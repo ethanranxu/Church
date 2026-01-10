@@ -29,6 +29,15 @@ To learn more about Next.js, take a look at the following resources:
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new).
+
+### Deployment Steps:
+
+1. **Push your code** to a GitHub/GitLab/Bitbucket repository.
+2. **Import the project** in the Vercel dashboard.
+3. **Environment Variables**: You MUST add the following environment variable in the Vercel Project Settings:
+   - `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`: Get this from your Google Cloud Console. It's required for the map in the Location section.
+4. **Deploy**: Vercel will automatically detect the Next.js framework and deploy the site.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
