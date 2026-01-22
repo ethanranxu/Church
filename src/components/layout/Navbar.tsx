@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 
 const NAV_LINKS = [
-    { name: "首頁", href: "#" },
-    { name: "信仰告白", href: "#" },
-    { name: "事奉團隊", href: "#" },
-    { name: "查經小組", href: "#" },
-    { name: "每日靈修", href: "#" },
+    { name: "首頁", href: "/" },
+    { name: "信仰告白", href: "/statement-of-faith" },
+    { name: "事奉團隊", href: "/ministry-team" },
+    { name: "查經小組", href: "/bible-study" },
+    { name: "每日靈修", href: "/devotion" },
     { name: "奉獻資訊", href: "#" },
     { name: "代禱需求", href: "#" },
 ];

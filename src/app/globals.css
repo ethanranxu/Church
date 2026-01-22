@@ -32,16 +32,67 @@ body {
   }
 }
 
+/* Bible Study Page - Journey Line */
+.journey-line {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, rgba(19, 127, 236, 0.2) 10%, rgba(19, 127, 236, 0.2) 90%, transparent);
+  height: 100%;
+  z-index: 0;
+}
+
+@media (max-width: 768px) {
+  .journey-line {
+    display: none;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #ccc;
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #999;
+}
+
+/* Devotion Page - Serif Content */
+.font-serif-content {
+  font-family: 'Noto Serif TC', serif;
+}
+
+/* Line Clamp */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Custom Scrollbar for Devotion Page */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #e2e8f0;
+  border-radius: 20px;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #374151;
 }

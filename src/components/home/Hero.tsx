@@ -16,8 +16,7 @@ export const Hero = () => {
                     backgroundImage: `url("/images/hero-bg.png")`,
                 }}
             />
-            {/* Minimal Overlay - only subtle dark tint at the bottom to protect text readability */}
-            <div className="absolute inset-0 z-10 bg-black/10" />
+            {/* Minimal Overlay - removed as per user request */}
 
             {/* Content */}
             <Container className="relative z-20 text-center mt-12">
