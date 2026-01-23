@@ -133,7 +133,7 @@ export const OfferingMethods = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-lg border border-blue-100 dark:border-blue-900/30">
                                         <p className="text-[11px] font-bold text-blue-600 dark:text-blue-400 mb-1 uppercase">
-                                            姓名及編號 Particulars/Code
+                                            姓名及編號
                                         </p>
                                         <p className="text-base font-bold text-[#111418] dark:text-white">
                                             請輸入您的中文或英文全名
@@ -144,7 +144,7 @@ export const OfferingMethods = () => {
                                     </div>
                                     <div className="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-lg border border-blue-100 dark:border-blue-900/30">
                                         <p className="text-[11px] font-bold text-blue-600 dark:text-blue-400 mb-1 uppercase">
-                                            奉獻類別 Reference
+                                            奉獻類別
                                         </p>
                                         <p className="text-base font-bold text-[#111418] dark:text-white">
                                             什一、感恩、宣教、建堂等
