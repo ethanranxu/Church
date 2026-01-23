@@ -11,8 +11,8 @@ const NAV_LINKS = [
     { name: "事奉團隊", href: "/ministry-team" },
     { name: "查經小組", href: "/bible-study" },
     { name: "每日靈修", href: "/devotion" },
-    { name: "奉獻資訊", href: "#" },
-    { name: "代禱需求", href: "#" },
+    { name: "奉獻資訊", href: "/offering" },
+    { name: "代禱需求", href: "/prayer" },
 ];
 
 export const Navbar = () => {
@@ -46,9 +46,11 @@ export const Navbar = () => {
                                 {link.name}
                             </Link>
                         ))}
-                        <Button size="sm" className="bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all shadow-sm hover:shadow-md">
-                            新朋友專區
-                        </Button>
+                        <Link href="/welcome">
+                            <Button size="sm" className="bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all shadow-sm hover:shadow-md">
+                                新朋友專區
+                            </Button>
+                        </Link>
                     </nav>
 
                     {/* Mobile Menu Button */}
@@ -78,7 +80,9 @@ export const Navbar = () => {
                             </Link>
                         ))}
                         <div className="pt-2">
-                            <Button className="w-full text-center">新朋友專區</Button>
+                            <Link href="/welcome" onClick={() => setIsOpen(false)}>
+                                <Button className="w-full text-center">新朋友專區</Button>
+                            </Link>
                         </div>
                     </nav>
                 )}

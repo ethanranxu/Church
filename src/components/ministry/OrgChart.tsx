@@ -11,10 +11,10 @@ export default function OrgChart() {
         <section className="flex flex-col items-center py-10">
             <div className="w-full max-w-4xl">
                 {/* Top Section: Jesus Christ */}
-                <div className="flex flex-col items-center mb-8">
+                <div className="flex flex-col items-center mb">
                     <div
-                        className="bg-white border-[5px] border-gray-900 rounded-lg py-8 px-20 text-5xl md:text-6xl font-black text-center relative z-10 transform hover:scale-105 transition-transform duration-300"
-                        style={{ boxShadow: '8px 8px 0px rgba(255, 202, 40, 1)' }}
+                        className="bg-white border-[4px] border-gray-900 rounded-lg py-6 px-12 text-4xl md:text-5xl font-black text-center relative z-10 transform hover:scale-105 transition-transform duration-300"
+                        style={{ boxShadow: '6px 6px 0px rgba(255, 202, 40, 1)' }}
                     >
                         耶穌基督
                     </div>
@@ -25,7 +25,7 @@ export default function OrgChart() {
                 </div>
 
                 {/* Middle Section: Hierarchy */}
-                <div className="flex flex-col items-center gap-4 mb-12">
+                <div className="flex flex-col items-center gap-1 mb-12">
                     <div className="flex flex-col items-center">
                         <div className="w-0.5 h-6 bg-gray-300"></div>
                         <div

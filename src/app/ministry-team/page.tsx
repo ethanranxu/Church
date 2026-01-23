@@ -4,7 +4,7 @@ import { Footer } from '@/components/layout/Footer';
 import Hero from '@/components/ministry/Hero';
 import PastoralTeam from '@/components/ministry/PastoralTeam';
 import OrgChart from '@/components/ministry/OrgChart';
-import JoinCTA from '@/components/ministry/JoinCTA';
+
 
 export default function MinistryTeamPage() {
     return (
@@ -13,10 +13,9 @@ export default function MinistryTeamPage() {
             <main>
                 <Hero />
                 <div className="flex flex-col items-center w-full bg-white dark:bg-background-dark py-12 px-4 md:px-10">
-                    <div className="w-full max-w-[1024px] flex flex-col gap-16">
+                    <div className="w-full max-w-[1024px] flex flex-col gap-8">
                         <PastoralTeam />
                         <OrgChart />
-                        <JoinCTA />
                     </div>
                 </div>
             </main>

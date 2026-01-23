@@ -50,12 +50,6 @@ export const Connect = () => {
                     >
                         聯絡我們
                     </Button>
-                    <Button
-                        variant="ghost"
-                        className="px-8 py-3 bg-transparent border border-white text-white font-bold rounded-lg hover:bg-white/10 transition-colors"
-                    >
-                        訂閱電子報
-                    </Button>
                 </div>
             </Container>
         </section>

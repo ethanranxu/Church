@@ -6,18 +6,18 @@ import Link from "next/link";
 const MINISTRIES = [
     {
         title: "兒童主日學",
-        subtitle: "Children's Ministry",
+        subtitle: "",
         description: "專為兒童設計的聖經課程，透過生動的故事與活動，從小建立對神的認識與信心。",
         image: "/images/children-ministry.jpg",
-        icon: "child_care",
+        icon: "",
         iconColor: "text-yellow-400",
     },
     {
         title: "青少年團契",
-        subtitle: "Youth Fellowship",
+        subtitle: " ",
         description: "在歡樂與真誠的氛圍中，陪伴青少年探索信仰，建立深厚的屬靈友誼，共同面對成長的挑戰。",
         image: "/images/youth-fellowship.jpg",
-        icon: "groups",
+        icon: "",
         iconColor: "text-sky-400",
     },
 ];
@@ -58,7 +58,7 @@ export const Ministries = () => {
                                     href="#"
                                     className="inline-flex items-center gap-2 text-white font-semibold hover:gap-3 transition-all"
                                 >
-                                    了解更多 <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                                    <span className="material-symbols-outlined text-sm"></span>
                                 </Link>
                             </div>
                         </div>

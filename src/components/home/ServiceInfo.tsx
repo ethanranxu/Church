@@ -3,7 +3,7 @@ import { Container } from "@/components/ui/Container";
 
 export const ServiceInfo = () => {
     return (
-        <div className="relative z-30 -mt-20">
+        <div id="service-info" className="relative z-30 -mt-20">
             <Container>
                 <div className="bg-white dark:bg-[#1a2634] rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6 transition-colors">
                     {/* Time Info */}

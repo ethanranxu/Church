@@ -6,28 +6,25 @@ const FOOTER_SECTIONS = [
     {
         title: "教會資訊",
         links: [
-            { name: "關於我們", href: "#" },
-            { name: "信仰告白", href: "#" },
-            { name: "牧養團隊", href: "#" },
-            { name: "植堂異象", href: "#" },
+            { name: "聯絡我們", href: "/#location" },
+            { name: "信仰告白", href: "/statement-of-faith" },
+            { name: "事奉團隊", href: "/ministry-team" },
         ],
     },
     {
         title: "聚會與資源",
         links: [
-            { name: "主日崇拜", href: "#" },
-            { name: "查經小組", href: "#" },
-            { name: "每日靈修", href: "#" },
-            { name: "講道錄音", href: "#" },
+            { name: "主日崇拜", href: "/#service-info" },
+            { name: "查經小組", href: "/bible-study" },
+            { name: "每日靈修", href: "/devotion" },
         ],
     },
     {
         title: "關懷與奉獻",
         links: [
-            { name: "新朋友專區", href: "#" },
-            { name: "代禱需求", href: "#" },
-            { name: "奉獻資訊", href: "#" },
-            { name: "聯絡我們", href: "#" },
+            { name: "新朋友專區", href: "/welcome" },
+            { name: "代禱需求", href: "/prayer" },
+            { name: "奉獻資訊", href: "/offering" },
         ],
     },
 ];
@@ -39,19 +36,15 @@ export const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                     {/* Logo Column */}
                     <div className="flex flex-col gap-4">
-                        <div className="flex items-center text-white mb-6">
+                        <div className="flex items-center text-white">
                             <img
                                 src="/images/footer-logo.png"
                                 alt="長堤基督教會 Logo"
-                                className="h-20 w-auto object-contain bg-white rounded p-1"
+                                className="h-36 w-auto object-contain bg-white rounded p-1"
                             />
                         </div>
-                        <p className="text-sm text-gray-400">
-                            長堤基督教會 - 奧克蘭北岸屬神的家
-                        </p>
-                        <p className="text-sm text-gray-500 mt-2">
-                            © 2026 長堤基督教會. All Rights Reserved.
-                        </p>
+
+
                     </div>
 
                     {/* Nav Columns */}
@@ -72,6 +65,12 @@ export const Footer = () => {
                             </ul>
                         </div>
                     ))}
+                </div>
+
+                <div className="border-t border-gray-800 pt-8 mt-8 text-center">
+                    <p className="text-sm text-gray-500">
+                        Copyright © 2026 長堤基督教會. All Rights Reserved.
+                    </p>
                 </div>
             </Container>
         </footer>
