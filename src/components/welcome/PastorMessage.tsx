@@ -2,7 +2,7 @@ import React from "react";
 
 export const PastorMessage = () => {
     return (
-        <section className="py-16 px-4 md:px-10 bg-white dark:bg-[#101922]">
+        <section className="py-12 px-4 md:px-10 bg-white dark:bg-[#101922]">
             <div className="mx-auto max-w-6xl">
                 <div className="flex flex-col md:flex-row gap-12 items-center">
                     <div className="w-full md:w-1/2 relative">

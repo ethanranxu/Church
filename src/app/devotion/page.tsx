@@ -16,7 +16,7 @@ export default function DevotionPage() {
             <main className="flex-grow flex flex-col items-center w-full">
                 <Hero />
 
-                <div className="max-w-[1200px] w-full mx-auto px-4 md:px-10 py-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
+                <div className="max-w-[1200px] w-full mx-auto px-4 md:px-10 py-12 grid grid-cols-1 lg:grid-cols-12 gap-10">
                     {/* Main Content - Left Column */}
                     <div className="lg:col-span-8 flex flex-col gap-8">
                         <Welcome />

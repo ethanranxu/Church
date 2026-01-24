@@ -5,7 +5,7 @@ export default function PastoralTeam() {
         <section className="flex flex-col gap-8">
             {/* Section Title */}
             <div className="flex flex-col items-center text-center gap-2 mb-4">
-                <h2 className="text-[#111418] dark:text-white text-3xl font-bold leading-tight">牧養團隊</h2>
+                <h2 className="text-[#111418] dark:text-white text-3xl md:text-4xl font-bold leading-tight">牧養團隊</h2>
                 <div className="h-1 w-20 bg-primary rounded-full mt-2"></div>
             </div>
 

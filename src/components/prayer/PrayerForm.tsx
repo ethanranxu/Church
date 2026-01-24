@@ -96,11 +96,11 @@ export const PrayerForm = () => {
                             <option value="" disabled>
                                 請選擇代禱事項
                             </option>
-                            <option value="health">健康與疾病 (Health)</option>
-                            <option value="family">家庭與婚姻 (Family)</option>
-                            <option value="work">工作與事業 (Work)</option>
-                            <option value="spiritual">靈命成長 (Spiritual Growth)</option>
-                            <option value="other">其他 (Other)</option>
+                            <option value="health">健康與疾病</option>
+                            <option value="family">家庭與婚姻</option>
+                            <option value="work">工作與事業</option>
+                            <option value="spiritual">靈命成長</option>
+                            <option value="other">其他</option>
                         </select>
                         <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                             <span className="material-symbols-outlined text-[#617589]">

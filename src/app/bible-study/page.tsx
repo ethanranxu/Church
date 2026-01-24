@@ -12,7 +12,7 @@ export default function BibleStudyPage() {
             <Navbar />
             <main className="flex flex-col">
                 <Hero />
-                <div className="relative flex flex-col items-center pt-24 pb-32 px-4 md:px-0 bg-gradient-to-b from-white to-blue-50/30">
+                <div className="relative flex flex-col items-center pt-12 pb-32 px-4 md:px-0 bg-gradient-to-b from-white to-blue-50/30">
                     {/* Journey Line */}
                     <div className="journey-line"></div>
                     <BibleOverview />

@@ -3,11 +3,11 @@ import { Church, Users, Building, PartyPopper } from 'lucide-react'; // Approxim
 
 export default function HistoryTimeline() {
     return (
-        <div className="flex flex-1 justify-center py-20 px-4 md:px-8 bg-[#F9FAFB] dark:bg-[#101922]">
+        <div className="flex flex-1 justify-center py-12 px-4 md:px-8 bg-[#F9FAFB] dark:bg-[#101922]">
             <div className="flex flex-col max-w-[1140px] w-full gap-24">
                 <section>
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-[#1E3A8A] dark:text-blue-300 mb-4">教會歷史沿革</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold text-[#111418] dark:text-white mb-4">教會歷史沿革</h2>
                         <div className="w-12 h-1 bg-[#FBBF24] mx-auto"></div>
                     </div>
 

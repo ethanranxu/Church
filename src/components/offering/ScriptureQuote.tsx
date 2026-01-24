@@ -4,7 +4,7 @@ import React from "react";
 
 export const ScriptureQuote = () => {
     return (
-        <div className="w-full bg-white dark:bg-[#101922] py-12 lg:py-16">
+        <div className="w-full bg-white dark:bg-[#101922] py-12">
             <div className="flex justify-center px-4 lg:px-40">
                 <div className="w-full max-w-[800px] bg-white dark:bg-[#1a2632] p-8 md:p-10 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-2 h-full bg-primary/20"></div>
