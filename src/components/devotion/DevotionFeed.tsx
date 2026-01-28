@@ -1,55 +1,130 @@
-import React from 'react';
+'use client';
+import React, { useState, useEffect, useRef } from 'react';
 
-const devotionArticles = [
-    {
-        date: '2026年01月24日',
-        title: '信心的跳躍',
-        content: '在這個繁忙的世界裡，我們常常感到缺乏。我們缺乏時間、缺乏精力、缺乏安全感。然而，大衛在詩篇23篇開頭就宣告了一個驚人的真理：「耶和華是我的牧者，我必不致缺乏。」這不是因為大衛擁有很多財富，而是因為他擁有了那位擁有一切的神。'
-    },
-    {
-        date: '2026年01月23日',
-        title: '愛人如己的真諦',
-        content: '當我們談論愛的時候，往往首先想到的是情感。但聖經中的「愛」更多地與行動和意志相關。愛鄰舍不僅僅是感覺良好，而是在具體的需要中伸出援手。耶穌通過撒馬利亞人的比喻，打破了界限，告訴我們每個人都是我們的鄰舍。'
-    },
-    {
-        date: '2026年01月22日',
-        title: '如何面對焦慮',
-        content: '焦慮是現代人的常態，但聖經勸誡我們要「一無掛慮」。這並非要我們逃避現實，而是教導我們將所有的憂慮通過禱告交託給神。當我們將目光從問題轉向那位創造天地的神時，祂的出人意外的平安必保守我們的心懷意念。'
-    }
-];
+import { Devotion, getPublishedDevotions } from '@/app/actions/devotions';
 
-export default function DevotionFeed() {
+interface DevotionFeedProps {
+    devotions: Devotion[];
+    onSelectDevotion: (devotion: Devotion) => void;
+}
+
+export default function DevotionFeed({ devotions: initialDevotions, onSelectDevotion }: DevotionFeedProps) {
+    const [devotions, setDevotions] = useState<Devotion[]>(initialDevotions);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const observerTarget = useRef<HTMLDivElement>(null);
+
+    // Update devotions if initial props change (though typically static from server)
+    // useEffect(() => {
+    //     setDevotions(initialDevotions);
+    // }, [initialDevotions]);
+
+    const loadMoreDevotions = async () => {
+        if (loading || !hasMore) return;
+
+        setLoading(true);
+        try {
+            const lastDevotion = devotions[devotions.length - 1];
+            if (!lastDevotion) {
+                setHasMore(false);
+                setLoading(false);
+                return;
+            }
+
+            const newDevotions = await getPublishedDevotions(10, lastDevotion.publishDate, lastDevotion.createdAt);
+
+            if (newDevotions.length < 10) {
+                setHasMore(false);
+            }
+
+            if (newDevotions.length > 0) {
+                setDevotions(prev => [...prev, ...newDevotions]);
+            }
+        } catch (error) {
+            console.error("Failed to load more devotions", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDevotionClick = async (article: Devotion) => {
+        onSelectDevotion(article);
+    };
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            entries => {
+                if (entries[0].isIntersecting && hasMore) {
+                    loadMoreDevotions();
+                }
+            },
+            { threshold: 1.0 }
+        );
+
+        if (observerTarget.current) {
+            observer.observe(observerTarget.current);
+        }
+
+        return () => {
+            if (observerTarget.current) {
+                observer.unobserve(observerTarget.current);
+            }
+        };
+    }, [hasMore, loading, devotions.length]); // Dependencies for re-creating/triggering observer
+
     return (
         <div className="flex flex-col gap-6">
             <div className="flex items-center gap-2 mb-2">
                 <span className="w-1 h-6 bg-primary rounded-full"></span>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white font-display">靈修分享 (Devotion Feed)</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white font-display">靈修分享</h3>
             </div>
 
-            {devotionArticles.map((article, index) => (
-                <article key={index} className="bg-white dark:bg-[#101922] p-6 md:p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 hover:border-primary/30 transition-all group">
+            {devotions.map((article) => (
+                <article key={article.id} className="bg-white dark:bg-[#101922] p-6 md:p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 hover:border-primary/30 transition-all group">
                     <div className="flex flex-col gap-3">
-                        <time className="text-sm font-medium text-gray-500 dark:text-gray-400">{article.date}</time>
-                        <h4 className="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors font-serif-content">
-                            {article.title}
-                        </h4>
-                        <div className="text-gray-700 dark:text-gray-300 font-serif-content leading-relaxed line-clamp-3">
-                            {article.content}
-                        </div>
-                        <div className="mt-4 flex items-center gap-2 text-primary font-bold text-sm cursor-pointer hover:underline">
+                        <time className="text-sm font-medium text-gray-500 dark:text-gray-400">{article.publishDate}</time>
+                        <button
+                            onClick={() => handleDevotionClick(article)}
+                            className="text-left"
+                        >
+                            <h4 className="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors font-serif-content">
+                                {article.title.length > 50 ? article.title.substring(0, 50) + "..." : article.title}
+                            </h4>
+                        </button>
+                        {(() => {
+                            const cleanContent = article.content.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/(?:https?|ftp):\/\/[\S]+/g, '');
+                            const shouldTruncate = cleanContent.length > 300;
+                            return (
+                                <div className="text-gray-700 dark:text-gray-300 font-serif-content leading-relaxed line-clamp-3">
+                                    {shouldTruncate ? cleanContent.substring(0, 300) + "..." : cleanContent}
+                                </div>
+                            );
+                        })()}
+                        <button
+                            onClick={() => handleDevotionClick(article)}
+                            className="mt-4 flex items-center gap-2 text-primary font-bold text-sm cursor-pointer hover:underline inline-flex"
+                        >
                             繼續閱讀
                             <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                        </div>
+                        </button>
                     </div>
                 </article>
             ))}
 
-            <div className="flex justify-center py-8">
-                <button className="flex items-center gap-2 px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full font-bold text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-                    <span className="material-symbols-outlined animate-spin text-sm">refresh</span>
-                    載入更多內容
-                </button>
+            {/* Loading Indicator / Sentinel */}
+            <div ref={observerTarget} className="flex justify-center py-8 h-20">
+                {loading && (
+                    <div className="flex items-center gap-2 text-gray-500">
+                        <span className="material-symbols-outlined animate-spin">refresh</span>
+                        <span>載入中...</span>
+                    </div>
+                )}
+                {!hasMore && devotions.length > 0 && (
+                    <div className="text-gray-400 text-sm">沒有更多內容了</div>
+                )}
             </div>
+
+
         </div>
     );
 }

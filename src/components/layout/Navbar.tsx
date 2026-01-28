@@ -7,7 +7,7 @@ import Link from "next/link";
 
 const NAV_LINKS = [
     { name: "首頁", href: "/" },
-    { name: "信仰告白", href: "/statement-of-faith" },
+    { name: "認識教會", href: "/statement-of-faith" },
     { name: "事奉團隊", href: "/ministry-team" },
     { name: "查經小組", href: "/bible-study" },
     { name: "每日靈修", href: "/devotion" },
@@ -22,17 +22,13 @@ export const Navbar = () => {
         <header className="sticky top-0 z-50 w-full bg-white/90 dark:bg-[#101922]/90 backdrop-blur-md border-b border-[#e7edf3] dark:border-gray-800 transition-colors">
             <Container>
                 <div className="flex justify-between items-center h-24">
-                    {/* Logo - Icon + Text side by side */}
-                    <Link href="/" className="flex items-center gap-4 h-full py-4">
+                    {/* Logo - Updated to new image logo */}
+                    <Link href="/" className="flex items-center h-full py-4">
                         <img
-                            src="/images/logo-icon.png"
+                            src="/images/logo-icon.jpg"
                             alt="長堤基督教會"
-                            className="h-full w-auto object-contain"
+                            className="h-16 w-auto object-contain"
                         />
-                        <div className="hidden sm:flex flex-col justify-center gap-1">
-                            <span className="text-2xl font-bold text-gray-900 dark:text-white leading-none tracking-tight">長堤基督教會</span>
-                            <span className="text-base text-gray-500 dark:text-gray-400 leading-tight">EFC of East Coast Bays</span>
-                        </div>
                     </Link>
 
                     {/* Desktop Nav */}

@@ -31,18 +31,21 @@ const VALUES = [
 
 export const CoreValues = () => {
     return (
-        <Section className="bg-white dark:bg-[#101922]">
+        <Section className="bg-white dark:bg-[#101922] py-12 md:py-12">
             <Container>
-                <div className="text-center max-w-3xl mx-auto mb-16">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                <div className="text-center mb-16">
+                    <h2 className="text-3xl md:text-4xl font-bold text-[#111418] dark:text-white mb-4">
                         我们的核心价值
                     </h2>
-                    <p className="text-gray-600 dark:text-gray-400 text-lg">
-                        在愛中建立團契，在真理中彼此教導，在社區中熱心服事
-                    </p>
+                    <Container className="max-w-[1134px]">
+                        <div className="w-12 h-1 bg-[#FBBF24] mx-auto mb-6"></div>
+                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                            在愛中建立團契，在真理中彼此教導，在社區中熱心服事
+                        </p>
+                    </Container>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6  max-w-[1158px] mx-auto">
                     {VALUES.map((value) => (
                         <div
                             key={value.title}

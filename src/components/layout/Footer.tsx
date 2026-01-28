@@ -7,7 +7,7 @@ const FOOTER_SECTIONS = [
         title: "教會資訊",
         links: [
             { name: "聯絡我們", href: "/#location" },
-            { name: "信仰告白", href: "/statement-of-faith" },
+            { name: "認識教會", href: "/statement-of-faith" },
             { name: "事奉團隊", href: "/ministry-team" },
         ],
     },
@@ -38,7 +38,7 @@ export const Footer = () => {
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center text-white">
                             <img
-                                src="/images/footer-logo.png"
+                                src="/images/footer-logo.jpg"
                                 alt="長堤基督教會 Logo"
                                 className="h-36 w-auto object-contain bg-white rounded p-1"
                             />

@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 文章集合 (存儲每日靈修等內容)
+    match /Articles/{articleId} {
+      // 允許管理員（認證用戶）讀寫
+      allow read, write: if request.auth != null;
+      
+      // 允許公眾讀取已發佈的內容
+      allow read: if resource.data.status == 'published';
+    }
+
+    // 系統用戶集合
+    match /Users/{userId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // 默認拒絕所有其他訪問
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

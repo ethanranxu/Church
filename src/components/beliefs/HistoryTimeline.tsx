@@ -7,8 +7,11 @@ export default function HistoryTimeline() {
             <div className="flex flex-col max-w-[1140px] w-full gap-24">
                 <section>
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-[#111418] dark:text-white mb-4">教會歷史沿革</h2>
-                        <div className="w-12 h-1 bg-[#FBBF24] mx-auto"></div>
+                        <h2 className="text-3xl md:text-4xl font-bold text-[#111418] dark:text-white mb-4">我們的歷史</h2>
+                        <div className="w-12 h-1 bg-[#FBBF24] mx-auto mb-6"></div>
+                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                            从神的异象出发，因福音而扩展，在使命中不断前行。
+                        </p>
                     </div>
 
                     <div className="relative">
@@ -95,16 +98,16 @@ export default function HistoryTimeline() {
                     {/* Detailed History Text */}
                     <div className="mt-16 bg-gradient-to-br from-blue-50 to-white dark:from-[#1E3A8A]/10 dark:to-[#1a2632] p-8 md:p-12 rounded-3xl border border-blue-100 dark:border-blue-800 shadow-sm">
                         <div className="max-w-4xl mx-auto space-y-6">
-                            <p className="text-gray-700 dark:text-gray-200 text-lg text-justify indent-[2em] leading-relaxed tracking-wider">
+                            <p className="text-gray-700 dark:text-gray-200 text-justify indent-[2em] leading-relaxed tracking-wider">
                                 紐西蘭奧克蘭長堤基督教會是由龔偉鴻牧師於2003年領受從神而來的異象與使命後，在美國台福總會以及柑縣台福基督教會的支持下所創辦並在其中牧養。在2003年至2023年，這二十年期間，龔牧師忠心地遵行上帝的託付，在基督的名未被稱過的地方「廣傳福音、開拓植堂、拓展神的國度。」
                             </p>
-                            <p className="text-gray-700 dark:text-gray-200 text-lg text-justify indent-[2em] leading-relaxed tracking-wider">
+                            <p className="text-gray-700 dark:text-gray-200 text-justify indent-[2em] leading-relaxed tracking-wider">
                                 如今，至2023年10月為此，長堤基督教會在龔牧師的帶領之下，已為主開拓兩間教會，分別是於2015年在奧克蘭木槿灣地區成立「木槿灣基督教會」以及於2019年在奧克蘭長灣地區成立「長灣基督教會」。
                             </p>
-                            <p className="text-gray-700 dark:text-gray-200 text-lg text-justify indent-[2em] leading-relaxed tracking-wider">
-                                龔牧師在2023年長堤基督教會成立二十週年之際，為整體教會立下三大目標：（1）活潑感人的主日崇拜與講道（2）家庭小組的牧養關懷系統（3）教會整體傳福音的動力並決議採用以「牧者團隊」的體制帶領全體教會一同繼續前進。這牧養體制不但符合紐西蘭當地的教會文化，也能提供實際的牧養需要與關懷幫助會友一同在神的家中茁壯成長。
+                            <p className="text-gray-700 dark:text-gray-200 text-justify indent-[2em] leading-relaxed tracking-wider">
+                                龔牧師在2023年長堤基督教會成立二十週年之際，為整體教會立下三大目標：（1）活潑感人的主日崇拜與講道（2）家庭小組的牧養關懷系統（3）教會整體傳福音的動力並決議採用以「牧者團隊」的體制帶領全體教會一同繼續前進。這牧養體制不但符合紐西蘭當地的教會文化，也能提供實際的牧養需要與關怀幫助會友一同在神的家中茁壯成長。
                             </p>
-                            <p className="text-gray-700 dark:text-gray-200 text-lg text-justify indent-[2em] leading-relaxed tracking-wider">
+                            <p className="text-gray-700 dark:text-gray-200 text-justify indent-[2em] leading-relaxed tracking-wider">
                                 基於此體制與美國台福總會相左，在經過牧者團隊的深思熟慮後決定於2023年10月22日正式離開美國台福總會體制，並加入「長堤牧養系統」藉著聖靈的引領由牧者團隊選出合神心意、願意絕對順服上帝且具有屬靈權柄的基督徒領袖和牧者團隊一同牧養長堤基督教會。
                             </p>
                         </div>

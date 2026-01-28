@@ -83,11 +83,14 @@ export default function FundamentalTruths() {
     ];
 
     return (
-        <div className="w-full pb-20 px-4 md:px-8 bg-[#F9FAFB] dark:bg-[#101922]">
+        <div className="w-full pt-12 pb-20 px-4 md:px-8 bg-white dark:bg-[#101922]">
             <div className="max-w-[1140px] w-full mx-auto">
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-4xl font-bold text-[#111418] dark:text-white mb-4">基要真理</h2>
-                    <div className="w-12 h-1 bg-[#FBBF24] mx-auto"></div>
+                    <div className="w-12 h-1 bg-[#FBBF24] mx-auto mb-6"></div>
+                    <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                        以圣经为根基，因基督得救，在圣灵里活出教会的使命。
+                    </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

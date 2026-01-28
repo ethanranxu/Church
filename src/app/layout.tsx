@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { AuthProvider } from "@/components/auth/AuthProvider";
+import { UserTracker } from "@/components/analytics/UserTracker";
 import { Inter, Noto_Sans_TC } from "next/font/google";
 import "./globals.css";
 
@@ -34,7 +36,10 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${notoIsTC.variable} antialiased bg-[#f6f7f8] text-[#0d141b] dark:bg-[#101922] dark:text-white transition-colors duration-200`}
       >
-        {children}
+        <AuthProvider>
+          <UserTracker />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
