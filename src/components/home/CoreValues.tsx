@@ -35,7 +35,7 @@ export const CoreValues = () => {
             <Container>
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-4xl font-bold text-[#111418] dark:text-white mb-4">
-                        我们的核心价值
+                        核心價值
                     </h2>
                     <Container className="max-w-[1134px]">
                         <div className="w-12 h-1 bg-[#FBBF24] mx-auto mb-6"></div>

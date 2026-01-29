@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import { submitPrayer } from "@/app/actions/prayer";
 
 export const PrayerForm = () => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         contact: "",
@@ -11,9 +13,35 @@ export const PrayerForm = () => {
         isPrivate: false,
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        alert("代禱需求已送出，我們會為您禱告！");
+
+        if (!formData.category || !formData.content) {
+            alert("請填寫代禱類別和詳細內容");
+            return;
+        }
+
+        setIsSubmitting(true);
+        try {
+            const result = await submitPrayer(formData);
+            if (result.success) {
+                alert(result.message);
+                setFormData({
+                    name: "",
+                    contact: "",
+                    category: "",
+                    content: "",
+                    isPrivate: false,
+                });
+            } else {
+                alert(result.error || "提交失敗");
+            }
+        } catch (error) {
+            console.error("Submission error:", error);
+            alert("提交出錯，請稍後再試");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -155,10 +183,15 @@ export const PrayerForm = () => {
                 <div className="pt-4">
                     <button
                         type="submit"
-                        className="w-full flex justify-center items-center gap-2 bg-primary hover:bg-[#116ecf] text-white text-base font-bold py-4 px-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
+                        disabled={isSubmitting}
+                        className={`w-full flex justify-center items-center gap-2 bg-primary hover:bg-[#116ecf] text-white text-base font-bold py-4 px-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
                     >
-                        <span className="material-symbols-outlined">send</span>
-                        送出代禱
+                        {isSubmitting ? (
+                            <span className="animate-spin material-symbols-outlined">sync</span>
+                        ) : (
+                            <span className="material-symbols-outlined">send</span>
+                        )}
+                        {isSubmitting ? "正在送出..." : "送出代禱"}
                     </button>
                 </div>
             </form>

@@ -4,7 +4,7 @@ import { HeartHandshake } from 'lucide-react';
 
 export default function JoinCTA() {
     return (
-        <div className="w-full pb-20 px-4 md:px-8 bg-[#F9FAFB] dark:bg-[#101922]">
+        <div className="w-full pt-12 pb-12 px-4 md:px-8 bg-[#F9FAFB] dark:bg-[#101922]">
             <div className="max-w-[1140px] w-full mx-auto">
                 <div className="bg-gradient-to-br from-[#1E3A8A] to-[#152a6d] rounded-[2.5rem] p-10 md:p-16 text-center text-white shadow-xl relative overflow-hidden">
                     <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuDoI1SNoBlJjk0b_5noH4MjhIsQDzlii0vnLPKJev39u2SuY81eG3_A4TiKu8N7KQd4Q9tC31rFf4PQQndbwzmvAw7F10dZUufqMSO5QDGFVbBwDKU6aA1An4U7J2sgiIVzEMAHoWjqQtINOaVbpeFkzve96R3qlscfF2XPc-Wc6dSjkV5aYyxK2tLSEanlxn33wdJzv2VYzP3bfcxIjGI6HoHmEV8aJxHpOt_JRZ-XOGt71Ua0_qr7CdMzt3wsaPTZQE5dXoSfW-o")' }}></div>

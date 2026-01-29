@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Users, BookOpen, LayoutDashboard, Settings, LogOut, Church, Lock } from "lucide-react";
+import { Users, BookOpen, LayoutDashboard, Settings, LogOut, Church, Lock, HeartHandshake } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import clsx from "clsx";
 
@@ -10,6 +10,7 @@ const navigation = [
     { name: "儀表板", href: "/admin", icon: LayoutDashboard },
     { name: "系統用戶", href: "/admin/users", icon: Users },
     { name: "每日靈修", href: "/admin/devotions", icon: BookOpen },
+    { name: "代禱需求", href: "/admin/prayers", icon: HeartHandshake },
     { name: "系統設置", href: "/admin/settings", icon: Settings },
 ];
 
