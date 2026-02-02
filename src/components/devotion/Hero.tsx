@@ -5,7 +5,7 @@ export default function Hero() {
         <div
             className="relative flex min-h-[400px] w-full flex-col items-center justify-center overflow-hidden bg-cover bg-center p-4 text-center md:p-10"
             style={{
-                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuAlAfzat7kIIuACwd9eD8leyJYYLMloNhooSQ8wBGJc3kUf6GOdLzoFsvvaiM2Ki_3dRfvOKr-AL6oOtb8fjlI2xFUFi_IyaJGbNmOBm9MgICokdPVaCehZFZoEBwC9ppePVUK2rxx4hpj-9i4QISoz1vRHiTeQakomSbhQifCQZED0AJe2ypQUc0Pnxl8n5fqiMce5Vwk7ZY0jxLwB6Vxt9Jqg5fGd41jTVzJfZ4x6YXpExJTioeAnUi6NhQlCL6uWyGvBqoAIFq4")`
+                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url("/images/assets/devotion-hero.jpg")`
             }}
         >
             <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-4 drop-shadow-2xl tracking-[0.2em]">

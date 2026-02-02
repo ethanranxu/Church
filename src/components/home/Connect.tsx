@@ -14,14 +14,16 @@ export const Connect = () => {
                 {/* Social Icons */}
                 <div className="flex justify-center gap-6 mb-12">
                     <a
-                        href="#"
+                        href="https://www.facebook.com/efcecb/"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all border border-white/20 group"
                         title="Facebook"
                     >
                         <span className="font-bold text-2xl group-hover:scale-110 transition-transform">fb</span>
                     </a>
                     <a
-                        href="https://www.youtube.com/@efcecb"
+                        href="https://www.youtube.com/channel/UCmYfo0BlmnaivWtSfszI3iQ"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all border border-white/20 group"
@@ -32,7 +34,9 @@ export const Connect = () => {
                         </span>
                     </a>
                     <a
-                        href="#"
+                        href="https://www.instagram.com/efcecbnz/"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all border border-white/20 group"
                         title="Instagram"
                     >

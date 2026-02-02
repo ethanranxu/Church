@@ -35,9 +35,14 @@ export const LatestSermon = () => {
                         </p>
                         <div className="flex flex-wrap gap-4">
                             <Button>前往影音專區</Button>
-                            <Button variant="ghost" className="border border-gray-300 dark:border-gray-600" onClick={() => window.open('https://www.youtube.com/@efcecb', '_blank')}>
+                            <a
+                                href="https://www.youtube.com/channel/UCmYfo0BlmnaivWtSfszI3iQ"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center rounded-lg transition-all gap-2 disabled:opacity-50 disabled:cursor-not-allowed px-6 py-2.5 text-sm font-bold bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600"
+                            >
                                 訂閱 YouTube 頻道
-                            </Button>
+                            </a>
                         </div>
                     </div>
                 </div>

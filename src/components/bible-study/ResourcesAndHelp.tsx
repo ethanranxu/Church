@@ -1,10 +1,10 @@
 import React from 'react';
 
 const tools = [
-    { name: '網上聖經', icon: 'menu_book' },
-    { name: '每日靈修', icon: 'wb_sunny' },
-    { name: '荒漠甘泉', icon: 'water_drop' },
-    { name: '神學辭典', icon: 'library_books' },
+    { name: '網上聖經', icon: 'menu_book', link: 'https://www.bible.com/zh-HK' },
+    { name: '聖經地圖', icon: 'map', link: 'https://www.biblestudytools.com/bible-atlas/' },
+    { name: '荒漠甘泉', icon: 'water_drop', link: 'https://xybk.fuyin.tv/Books/CCIM_Streams_Desert/b5/index.htm' },
+    { name: '神學辭典', icon: 'library_books', link: 'https://www.biblestudytools.com/dictionaries/bakers-evangelical-dictionary/' },
 ];
 
 export default function ResourcesAndHelp() {
@@ -26,7 +26,9 @@ export default function ResourcesAndHelp() {
                         {tools.map((tool) => (
                             <a
                                 key={tool.name}
-                                href="#"
+                                href={tool.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 hover:bg-primary/5 transition-colors group"
                             >
                                 <div className="flex items-center gap-3">

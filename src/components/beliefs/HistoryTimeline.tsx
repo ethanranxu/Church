@@ -34,14 +34,14 @@ export default function HistoryTimeline() {
                                     <Church className="w-8 h-8" />
                                 </div>
                                 <div className="w-full md:w-[45%] order-3">
-                                    <img alt="2003 Church Founding" className="w-full h-48 object-cover rounded-2xl shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqc2vAwttQBPf7gM_O_PwkUHsRZYSvrhlvHZvrhwgrjApk-7SjVTWifd-nzkKXsWvmf94LWn-6WHF6xmeUDJqcdqr33JPcAXDC6BeG4oRLaCXMfCpjLjz0dH0N29BnUbF4o8LfKMJiOVD5oHF_BlCtS17YA-vcx4fgd-fCNIJiRRlrnnO2fkPfqoFVhzga9JzyyRwpNzryRStl5Ss4O2uUAY9GNWzjw7lFBvCtL80-aysSd9TbDh-LPbCWoCtOX0AAcdHtEavwDqM" />
+                                    <img alt="2003 Church Founding" className="w-full h-48 object-cover rounded-2xl shadow-lg" src="/images/assets/history-2003.jpg" />
                                 </div>
                             </div>
 
                             {/* 2015 Item (Right Aligned Text) */}
                             <div className="flex flex-col md:flex-row items-center justify-between w-full">
                                 <div className="w-full md:w-[45%] order-3 md:order-1">
-                                    <img alt="2015 Mission" className="w-full h-48 object-cover rounded-2xl shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjhvZ-NLHWYYUC0MqzvpMlLzjsAecqFQJmsbQbs6KfSiJo_Zq6ASR20iTMKTNuvgRlJ3OaD2jR3PH8YfkPZWx4p1ZRsI7vk_FsoRD0Qet_n3TWkjA7SI-5LaFHq7R3nEu--iv3Ff4xSAsVccN7BDCQG5OW3qRA73U7ooBZrjzOWPMOFCWK2AuKXTG2bOG_HD-KfYBAktfjMWSo7U6IJM72luEahTw850-X_tVMm1KIeILcdZpZm7khwiZP6Yz7OM-udtpHo3r2FaA" />
+                                    <img alt="2015 Mission" className="w-full h-48 object-cover rounded-2xl shadow-lg" src="/images/assets/history-2015.jpg" />
                                 </div>
                                 <div className="z-10 bg-[#FBBF24] text-[#1E3A8A] p-3 rounded-full mb-6 md:mb-0 order-1 md:order-2">
                                     <Users className="w-8 h-8" />
@@ -70,14 +70,14 @@ export default function HistoryTimeline() {
                                     <Building className="w-8 h-8" />
                                 </div>
                                 <div className="w-full md:w-[45%] order-3">
-                                    <img alt="2019 Expansion" className="w-full h-48 object-cover rounded-2xl shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqWUUJi8rRiZnP4IPz4pQZk5bcY4ETZfDcMlF5MI6wtjT1oexEMAOOVwM0DUjGY8x4VbAz439YKGCH5Ew3Y2n1dWhg0ARuqiQ6ZYegHOeU_L8fc5Vw-nJBfiAd-dV_YkgLMNI2UUjm7Sg-IKgrQUvUXwKMOe-NF9cZT1bXSlxePD2aHZCQvTnxUjdHfUEsMaqQMZYHC567TPIYGa9BIPil4QgPcQeifK6JSzt9QhxW8bNoM2F4ZokVfzY_hDL5kT3oZmzNuAkN1Ds" />
+                                    <img alt="2019 Expansion" className="w-full h-48 object-cover rounded-2xl shadow-lg" src="/images/assets/history-2019.jpg" />
                                 </div>
                             </div>
 
                             {/* 2023 Item (Right Aligned) */}
                             <div className="flex flex-col md:flex-row items-center justify-between w-full">
                                 <div className="w-full md:w-[45%] order-3 md:order-1">
-                                    <img alt="2023 New Chapter" className="w-full h-48 object-cover rounded-2xl shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWAPx2X3tClQ5wjc9lmLfYdp3NaXXiPHGsjJk-ISieZCUrr1ueECoHQ2KI-L7YRh-YBpExV8D1x-HadIjEbS4csVBCm3-xAy86bNXxBUSPEa1Fcu3iNlwyfq0girYIP29Zfvi4rVQ9wWIWc_ozpPYdqi9uzJQVTMaZaymn0QcHX921Go8u3MOC_LSddQ-GX2Qe2k3IhmUMVLmf15q595C-l5F7Sgm3-FAcD0vH5xXaGTxK5U7lgMBnoRB5iB4yQd49Jbz1jBwDLdI" />
+                                    <img alt="2023 New Chapter" className="w-full h-48 object-cover rounded-2xl shadow-lg" src="/images/assets/history-2023.jpg" />
                                 </div>
                                 <div className="z-10 bg-[#FBBF24] text-[#1E3A8A] p-3 rounded-full mb-6 md:mb-0 order-1 md:order-2">
                                     <PartyPopper className="w-8 h-8" />

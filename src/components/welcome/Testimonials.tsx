@@ -4,7 +4,7 @@ const TESTIMONIALS = [
     {
         name: "王弟兄",
         duration: "加入教會 6 個月",
-        avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuBMSc7PxDQ6DtfxFHWLK_lJYhx7ZwbjQlA3ShJncZlXzEyGDLG9xcsC6Y82pZNDi9mPNQiB2fb5WyYx0pNuDSE1Ucgc_bdJPVKHRb8p1o1uA8LX5vFkELX6yDbTIGgMm2pQZPuzM_FBi3odA756DK9-0vocjwoIvdtV35A16obiGsOmExQUdzR0DSYLM452_TZCqzOuDo3JCnk1-eLXJCXAtTDW3_ut6JlJON1HnJpRPFweUvQPLswobJJP8OAzVjFzi12_k9Ug0s4",
+        avatar: "/images/assets/testimonial-avatar-1.jpg",
         quote: "剛搬到奧克蘭時覺得很孤單，但第一次來到長堤就感受到了家的溫暖。這裡的弟兄姊妹非常熱情，讓我很快就融入了這個大家庭。",
     },
     {
@@ -16,7 +16,7 @@ const TESTIMONIALS = [
     {
         name: "陳弟兄",
         duration: "加入教會 2 個月",
-        avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuB98nMRmJ7JSQd5cREDVUD226vbA7QkfsTLhViWjYP4wWRMz9tfZyrnicg2fGeyIxb3h90icm64aez5xL0oNrg1yBQm5SeA3U3F5wB40KA0hoBQs0DuKiefiMFrx9wfHMB7t0C-fjOHtsEJCOLAOzhsTRmbVSKqTm2Rz0RDAKyAKT3YrbipYeGUJBRoqxandoxNukjBDYq3k-fFVHH4MNPN_-QQRpBQmRBBtGVhF-mvKHf0tD8Ynl-wSPxjAclL6Yqmqaw1FdD2SfY",
+        avatar: "/images/assets/testimonial-avatar-2.jpg",
         quote: "這裡的講道非常生活化，幫助我在忙碌的工作中找到平安。主日午餐的團契時間也是我每週最期待的時刻。",
     },
 ];

@@ -1,19 +1,18 @@
 import React from 'react';
 
 const oldTestamentBooks = [
-    { name: '創世記', subtitle: '起源與約', icon: 'eco' },
-    { name: '出埃及記', subtitle: '拯救與律法', icon: 'waves' },
-    { name: '申命記', subtitle: '重申誡命', icon: 'gavel' },
+    { name: '創世記', subtitle: '起源與約', icon: 'eco', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaU02f9zzO9bD_K1gduUoNjE' },
+    { name: '出埃及記', subtitle: '拯救與律法', icon: 'waves', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaWSZWlHWfmCzgjEjRnJzWGo' },
+    { name: '申命記', subtitle: '重申誡命', icon: 'gavel', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaUJYwyquxkPvcqsyPWs5h_2' },
 ];
 
 const newTestamentBooks = [
-    { name: '啟示錄', icon: 'auto_awesome' },
-    { name: '馬可福音', icon: 'face_6' },
-    { name: '以弗所書', icon: 'forward_to_inbox' },
-    { name: '希伯來書', icon: 'account_balance' },
-    { name: '使徒行傳', icon: 'footprint' },
-    { name: '提摩太前後書', icon: 'person_pin' },
-    { name: '哥林多前後書', icon: 'forum' },
+    { name: '啟示錄', icon: 'auto_awesome', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaUA0lNNXN6wG7EooQmK7fwp' },
+    { name: '馬可福音', icon: 'face_6', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaU8a9x7nYQ-J_JUdEOtO9Da' },
+    { name: '以弗所書', icon: 'forward_to_inbox', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaXlMOCNYUpq4Vowd10aV-S6' },
+    { name: '希伯來書', icon: 'account_balance', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaUEZCf_GzkdiP41UCAo__3d' },
+    { name: '使徒行傳', icon: 'footprint', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaUurqmm7_Kz-IPPg29KJWZg' },
+    { name: '提摩太前後書', icon: 'person_pin', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaUGE_COV0p297YLFjOcX2n8' },
 ];
 
 export default function BibleBooks() {
@@ -37,7 +36,9 @@ export default function BibleBooks() {
                         {oldTestamentBooks.map((book) => (
                             <a
                                 key={book.name}
-                                href="#"
+                                href={book.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="group relative flex items-center justify-end gap-4 bg-white dark:bg-[#1a2632] p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 hover:border-amber-200 hover:shadow-xl transition-all hover:-translate-y-1 w-full sm:w-[calc(50%-0.5rem)] text-right"
                             >
                                 <div className="flex-1">
@@ -64,7 +65,9 @@ export default function BibleBooks() {
                         {newTestamentBooks.map((book) => (
                             <a
                                 key={book.name}
-                                href="#"
+                                href={book.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="group flex items-center gap-3 bg-white dark:bg-[#1a2632] p-4 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-emerald-200 hover:shadow-lg transition-all hover:-translate-y-1"
                             >
                                 <div className="size-10 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors shrink-0">
@@ -77,7 +80,9 @@ export default function BibleBooks() {
                         ))}
                         {/* Special Training Card - Moved to new row */}
                         <a
-                            href="#"
+                            href="https://www.youtube.com/playlist?list=PLP7Y2-_kjaaW3CF35j6cWu40sGsPLTRm8"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="group flex items-center gap-3 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-200 dark:border-blue-800 hover:shadow-lg transition-all hover:-translate-y-1 sm:col-start-1"
                         >
                             <div className="size-10 rounded-lg bg-primary text-white flex items-center justify-center shadow-md shrink-0">

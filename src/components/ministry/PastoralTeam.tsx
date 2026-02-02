@@ -14,7 +14,7 @@ export default function PastoralTeam() {
                 <div
                     className="md:w-2/5 min-h-[320px] bg-cover bg-top"
                     style={{
-                        backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuABUTJLO0re_DHeJGd4Y4vp5UZMof3fuiY27twdMuUU51Mg86L002pEqtdorNuRwWXFt7eh2vk6NsrhJVMxqTKvPBBlBNtvoLPxgCPOs9c4so9D4CWcic-XplXqzhnU9fSdJhckJQgoxaU7TrhxPK9M5xraeuqqOTTm-G_TCpLPhROYpAalaFWmHoyO4inr4cZmLx9yWWrIzgJMk1hV5oP5A6oTDMzz_DVT-PqsBqgxQlYnP8EdqFYMV731BcTo4gOVL2M0X4JoKrE")`
+                        backgroundImage: `url("/images/assets/pastoral-team-1.jpg")`
                     }}
                 ></div>
                 <div className="md:w-3/5 p-8 flex flex-col justify-center gap-4">
@@ -46,7 +46,7 @@ export default function PastoralTeam() {
                     <div
                         className="aspect-[16/10] w-full bg-cover bg-center"
                         style={{
-                            backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuCE_AnSPPcPFZt-284OpNZvw4tY51F6L3ChjBPjC_FS-UlfCAE5pyRi_9GH_VYmdqc5UftU97cezf2sKNMxtEPaC4G2NsAaWULl1U5tkVvUQHPTfwjvhRpW_zujN2io1K75-8y_W7WAh9D6a7IZq3rqpNVGvtHXLUgkwoG7xNTOwhMJK3WizO5JX7XC-4cU70u4c-fkk7DvrK1i8Ygz5w0aB-Bf0CvtEw9MtorKOiZrq8r9U4ubL7xounCrPfE7hWtmW6f4NPx2e74")`
+                            backgroundImage: `url("/images/assets/pastoral-team-2.jpg")`
                         }}
                     ></div>
                     <div className="p-6 flex flex-col gap-3">
@@ -65,7 +65,7 @@ export default function PastoralTeam() {
                     <div
                         className="aspect-[16/10] w-full bg-cover bg-center"
                         style={{
-                            backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuCE_AnSPPcPFZt-284OpNZvw4tY51F6L3ChjBPjC_FS-UlfCAE5pyRi_9GH_VYmdqc5UftU97cezf2sKNMxtEPaC4G2NsAaWULl1U5tkVvUQHPTfwjvhRpW_zujN2io1K75-8y_W7WAh9D6a7IZq3rqpNVGvtHXLUgkwoG7xNTOwhMJK3WizO5JX7XC-4cU70u4c-fkk7DvrK1i8Ygz5w0aB-Bf0CvtEw9MtorKOiZrq8r9U4ubL7xounCrPfE7hWtmW6f4NPx2e74")`
+                            backgroundImage: `url("/images/assets/pastoral-team-2.jpg")`
                         }}
                     ></div>
                     <div className="p-6 flex flex-col gap-3">

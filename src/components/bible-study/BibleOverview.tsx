@@ -24,10 +24,15 @@ export default function BibleOverview() {
                     提供舊約與新約的歷史背景、神學主題及書卷大綱，幫助弟兄姊妹快速掌握聖經脈絡，建立宏觀的信仰視野。從創造到啟示，開啟一段認識上帝主權與救恩計劃的旅程。
                 </p>
 
-                <button className="mt-4 inline-flex items-center gap-3 rounded-full bg-primary hover:bg-blue-600 px-10 py-4 text-white font-bold text-lg shadow-xl shadow-blue-500/20 transition-all hover:-translate-y-1 active:scale-95 cursor-pointer">
+                <a
+                    href="https://www.youtube.com/playlist?list=PLP7Y2-_kjaaXIWryefIN6dKeDYLRHutAu"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 inline-flex items-center gap-3 rounded-full bg-primary hover:bg-blue-600 px-10 py-4 text-white font-bold text-lg shadow-xl shadow-blue-500/20 transition-all hover:-translate-y-1 active:scale-95 cursor-pointer"
+                >
                     <span className="material-symbols-outlined">explore</span>
                     開始閱讀
-                </button>
+                </a>
             </div>
         </section>
     );

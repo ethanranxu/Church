@@ -20,7 +20,7 @@ export const Hero = () => {
 
             {/* Content */}
             <Container className="relative z-20 text-center mt-12">
-                <span className="inline-block px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm font-semibold mb-6 border border-white/30 shadow-lg animate-fade-in">
+                <span className="inline-block px-5 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white text-xl font-semibold mb-6 border border-white/30 shadow-lg animate-fade-in">
                     歡迎來到長堤基督教會
                 </span>
                 <h1 className="text-4xl md:text-6xl font-black text-white leading-tight mb-6 tracking-tight drop-shadow-lg animate-slide-up">

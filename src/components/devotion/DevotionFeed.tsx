@@ -37,8 +37,13 @@ export default function DevotionFeed({ devotions: initialDevotions, onSelectDevo
                 setHasMore(false);
             }
 
+
             if (newDevotions.length > 0) {
-                setDevotions(prev => [...prev, ...newDevotions]);
+                setDevotions(prev => {
+                    const existingIds = new Set(prev.map(d => d.id));
+                    const uniqueNew = newDevotions.filter(d => !existingIds.has(d.id));
+                    return [...prev, ...uniqueNew];
+                });
             }
         } catch (error) {
             console.error("Failed to load more devotions", error);

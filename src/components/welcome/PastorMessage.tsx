@@ -10,7 +10,7 @@ export const PastorMessage = () => {
                             <div
                                 className="w-full h-full bg-cover bg-center"
                                 style={{
-                                    backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuBRFHmhkAlodWbB7KIFjjIK0dEEBH2tiTTtpsBzbjwmpH7oLQPMfpa9cjKORQVoyR7TiYo6VeVXGTj-Ntrs74-L7236Ft7QmUWy-vQREoCsXR_cmmJJ4KPm2B_lnqsfXF2KyG2zA1CloX_unXO8tEnwDS9mYNcn5Kj-sdoBvL8_HglnsntaYkP8MT9rxblmpZW5VF25YFv8b5mxfzIed8Ic5GA8zEq65U8-RDBwBOmMiY_brd9Pmr5fNPon_Ztvhjgqq2-Kt6yglIc")`,
+                                    backgroundImage: `url("/images/assets/pastor-bg.jpg")`,
                                 }}
                             ></div>
                         </div>
