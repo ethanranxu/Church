@@ -9,7 +9,7 @@ export default function Hero() {
             }}
         >
             <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-4 drop-shadow-2xl tracking-[0.2em]">
-                查經小組
+                影視資源
             </h1>
             <p className="text-white text-lg md:text-xl font-medium max-w-2xl opacity-90 drop-shadow-md">
                 「你的話是我腳前的燈，是我路上的光。」<br />詩篇 119:105

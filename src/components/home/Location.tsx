@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/Button";
 
 export const Location = () => {
     return (
-        <Section id="location" className="bg-white dark:bg-[#101922]">
+        <Section id="location" className="bg-white dark:bg-background-dark">
             <Container>
-                <div className="bg-background-light dark:bg-[#1a2634] rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
+                <div className="bg-background-light dark:bg-[#1a2634] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 transition-colors overflow-hidden">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-8">
                         {/* Google Maps Embed */}
                         <div className="w-full h-[400px] rounded-xl overflow-hidden bg-gray-200 relative">

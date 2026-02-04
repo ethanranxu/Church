@@ -2,9 +2,11 @@ import React from "react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 
+import { Section } from "@/components/ui/Section";
+
 export const Connect = () => {
     return (
-        <section className="py-20 bg-primary text-white">
+        <Section className="bg-primary text-white">
             <Container className="text-center">
                 <h2 className="text-3xl font-bold mb-6">保持連結</h2>
                 <p className="text-primary-100 mb-10 max-w-xl mx-auto opacity-90">
@@ -56,6 +58,6 @@ export const Connect = () => {
                     </Button>
                 </div>
             </Container>
-        </section>
+        </Section>
     );
 };

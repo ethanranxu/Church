@@ -6,16 +6,16 @@ const FOOTER_SECTIONS = [
     {
         title: "教會資訊",
         links: [
-            { name: "聯絡我們", href: "/#location" },
             { name: "認識教會", href: "/statement-of-faith" },
-            { name: "事奉團隊", href: "/ministry-team" },
+            { name: "認識我們", href: "/ministry-team" },
+            { name: "聯絡我們", href: "/#location" },
         ],
     },
     {
         title: "聚會與資源",
         links: [
             { name: "主日崇拜", href: "/#service-info" },
-            { name: "查經小組", href: "/bible-study" },
+            { name: "影視資源", href: "/bible-study" },
             { name: "每日靈修", href: "/devotion" },
         ],
     },

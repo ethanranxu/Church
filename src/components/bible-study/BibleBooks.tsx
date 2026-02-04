@@ -30,7 +30,7 @@ export default function BibleBooks() {
                 <div className="flex flex-col gap-8">
                     <div className="flex items-center gap-4 text-amber-700 dark:text-amber-500 border-b-2 border-amber-100 dark:border-amber-900/30 pb-4 md:flex-row-reverse md:text-right">
                         <span className="material-symbols-outlined text-4xl">history_edu</span>
-                        <h2 className="text-4xl font-black w-full">舊約</h2>
+                        <h2 className="text-4xl font-black w-full">舊約查經課程</h2>
                     </div>
                     <div className="flex flex-col gap-4 md:items-end">
                         {oldTestamentBooks.map((book) => (
@@ -59,7 +59,7 @@ export default function BibleBooks() {
                 <div className="flex flex-col gap-8">
                     <div className="flex items-center justify-end md:justify-start gap-4 text-emerald-700 dark:text-emerald-500 border-b-2 border-emerald-100 dark:border-emerald-900/30 pb-4">
                         <span className="material-symbols-outlined text-4xl">local_library</span>
-                        <h2 className="text-4xl font-black">新約</h2>
+                        <h2 className="text-4xl font-black">新約查經課程</h2>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {newTestamentBooks.map((book) => (

@@ -8,8 +8,8 @@ import Link from "next/link";
 const NAV_LINKS = [
     { name: "首頁", href: "/" },
     { name: "認識教會", href: "/statement-of-faith" },
-    { name: "事奉團隊", href: "/ministry-team" },
-    { name: "查經小組", href: "/bible-study" },
+    { name: "認識我們", href: "/ministry-team" },
+    { name: "影視資源", href: "/bible-study" },
     { name: "每日靈修", href: "/devotion" },
     { name: "奉獻資訊", href: "/offering" },
     { name: "代禱需求", href: "/prayer" },

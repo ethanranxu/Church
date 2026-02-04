@@ -10,7 +10,7 @@ export default function Hero() {
         >
             <div className="flex flex-col items-center justify-center max-w-[960px] mx-auto px-4 text-center">
                 <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-4 drop-shadow-2xl tracking-[0.2em]">
-                    事奉團隊
+                    認識我們
                 </h1>
                 <p className="text-white text-lg md:text-xl font-medium max-w-2xl opacity-90 drop-shadow-md">
                     「各人要照所得的恩赐彼此服事，作神百般恩赐的好管家。」

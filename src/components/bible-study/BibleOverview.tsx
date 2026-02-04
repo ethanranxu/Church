@@ -16,7 +16,7 @@ export default function BibleOverview() {
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
 
                 <div className="flex flex-col gap-2">
-                    <h2 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white">聖經速覽</h2>
+                    <h2 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white">聖經綜覽課程</h2>
                     <h3 className="text-xl font-bold text-primary">全本聖經綜覽與核心架構</h3>
                 </div>
 
