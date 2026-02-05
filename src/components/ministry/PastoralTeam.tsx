@@ -76,17 +76,15 @@ export default function PastoralTeam() {
                     <div
                         className="aspect-[16/10] w-full bg-cover bg-center"
                         style={{
-                            backgroundImage: `url("/images/assets/pastoral-team-2.jpg")`
+                            backgroundImage: `url("/images/no-profile.png")`
                         }}
                     ></div>
                     <div className="p-6 flex flex-col gap-3">
                         <div>
-                            <h3 className="text-xl font-bold text-[#111418] dark:text-white text-center">*** 傳道</h3>
-                            <p className="text-primary font-medium text-center">事工方向</p>
+                            <h3 className="text-xl font-bold text-[#111418] dark:text-white text-center">王愛萍傳道</h3>
+                            <p className="text-primary font-medium text-center">木槿灣基督教會駐堂傳道</p>
                         </div>
-                        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed text-center">
-                            傳道的簡短介紹，描述其在教會中的服事領域與異象。
-                        </p>
+
                     </div>
                 </div>
 
@@ -95,17 +93,15 @@ export default function PastoralTeam() {
                     <div
                         className="aspect-[16/10] w-full bg-cover bg-center"
                         style={{
-                            backgroundImage: `url("/images/assets/pastoral-team-2.jpg")`
+                            backgroundImage: `url("/images/no-profile.png")`
                         }}
                     ></div>
                     <div className="p-6 flex flex-col gap-3">
                         <div>
-                            <h3 className="text-xl font-bold text-[#111418] dark:text-white text-center">*** 傳道</h3>
-                            <p className="text-primary font-medium text-center">事工方向</p>
+                            <h3 className="text-xl font-bold text-[#111418] dark:text-white text-center">Lina易傳道</h3>
+                            <p className="text-primary font-medium text-center">木槿灣基督教會青年及兒童傳道</p>
                         </div>
-                        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed text-center">
-                            傳道的簡短介紹，描述其在教會中的服事領域與異象。
-                        </p>
+
                     </div>
                 </div>
 
@@ -122,9 +118,7 @@ export default function PastoralTeam() {
                             <h3 className="text-xl font-bold text-[#111418] dark:text-white text-center">鍾學謙傳道</h3>
                             <p className="text-primary font-medium text-center">長堤基督教會青年傳道</p>
                         </div>
-                        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed text-center">
-                            傳道的簡短介紹，描述其在教會中的服事領域與異象。
-                        </p>
+
                     </div>
                 </div>
             </div>

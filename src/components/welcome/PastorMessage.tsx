@@ -10,7 +10,7 @@ export const PastorMessage = () => {
                             <div
                                 className="w-full h-full bg-cover bg-center"
                                 style={{
-                                    backgroundImage: `url("/images/assets/pastor-bg.jpg")`,
+                                    backgroundImage: `url("/images/assets/pastor-message.jpg")`,
                                 }}
                             ></div>
                         </div>
