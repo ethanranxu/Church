@@ -34,7 +34,13 @@ export const LatestSermon = () => {
                             透過每週的主日信息，我們一同深入聖經真理，領受生命的糧。無論您身在何處，都歡迎線上參與我們的敬拜與學習。
                         </p>
                         <div className="flex flex-wrap gap-4">
-                            <Button>前往影音專區</Button>
+                            <a
+                                href="https://www.youtube.com/@EFCEastCoastBays/videos"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <Button>前往影音專區</Button>
+                            </a>
                             <a
                                 href="https://www.youtube.com/channel/UCmYfo0BlmnaivWtSfszI3iQ"
                                 target="_blank"

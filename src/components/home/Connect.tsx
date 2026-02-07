@@ -50,12 +50,14 @@ export const Connect = () => {
 
                 {/* CTA Buttons */}
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
-                    <Button
-                        variant="ghost"
-                        className="px-8 py-3 bg-white text-primary font-bold rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
-                    >
-                        聯絡我們
-                    </Button>
+                    <a href="mailto:efcecbnz@gmail.com">
+                        <Button
+                            variant="ghost"
+                            className="px-8 py-3 bg-white text-primary font-bold rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
+                        >
+                            聯絡我們
+                        </Button>
+                    </a>
                 </div>
             </Container>
         </Section>

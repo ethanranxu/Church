@@ -15,6 +15,10 @@
   --foreground: #0d141b;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 .dark {
   --background: #101922;
   --foreground: #ffffff;

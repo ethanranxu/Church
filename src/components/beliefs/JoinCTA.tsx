@@ -17,12 +17,12 @@ export default function JoinCTA() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row justify-center gap-4">
-                            <button className="flex cursor-pointer items-center justify-center rounded-full h-14 px-10 bg-[#FBBF24] hover:bg-yellow-400 transition-all text-[#1E3A8A] text-lg font-bold shadow-lg transform hover:scale-105">
+                            <a href="/#location" className="flex cursor-pointer items-center justify-center rounded-full h-14 px-10 bg-[#FBBF24] hover:bg-yellow-400 transition-all text-[#1E3A8A] text-lg font-bold shadow-lg transform hover:scale-105">
                                 聯絡我們
-                            </button>
-                            <button className="flex cursor-pointer items-center justify-center rounded-full h-14 px-10 bg-white/10 hover:bg-white/20 border border-white/30 transition-all text-white text-lg font-bold backdrop-blur-sm">
+                            </a>
+                            <a href="/#service-info" className="flex cursor-pointer items-center justify-center rounded-full h-14 px-10 bg-white/10 hover:bg-white/20 border border-white/30 transition-all text-white text-lg font-bold backdrop-blur-sm">
                                 參加主日
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>

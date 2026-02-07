@@ -6,7 +6,7 @@ const FOOTER_SECTIONS = [
     {
         title: "教會資訊",
         links: [
-            { name: "認識教會", href: "/statement-of-faith" },
+            { name: "認識教會", href: "/east-coast-bays" },
             { name: "認識我們", href: "/ministry-team" },
             { name: "聯絡我們", href: "/#location" },
         ],

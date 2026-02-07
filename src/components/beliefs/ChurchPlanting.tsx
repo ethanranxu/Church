@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { MapPin, Clock, Phone, Calendar } from 'lucide-react';
 
 type ChurchInfo = {
@@ -12,6 +13,7 @@ type ChurchInfo = {
     location: string;
     meetingTime: string;
     contacts: { name: string; phone: string }[];
+    href?: string;
 };
 
 const churches: ChurchInfo[] = [
@@ -24,7 +26,8 @@ const churches: ChurchInfo[] = [
         meetingTime: '每週日早上 9:30AM',
         contacts: [
             { name: '龔偉鴻牧師', phone: '022 476 9930' }
-        ]
+        ],
+        href: '/hibiscus-coast'
     },
     {
         name: '長灣基督教會',
@@ -35,21 +38,35 @@ const churches: ChurchInfo[] = [
         meetingTime: '每週日下午 2:30PM',
         contacts: [
             { name: '龔偉鴻牧師', phone: '022 476 9930' },
-            { name: '倪耿忠傳道', phone: '027 558 4493' }
-        ]
+            { name: '倪耿忠牧師', phone: '027 558 4493' }
+        ],
+        href: '/long-bay'
     }
 ];
 
 const ChurchCard = ({ church }: { church: ChurchInfo }) => (
     <div className="bg-white dark:bg-[#1a2632] rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-all duration-300">
         {/* Church Photo */}
+        {/* Church Photo */}
         <div className="relative h-80 w-full bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/20">
-            <Image
-                src={church.photo}
-                alt={`${church.name} 教會照片`}
-                fill
-                className="object-cover"
-            />
+            {church.href ? (
+                <Link href={church.href} className="block w-full h-full relative group">
+                    <Image
+                        src={church.photo}
+                        alt={`${church.name} 教會照片`}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                </Link>
+            ) : (
+                <Image
+                    src={church.photo}
+                    alt={`${church.name} 教會照片`}
+                    fill
+                    className="object-cover"
+                />
+            )}
         </div>
 
         <div className="p-6">
@@ -57,7 +74,13 @@ const ChurchCard = ({ church }: { church: ChurchInfo }) => (
             <div className="flex items-start justify-between gap-4 mb-6">
                 <div className="flex-1 space-y-3">
                     <h3 className="text-xl font-bold text-[#1E3A8A] dark:text-blue-300">
-                        {church.name}
+                        {church.href ? (
+                            <Link href={church.href} className="hover:text-blue-600 transition-colors">
+                                {church.name}
+                            </Link>
+                        ) : (
+                            church.name
+                        )}
                     </h3>
                     <div className="flex items-start gap-3">
                         <Calendar className="w-5 h-5 text-[#FBBF24] flex-shrink-0 mt-0.5" />
@@ -93,14 +116,25 @@ const ChurchCard = ({ church }: { church: ChurchInfo }) => (
                         </div>
                     </div>
                 </div>
-                <div className="w-40 h-40 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                    <Image
-                        src={church.logo}
-                        alt={`${church.name} Logo`}
-                        width={150}
-                        height={150}
-                        className="object-contain"
-                    />
+                <div className="w-40 h-40 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0 overflow-hidden group">
+                    {church.href ? (
+                        <Link href={church.href} className="block w-full h-full relative p-2">
+                            <Image
+                                src={church.logo}
+                                alt={`${church.name} Logo`}
+                                fill
+                                className="object-contain p-2 transition-transform duration-300 group-hover:scale-110"
+                            />
+                        </Link>
+                    ) : (
+                        <Image
+                            src={church.logo}
+                            alt={`${church.name} Logo`}
+                            width={150}
+                            height={150}
+                            className="object-contain"
+                        />
+                    )}
                 </div>
             </div>
 

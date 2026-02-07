@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import Link from "next/link";
 
 export const Hero = () => {
-    const [showVideo, setShowVideo] = useState(false);
-
     return (
         <section className="relative w-full h-[700px] flex items-center justify-center overflow-hidden">
             {/* Background Image - removed scale for maximum clarity */}
@@ -33,44 +32,38 @@ export const Hero = () => {
                     在真理中成長，在愛中建立團契。
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up animation-delay-400">
-                    <Button size="lg" className="flex items-center gap-2">
-                        <span>參加我們的聚會</span>
-                        <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                    </Button>
-                    <Button
-                        variant="secondary"
-                        size="lg"
-                        className="flex items-center gap-2"
-                        onClick={() => setShowVideo(true)}
+                    <Link
+                        href="/#location"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            const element = document.getElementById("location");
+                            if (element) {
+                                element.scrollIntoView({ behavior: "smooth" });
+                                window.history.pushState(null, "", "/#location");
+                            }
+                        }}
                     >
-                        <span className="material-symbols-outlined">play_circle</span>
-                        <span>觀看線上講道</span>
-                    </Button>
+                        <Button size="lg" className="flex items-center gap-2">
+                            <span>參加我們的聚會</span>
+                            <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                        </Button>
+                    </Link>
+                    <a
+                        href="https://www.youtube.com/@EFCEastCoastBays/streams"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <Button
+                            variant="secondary"
+                            size="lg"
+                            className="flex items-center gap-2"
+                        >
+                            <span className="material-symbols-outlined">play_circle</span>
+                            <span>觀看線上講道</span>
+                        </Button>
+                    </a>
                 </div>
             </Container>
-
-            {/* Video Modal */}
-            {showVideo && (
-                <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4">
-                    <div className="relative w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl">
-                        <button
-                            className="absolute top-4 right-4 text-white hover:text-gray-300 z-10 p-2 bg-black/50 rounded-full transition-colors"
-                            onClick={() => setShowVideo(false)}
-                        >
-                            <span className="material-symbols-outlined">close</span>
-                        </button>
-                        <div className="aspect-video w-full">
-                            <iframe
-                                src="https://www.youtube.com/embed/DP5RWiCUrGI?autoplay=1"
-                                title="YouTube video player"
-                                className="w-full h-full"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            />
-                        </div>
-                    </div>
-                </div>
-            )}
         </section>
     );
 };
