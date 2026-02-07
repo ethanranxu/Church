@@ -44,11 +44,11 @@ export const PrayerSidebar = () => {
                 <ul className="space-y-3">
                     <li className="flex items-center gap-3 text-sm text-[#617589] dark:text-gray-400">
                         <span className="material-symbols-outlined text-primary">call</span>
-                        <span>(09) 123-4567</span>
+                        <span>022 476 9930</span>
                     </li>
                     <li className="flex items-center gap-3 text-sm text-[#617589] dark:text-gray-400">
                         <span className="material-symbols-outlined text-primary">email</span>
-                        <span>prayer@efcecb.org.nz</span>
+                        <span>efcecbnz@gmail.com</span>
                     </li>
                 </ul>
             </div>
