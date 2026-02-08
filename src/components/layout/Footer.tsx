@@ -69,7 +69,8 @@ export const Footer = () => {
 
                 <div className="border-t border-gray-800 pt-8 mt-8 text-center">
                     <p className="text-sm text-gray-500">
-                        Copyright © 2026 長堤基督教會. All Rights Reserved.
+                        Copyright © 2026 長堤基督教會. All Rights Reserved.<br />
+                        Website design, development & maintenance by Xu Ran.
                     </p>
                 </div>
             </Container>

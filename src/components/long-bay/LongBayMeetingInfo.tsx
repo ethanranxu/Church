@@ -16,7 +16,7 @@ const contacts: ContactPerson[] = [
 
 export const LongBayMeetingInfo = () => {
     return (
-        <section className="w-full py-12 bg-[#f6f7f8]">
+        <section className="w-full pt-10 pb-12 bg-[#f6f7f8]">
             <div className="max-w-[1024px] mx-auto px-4 md:px-10">
                 <div className="flex flex-col gap-4 mb-8 text-center">
                     <h2 className="text-[#111418] text-4xl font-black leading-tight">

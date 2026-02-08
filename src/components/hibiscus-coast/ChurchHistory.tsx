@@ -65,12 +65,12 @@ export const ChurchHistory = () => {
                     </div>
 
                     <div className="bg-gray-50 rounded-xl p-6 md:p-8 mb-8">
-                        <p className="text-gray-700 leading-relaxed text-base">
+                        <p className="text-gray-700 leading-relaxed text-base indent-[2em] text-justify">
                             木槿灣地區距離長堤母會向北行駛20分鐘。當時北岸地區，特別是Albany一帶房價飆升，居住成本過高，
                             許多新舊移民與華人紛紛遷往新興社區如Silverdale、Millwater等購地自建。政府積極推動當地的造鎮計畫，
                             大型商場、學校都已具雛型。其中Kingsway小學隸屬於基督教小學，風評極好，吸引大量華人家長青睞。
                         </p>
-                        <p className="text-gray-700 leading-relaxed text-base mt-4">
+                        <p className="text-gray-700 leading-relaxed text-base mt-4 indent-[2em] text-justify">
                             龔牧師領受上帝的異象，看見這地區的需要，深感華人移民眾多卻沒有一間華人教會，就為此迫切禱告。
                         </p>
                     </div>
@@ -78,7 +78,7 @@ export const ChurchHistory = () => {
 
                 {/* Timeline */}
                 <div className="mb-12">
-                    <h3 className="text-2xl font-black text-[#111418] mb-6 text-center">發展歷程</h3>
+                    <h3 className="text-4xl font-black text-[#111418] mb-6 text-center">發展歷程</h3>
                     <div className="relative">
                         {/* Timeline line */}
                         <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-emerald-200 transform md:-translate-x-1/2" />

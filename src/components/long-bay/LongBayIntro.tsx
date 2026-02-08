@@ -41,7 +41,7 @@ const timeline: TimelineEvent[] = [
 
 export const LongBayIntro = () => {
     return (
-        <section className="w-full py-12 bg-white">
+        <section className="w-full pt-12 pb-6 bg-white">
             <div className="max-w-[1024px] mx-auto px-4 md:px-10">
                 {/* Background Story */}
                 <div className="mb-12">
@@ -53,18 +53,18 @@ export const LongBayIntro = () => {
                     </div>
 
                     <div className="bg-blue-50 rounded-xl p-6 md:p-8 mb-8">
-                        <p className="text-gray-700 leading-relaxed text-base">
+                        <p className="text-gray-700 leading-relaxed text-base indent-[2em]">
                             長灣地區距離紐西蘭奧克蘭市中心向北行駛30分鐘，有著一條長達一公里的沙灘及一座地區公園（Long Bay Regional Park）。這裡不但地理位置十分優越、自然風光迷人，更是紐西蘭政府重點發展的潛力地區之一。
                         </p>
-                        <p className="text-gray-700 leading-relaxed text-base mt-4">
+                        <p className="text-gray-700 leading-relaxed text-base indent-[2em] mt-4">
                             因此，龔牧師秉持著神所賜下的異象，要在這上好的土地為主圖謀大事，搶救百萬靈魂！
                         </p>
                     </div>
                 </div>
 
                 {/* Timeline */}
-                <div className="mb-12">
-                    <h3 className="text-2xl font-black text-[#111418] mb-12 text-center">發展歷程</h3>
+                <div>
+                    <h3 className="text-4xl font-black text-[#111418] mb-12 text-center">發展歷程</h3>
                     <div className="max-w-4xl mx-auto space-y-12">
                         {timeline.map((yearGroup, index) => (
                             <div key={yearGroup.year} className="flex flex-col md:flex-row gap-8 items-start">
