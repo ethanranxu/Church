@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Devotion } from '@/app/actions/devotions';
+import 'suneditor/dist/css/suneditor.min.css'; // 保持与后台编辑器一致的样式
 
 interface DevotionModalProps {
     devotion: Devotion | null;
@@ -40,7 +41,7 @@ export default function DevotionModal({ devotion, onClose }: DevotionModalProps)
                 className="relative bg-white dark:bg-[#101922] rounded-2xl shadow-xl w-full max-w-3xl max-h-[85vh] flex flex-col animate-in fade-in zoom-in-95 duration-200"
             >
                 {/* Header */}
-                <div className="flex items-start justify-between p-6 border-b border-gray-100 dark:border-gray-800">
+                <div className="flex items-start justify-between px-6 pt-5 pb-2 border-b border-gray-100 dark:border-gray-800">
                     <div className="pr-8">
                         <time className="text-sm font-medium text-primary mb-1 block">
                             {devotion.publishDate}
@@ -57,10 +58,10 @@ export default function DevotionModal({ devotion, onClose }: DevotionModalProps)
                     </button>
                 </div>
 
-                {/* Content */}
-                <div className="overflow-y-auto p-6 md:p-8 custom-scrollbar">
+                {/* Content - 使用 sun-editor-editable 类以保持与后台编辑器一致 */}
+                <div className="overflow-y-auto pt-2 px-6 pb-6 md:px-8 custom-scrollbar">
                     <div
-                        className="prose prose-lg dark:prose-invert max-w-none font-serif-content
+                        className="sun-editor-editable prose prose-lg dark:prose-invert max-w-none font-serif-content
                             prose-headings:font-display prose-headings:font-bold
                             prose-p:leading-relaxed prose-p:mb-4
                             prose-a:text-primary prose-a:no-underline hover:prose-a:underline

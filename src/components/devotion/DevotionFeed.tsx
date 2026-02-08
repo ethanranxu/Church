@@ -97,7 +97,22 @@ export default function DevotionFeed({ devotions: initialDevotions, onSelectDevo
                             </h4>
                         </button>
                         {(() => {
-                            const cleanContent = article.content.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/(?:https?|ftp):\/\/[\S]+/g, '');
+                            // 移除链接、图片、音视频、iframe 等非纯文本元素
+                            let cleanHtml = article.content
+                                .replace(/<a[^>]*>.*?<\/a>/gi, '') // 移除链接及其文本
+                                .replace(/<img[^>]*\/?>/gi, '')    // 移除图片
+                                .replace(/<video[^>]*>.*?<\/video>/gi, '') // 移除视频
+                                .replace(/<audio[^>]*>.*?<\/audio>/gi, '') // 移除音频
+                                .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '') // 移除iframe
+                                .replace(/<br\s*\/?>/gi, ' ');     // 换行转空格
+
+                            // 提取纯文本
+                            const cleanContent = cleanHtml
+                                .replace(/<[^>]+>/g, '')           // 移除所有HTML标签
+                                .replace(/&nbsp;/g, ' ')           // 替换 &nbsp;
+                                .replace(/\s+/g, ' ')              // 多个空格合并
+                                .trim();
+
                             const shouldTruncate = cleanContent.length > 300;
                             return (
                                 <div className="text-gray-700 dark:text-gray-300 font-serif-content leading-relaxed line-clamp-3">

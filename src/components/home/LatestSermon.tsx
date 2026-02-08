@@ -42,7 +42,7 @@ export const LatestSermon = () => {
                                 <Button>前往影音專區</Button>
                             </a>
                             <a
-                                href="https://www.youtube.com/channel/UCmYfo0BlmnaivWtSfszI3iQ"
+                                href="https://www.youtube.com/channel/UCmYfo0BlmnaivWtSfszI3iQ?sub_confirmation=1"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center justify-center rounded-lg transition-all gap-2 disabled:opacity-50 disabled:cursor-not-allowed px-6 py-2.5 text-sm font-bold bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600"

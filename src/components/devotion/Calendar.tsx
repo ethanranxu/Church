@@ -34,39 +34,26 @@ export default function Calendar({ devotions = [], onSelectDevotion }: CalendarP
     const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
     const todayDate = today.getDate();
 
-    // Build calendar days array
+    // Build calendar days array - 只显示当月天数
     const calendarDays: Array<{ day: number; isCurrentMonth: boolean; isToday: boolean; dateStr: string }> = [];
 
-    // Previous month days
-    for (let i = firstDay - 1; i >= 0; i--) {
-        const d = new Date(year, month - 1, daysInPrevMonth - i);
+    // 上个月的空白占位（不显示日期，只占位）
+    for (let i = 0; i < firstDay; i++) {
         calendarDays.push({
-            day: daysInPrevMonth - i,
+            day: 0, // 0 表示空白占位
             isCurrentMonth: false,
             isToday: false,
-            dateStr: formatDate(d)
+            dateStr: ''
         });
     }
 
-    // Current month days
+    // 当月天数
     for (let i = 1; i <= daysInMonth; i++) {
         calendarDays.push({
             day: i,
             isCurrentMonth: true,
             isToday: isCurrentMonth && i === todayDate,
             dateStr: `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`
-        });
-    }
-
-    // Next month days to fill the grid
-    const remainingDays = 42 - calendarDays.length; // 6 rows * 7 days
-    for (let i = 1; i <= remainingDays; i++) {
-        const d = new Date(year, month + 1, i);
-        calendarDays.push({
-            day: i,
-            isCurrentMonth: false,
-            isToday: false,
-            dateStr: formatDate(d)
         });
     }
 
@@ -143,16 +130,16 @@ export default function Calendar({ devotions = [], onSelectDevotion }: CalendarP
                             title={devotion?.title}
                         >
                             <button
-                                disabled={!hasDevotion}
+                                disabled={!hasDevotion || dayInfo.day === 0}
                                 onClick={() => devotion && onSelectDevotion?.(devotion)}
-                                className={`h-9 w-9 flex items-center justify-center text-sm rounded-full transition-all relative ${dayInfo.isToday
-                                    ? 'font-bold bg-primary text-white shadow-md shadow-primary/30'
-                                    : dayInfo.isCurrentMonth
-                                        ? 'font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer'
-                                        : 'font-medium text-gray-300 dark:text-gray-600'
+                                className={`h-9 w-9 flex items-center justify-center text-sm rounded-full transition-all relative ${dayInfo.day === 0
+                                    ? '' // 空白占位不显示
+                                    : dayInfo.isToday
+                                        ? 'font-bold bg-primary text-white shadow-md shadow-primary/30'
+                                        : 'font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer'
                                     } ${hasDevotion ? 'hover:scale-110 active:scale-95' : ''}`}
                             >
-                                {dayInfo.day}
+                                {dayInfo.day > 0 ? dayInfo.day : ''}
                             </button>
                             <div className="h-1.5 flex items-center justify-center">
                                 {shouldShowDot && (
