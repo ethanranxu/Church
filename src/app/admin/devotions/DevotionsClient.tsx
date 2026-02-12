@@ -104,10 +104,11 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
     };
 
     const SortIcon = ({ columnKey }: { columnKey: typeof sortConfig.key }) => {
-        if (sortConfig.key !== columnKey) return <ArrowUpRight className="h-2.5 w-2.5 opacity-0 group-hover/th:opacity-50 transition-opacity ml-1" />;
+        const active = sortConfig.key === columnKey;
+        if (!active) return <ArrowUpRight className="h-4 w-4 opacity-0 group-hover/th:opacity-30 transition-opacity ml-1" />;
         return sortConfig.direction === "asc" ?
-            <span className="material-symbols-outlined text-[10px] ml-1 text-emerald-600">arrow_upward</span> :
-            <span className="material-symbols-outlined text-[10px] ml-1 text-emerald-600">arrow_downward</span>;
+            <ArrowUpRight className="h-4 w-4 ml-1 rotate-0 transition-transform" /> :
+            <ArrowUpRight className="h-4 w-4 ml-1 rotate-180 transition-transform" />;
     };
 
     const handleEdit = (item: Devotion) => {
