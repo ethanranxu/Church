@@ -48,10 +48,11 @@ export async function getPublishedDevotions(
     lastCreatedAtStr?: string
 ): Promise<Devotion[]> {
     try {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
+        const now = new Date();
+        const nzDate = new Date(now.toLocaleString("en-US", { timeZone: "Pacific/Auckland" }));
+        const year = nzDate.getFullYear();
+        const month = String(nzDate.getMonth() + 1).padStart(2, '0');
+        const day = String(nzDate.getDate()).padStart(2, '0');
         const todayStr = `${year}-${month}-${day}`;
 
         let query = db.collection('Articles')
@@ -205,15 +206,16 @@ export async function incrementDevotionView(id: string) {
  */
 export async function getPopularDevotions(limitCount: number = 5): Promise<Devotion[]> {
     try {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
+        const now = new Date();
+        const nzDate = new Date(now.toLocaleString("en-US", { timeZone: "Pacific/Auckland" }));
+        const year = nzDate.getFullYear();
+        const month = String(nzDate.getMonth() + 1).padStart(2, '0');
+        const day = String(nzDate.getDate()).padStart(2, '0');
         const todayStr = `${year}-${month}-${day}`;
 
         // 计算30天前的日期
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(today.getDate() - 30);
+        const thirtyDaysAgo = new Date(nzDate);
+        thirtyDaysAgo.setDate(nzDate.getDate() - 30);
         const startYear = thirtyDaysAgo.getFullYear();
         const startMonth = String(thirtyDaysAgo.getMonth() + 1).padStart(2, '0');
         const startDay = String(thirtyDaysAgo.getDate()).padStart(2, '0');
@@ -249,10 +251,11 @@ export async function getPopularDevotions(limitCount: number = 5): Promise<Devot
  */
 export async function getCalendarDevotions(): Promise<Devotion[]> {
     try {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
+        const now = new Date();
+        const nzDate = new Date(now.toLocaleString("en-US", { timeZone: "Pacific/Auckland" }));
+        const year = nzDate.getFullYear();
+        const month = String(nzDate.getMonth() + 1).padStart(2, '0');
+        const day = String(nzDate.getDate()).padStart(2, '0');
         const todayStr = `${year}-${month}-${day}`;
 
         // 計算 6 個月前的日期

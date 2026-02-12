@@ -5,6 +5,8 @@ import Hero from '@/components/devotion/Hero';
 import { getPublishedDevotions, getPopularDevotions, getCalendarDevotions } from '@/app/actions/devotions';
 import DevotionContentWrapper from '@/components/devotion/DevotionContentWrapper';
 
+export const dynamic = "force-dynamic";
+
 export default async function DevotionPage() {
     const [devotions, popularDevotions, calendarDevotions] = await Promise.all([
         getPublishedDevotions(),
