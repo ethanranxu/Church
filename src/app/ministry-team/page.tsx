@@ -1,10 +1,19 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import Hero from '@/components/ministry/Hero';
 import PastoralTeam from '@/components/ministry/PastoralTeam';
 import OrgChart from '@/components/ministry/OrgChart';
 
+export const metadata: Metadata = {
+    title: "教牧團隊",
+    description: "認識長堤基督教會的教牧團隊與事工架構，包括長堤教會、木槿灣教會、長灣教會的牧者同工。",
+    openGraph: {
+        title: "教牧團隊 - 長堤基督教會",
+        description: "認識我們的教牧團隊與事工架構",
+    },
+};
 
 export default function MinistryTeamPage() {
     return (

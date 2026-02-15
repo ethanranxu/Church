@@ -10,8 +10,12 @@ import FundamentalTruths from '@/components/beliefs/FundamentalTruths';
 import JoinCTA from '@/components/beliefs/JoinCTA';
 
 export const metadata: Metadata = {
-    title: "認識教會 - 長堤基督教會",
-    description: "了解長堤基督教會的歷史、信仰中心與願景",
+    title: "認識教會",
+    description: "了解長堤基督教會（East Coast Bays Christian Church）的歷史沿革、信仰告白與教會願景。長堤教會位於奧克蘭北岸，致力於在社區中建立屬神的家。",
+    openGraph: {
+        title: "認識教會 - 長堤基督教會",
+        description: "了解長堤基督教會的歷史、信仰中心與願景",
+    },
 };
 
 export default function BeliefsPage() {

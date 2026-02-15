@@ -4,6 +4,25 @@ import { db } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { revalidatePath } from 'next/cache';
 
+/**
+ * 獲取新西蘭當前日期字串（YYYY-MM-DD）
+ * 晚上 20:00 後自動顯示為第二天，讓用戶提前閱讀明天的靈修
+ */
+function getNzTodayStr(): string {
+    const now = new Date();
+    const nzDate = new Date(now.toLocaleString("en-US", { timeZone: "Pacific/Auckland" }));
+
+    // 20:00 以後算作第二天
+    if (nzDate.getHours() >= 20) {
+        nzDate.setDate(nzDate.getDate() + 1);
+    }
+
+    const year = nzDate.getFullYear();
+    const month = String(nzDate.getMonth() + 1).padStart(2, '0');
+    const day = String(nzDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
 export interface Devotion {
     id?: string;
     title: string;
@@ -48,12 +67,7 @@ export async function getPublishedDevotions(
     lastCreatedAtStr?: string
 ): Promise<Devotion[]> {
     try {
-        const now = new Date();
-        const nzDate = new Date(now.toLocaleString("en-US", { timeZone: "Pacific/Auckland" }));
-        const year = nzDate.getFullYear();
-        const month = String(nzDate.getMonth() + 1).padStart(2, '0');
-        const day = String(nzDate.getDate()).padStart(2, '0');
-        const todayStr = `${year}-${month}-${day}`;
+        const todayStr = getNzTodayStr();
 
         let query = db.collection('Articles')
             .where('status', '==', 'published')
@@ -206,16 +220,12 @@ export async function incrementDevotionView(id: string) {
  */
 export async function getPopularDevotions(limitCount: number = 5): Promise<Devotion[]> {
     try {
-        const now = new Date();
-        const nzDate = new Date(now.toLocaleString("en-US", { timeZone: "Pacific/Auckland" }));
-        const year = nzDate.getFullYear();
-        const month = String(nzDate.getMonth() + 1).padStart(2, '0');
-        const day = String(nzDate.getDate()).padStart(2, '0');
-        const todayStr = `${year}-${month}-${day}`;
+        const todayStr = getNzTodayStr();
 
         // 计算30天前的日期
-        const thirtyDaysAgo = new Date(nzDate);
-        thirtyDaysAgo.setDate(nzDate.getDate() - 30);
+        const today = new Date(todayStr + 'T00:00:00');
+        const thirtyDaysAgo = new Date(today);
+        thirtyDaysAgo.setDate(today.getDate() - 30);
         const startYear = thirtyDaysAgo.getFullYear();
         const startMonth = String(thirtyDaysAgo.getMonth() + 1).padStart(2, '0');
         const startDay = String(thirtyDaysAgo.getDate()).padStart(2, '0');
@@ -251,12 +261,7 @@ export async function getPopularDevotions(limitCount: number = 5): Promise<Devot
  */
 export async function getCalendarDevotions(): Promise<Devotion[]> {
     try {
-        const now = new Date();
-        const nzDate = new Date(now.toLocaleString("en-US", { timeZone: "Pacific/Auckland" }));
-        const year = nzDate.getFullYear();
-        const month = String(nzDate.getMonth() + 1).padStart(2, '0');
-        const day = String(nzDate.getDate()).padStart(2, '0');
-        const todayStr = `${year}-${month}-${day}`;
+        const todayStr = getNzTodayStr();
 
         // 計算 6 個月前的日期
         const sixMonthsAgo = new Date();

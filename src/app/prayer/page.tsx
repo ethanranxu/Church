@@ -4,8 +4,12 @@ import { Footer } from "@/components/layout/Footer";
 import { PrayerHero, PrayerForm, PrayerSidebar } from "@/components/prayer";
 
 export const metadata: Metadata = {
-    title: "代禱需求 - 長堤基督教會",
-    description: "長堤基督教會代禱需求表單",
+    title: "代禱需求",
+    description: "歡迎提交您的代禱需求，長堤基督教會的代禱小組將為您禱告。我們相信禱告的力量，願與您一同在主面前交託。",
+    openGraph: {
+        title: "代禱需求 - 長堤基督教會",
+        description: "提交代禱需求，我們將為您禱告",
+    },
 };
 
 export default function PrayerPage() {
