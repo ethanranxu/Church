@@ -1,16 +1,20 @@
+"use client";
+
 import React from "react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-
 import { Section } from "@/components/ui/Section";
+import { useTranslation } from "@/i18n";
 
 export const Connect = () => {
+    const { t } = useTranslation();
+
     return (
         <Section className="bg-primary text-white">
             <Container className="text-center">
-                <h2 className="text-3xl font-bold mb-6">保持連結</h2>
+                <h2 className="text-3xl font-bold mb-6">{t.home.connect.title}</h2>
                 <p className="text-primary-100 mb-10 max-w-xl mx-auto opacity-90">
-                    追蹤我們的社群媒體，獲取最新活動消息、講道影片與教會生活點滴。
+                    {t.home.connect.description}
                 </p>
 
                 {/* Social Icons */}
@@ -55,7 +59,7 @@ export const Connect = () => {
                             variant="ghost"
                             className="px-8 py-3 bg-white text-primary font-bold rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
                         >
-                            聯絡我們
+                            {t.home.connect.contactUs}
                         </Button>
                     </a>
                 </div>

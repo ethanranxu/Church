@@ -3,10 +3,11 @@
 import { useState, useEffect, useMemo } from 'react';
 import { VisitReservation, getVisitReservations, updateVisitReservation, deleteVisitReservation } from '@/app/actions/visit';
 import { format, subYears, parseISO, startOfDay, endOfDay } from 'date-fns';
-import { Loader2, Trash2, Edit, Check, X, Plus, Search, ArrowUpRight, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
+import { Search, Filter, Download, ChevronRight, ChevronLeft, Calendar, ArrowUpRight, MoreHorizontal, Edit2, Trash2, Eye, X, Save, AlertCircle } from "lucide-react";
+import { useTranslation } from "@/i18n/LanguageContext";
 import { useRouter } from 'next/navigation';
 
-type SortKey = 'visitDate' | 'createdAt';
+type SortKey = 'visitDate' | 'createdAt' | 'visitorName' | 'status';
 type SortDirection = 'asc' | 'desc';
 
 interface SortConfig {
@@ -14,9 +15,10 @@ interface SortConfig {
     direction: SortDirection;
 }
 
-export default function VisitsClient() {
-    const [reservations, setReservations] = useState<VisitReservation[]>([]);
-    const [loading, setLoading] = useState(true);
+export default function VisitsClient({ initialReservations }: { initialReservations?: VisitReservation[] }) {
+    const { t } = useTranslation();
+    const [reservations, setReservations] = useState<VisitReservation[]>(initialReservations || []);
+    const [loading, setLoading] = useState(false);
 
     // Date Range State
     const [startDate, setStartDate] = useState(format(subYears(new Date(), 1), 'yyyy-MM-dd'));
@@ -28,9 +30,9 @@ export default function VisitsClient() {
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'visitDate', direction: 'desc' });
     const itemsPerPage = 10;
 
-    // Edit State
-    const [editingId, setEditingId] = useState<string | null>(null);
-    const [editForm, setEditForm] = useState<Partial<VisitReservation>>({});
+    // Edit Modal State
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editingReservation, setEditingReservation] = useState<VisitReservation | null>(null);
 
     const router = useRouter();
 
@@ -42,8 +44,11 @@ export default function VisitsClient() {
     };
 
     useEffect(() => {
-        loadReservations();
-    }, []);
+        // Initial load if initialReservations is empty or not provided
+        if (!initialReservations || initialReservations.length === 0) {
+            loadReservations();
+        }
+    }, [initialReservations]);
 
     // Filter, Sort, Paginate Logic
     const processedReservations = useMemo(() => {
@@ -66,15 +71,25 @@ export default function VisitsClient() {
         if (searchTerm) {
             const lowerTerm = searchTerm.toLowerCase();
             result = result.filter(r =>
-                r.visitors.some(v => v.toLowerCase().includes(lowerTerm)) ||
+                r.visitors.join(' ').toLowerCase().includes(lowerTerm) ||
                 (r.introducer && r.introducer.toLowerCase().includes(lowerTerm))
             );
         }
 
         // 3. Sort
         result.sort((a, b) => {
-            const aValue = a[sortConfig.key];
-            const bValue = b[sortConfig.key];
+            let aValue: any = '';
+            let bValue: any = '';
+
+            if (sortConfig.key === 'visitorName') {
+                aValue = a.visitors?.[0] || '';
+                bValue = b.visitors?.[0] || '';
+            } else {
+                // @ts-ignore
+                aValue = a[sortConfig.key];
+                // @ts-ignore
+                bValue = b[sortConfig.key];
+            }
 
             if (!aValue && !bValue) return 0;
             if (!aValue) return 1;
@@ -93,7 +108,7 @@ export default function VisitsClient() {
     }, [processedReservations]);
 
     const totalPages = Math.ceil(processedReservations.length / itemsPerPage);
-    const displayedReservations = processedReservations.slice(
+    const paginatedReservations = processedReservations.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
@@ -106,63 +121,60 @@ export default function VisitsClient() {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm('确定要删除这条预约记录吗？')) return;
+        if (!confirm(t.admin.visits.confirmDelete)) return;
 
-        const result = await deleteVisitReservation(id);
-        if (result.success) {
-            setReservations(reservations.filter(r => r.id !== id));
-        } else {
-            alert('删除失败');
+        try {
+            await deleteVisitReservation(id);
+            setReservations(prev => prev.filter(r => r.id !== id));
+        } catch (error) {
+            console.error("Delete failed", error);
+            alert(t.admin.visits.deleteFailed);
         }
     };
 
-    const startEdit = (reservation: VisitReservation) => {
-        setEditingId(reservation.id);
-        setEditForm({
-            visitors: [...reservation.visitors],
-            introducer: reservation.introducer || '',
-            visitDate: reservation.visitDate,
-            status: reservation.status
-        });
+    const openEditModal = (reservation: VisitReservation) => {
+        setEditingReservation({ ...reservation }); // Create a copy to edit
+        setIsEditModalOpen(true);
     };
 
-    const cancelEdit = () => {
-        setEditingId(null);
-        setEditForm({});
-    };
-
-    const saveEdit = async (id: string) => {
-        if (!editForm.visitDate || !editForm.visitors || editForm.visitors.length === 0) {
-            alert('请填写必要信息');
+    const handleUpdateStatus = async () => {
+        if (!editingReservation) return;
+        if (!editingReservation.visitors || editingReservation.visitors.length === 0 || !editingReservation.visitDate) {
+            alert(t.admin.visits.missingInfo);
             return;
         }
 
-        const result = await updateVisitReservation(id, editForm);
-        if (result.success) {
-            setReservations(reservations.map(r => r.id === id ? { ...r, ...editForm } : r));
-            setEditingId(null);
-        } else {
-            alert('更新失败');
+        try {
+            // Optimistic update
+            setReservations(prev => prev.map(r =>
+                r.id === editingReservation.id ? editingReservation : r
+            ));
+
+            await updateVisitReservation(editingReservation.id, editingReservation);
+            setIsEditModalOpen(false);
+            setEditingReservation(null);
+        } catch (error) {
+            console.error("Update failed", error);
+            alert(t.admin.visits.updateFailed);
+            // Revert on failure (reload from server would be better)
+            loadReservations();
         }
     };
 
-    const handleVisitorChange = (index: number, value: string) => {
-        if (!editForm.visitors) return;
-        const newVisitors = [...editForm.visitors];
-        newVisitors[index] = value;
-        setEditForm({ ...editForm, visitors: newVisitors });
-    };
+    const StatusBadge = ({ status }: { status: string }) => {
+        const config = {
+            pending: { color: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400", label: t.admin.visits.statuses.pending },
+            confirmed: { color: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400", label: t.admin.visits.statuses.confirmed },
+            completed: { color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400", label: t.admin.visits.statuses.completed },
+            cancelled: { color: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400", label: t.admin.visits.statuses.cancelled },
+        };
+        const statusConfig = config[status as keyof typeof config] || config.pending;
 
-    const addVisitorField = () => {
-        if (!editForm.visitors) return;
-        setEditForm({ ...editForm, visitors: [...editForm.visitors, ''] });
-    };
-
-    const removeVisitorField = (index: number) => {
-        if (!editForm.visitors || editForm.visitors.length <= 1) return;
-        const newVisitors = [...editForm.visitors];
-        newVisitors.splice(index, 1);
-        setEditForm({ ...editForm, visitors: newVisitors });
+        return (
+            <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${statusConfig.color}`}>
+                {statusConfig.label}
+            </span>
+        );
     };
 
     const SortIcon = ({ active }: { active: boolean }) => {
@@ -172,239 +184,137 @@ export default function VisitsClient() {
             <ArrowUpRight className="h-4 w-4 ml-1 rotate-180 transition-transform" />;
     };
 
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center h-64">
-                <Loader2 className="animate-spin text-primary" size={48} />
-            </div>
-        );
-    }
-
     return (
         <div className="container mx-auto p-6 space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">預約參訪管理</h1>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{t.admin.visits.title}</h1>
                 <button
                     onClick={loadReservations}
                     className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors text-sm"
                 >
-                    刷新列表
+                    {t.admin.visits.refresh}
                 </button>
             </div>
 
             {/* Filter and Stats Bar */}
-            <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-4 md:space-y-0 md:flex md:items-center md:gap-4">
-
-                {/* Date Range Picker */}
-                <div className="flex items-center gap-2">
-                    <div className="relative">
-                        <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row gap-4 justify-between items-center">
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                    <div className="relative flex-1 md:w-64">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                         <input
-                            type="date"
-                            value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
-                            className="pl-9 pr-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                            type="text"
+                            placeholder={t.admin.visits.searchPlaceholder}
+                            value={searchTerm}
+                            onChange={(e) => {
+                                setSearchTerm(e.target.value);
+                                setCurrentPage(1); // Reset to first page on search
+                            }}
+                            className="w-full pl-9 pr-4 py-2 bg-gray-50 dark:bg-gray-700/50 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none"
                         />
                     </div>
-                    <span className="text-gray-400">-</span>
-                    <div className="relative">
-                        <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                        <input
-                            type="date"
-                            value={endDate}
-                            onChange={(e) => setEndDate(e.target.value)}
-                            className="pl-9 pr-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                        />
+                    {/* Date Range Picker */}
+                    <div className="flex items-center gap-2">
+                        <div className="relative">
+                            <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                            <input
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                className="pl-9 pr-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                            />
+                        </div>
+                        <span className="text-gray-400">-</span>
+                        <div className="relative">
+                            <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                            <input
+                                type="date"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                className="pl-9 pr-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                            />
+                        </div>
                     </div>
                 </div>
 
-                {/* Search Bar */}
-                <div className="relative flex-1 max-w-md">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                    <input
-                        type="text"
-                        placeholder="搜索參訪人或介紹人..."
-                        value={searchTerm}
-                        onChange={(e) => {
-                            setSearchTerm(e.target.value);
-                            setCurrentPage(1); // Reset to first page on search
-                        }}
-                        className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/50"
-                    />
-                </div>
-
-                {/* Visitor Count Stats */}
-                <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium whitespace-nowrap">
-                    <span>共計參訪人:</span>
-                    <span className="text-lg font-bold">{totalVisitors}</span>
-                    <span>位</span>
+                <div className="flex items-center gap-3 text-sm text-gray-500">
+                    <span>{t.admin.visits.totalVisitors} <strong className="text-gray-900 dark:text-white">{totalVisitors}</strong> {t.admin.visits.unit}</span>
                 </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+            {/* Content Table */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm text-gray-600 dark:text-gray-300">
-                        <thead className="bg-gray-50 dark:bg-gray-900/50 text-xs uppercase text-gray-500 font-medium">
+                    <table className="w-full text-sm text-left">
+                        <thead className="bg-gray-50/50 dark:bg-gray-700/50 text-gray-500 font-medium border-b border-gray-100 dark:border-gray-700">
                             <tr>
-                                <th
-                                    className="px-6 py-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group select-none"
-                                    onClick={() => handleSort('visitDate')}
-                                >
-                                    <div className="flex items-center">
-                                        參訪日期
-                                        <SortIcon active={sortConfig.key === 'visitDate'} />
-                                    </div>
+                                <th onClick={() => handleSort('visitDate')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors">
+                                    <div className="flex items-center">{t.admin.visits.date} <SortIcon active={sortConfig.key === 'visitDate'} /></div>
                                 </th>
-                                <th className="px-6 py-4">參訪人</th>
-                                <th className="px-6 py-4">介紹人</th>
-                                <th className="px-6 py-4">狀態</th>
-                                <th
-                                    className="px-6 py-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group select-none"
-                                    onClick={() => handleSort('createdAt')}
-                                >
-                                    <div className="flex items-center">
-                                        提交時間
-                                        <SortIcon active={sortConfig.key === 'createdAt'} />
-                                    </div>
+                                <th onClick={() => handleSort('visitorName')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors">
+                                    <div className="flex items-center">{t.admin.visits.visitors} <SortIcon active={sortConfig.key === 'visitorName'} /></div>
                                 </th>
-                                <th className="px-6 py-4 text-right">操作</th>
+                                <th className="px-6 py-4">{t.admin.visits.introducer}</th>
+                                <th onClick={() => handleSort('status')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors">
+                                    <div className="flex items-center">{t.admin.visits.status} <SortIcon active={sortConfig.key === 'status'} /></div>
+                                </th>
+                                <th onClick={() => handleSort('createdAt')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors hidden md:table-cell">
+                                    <div className="flex items-center">{t.admin.visits.submitTime} <SortIcon active={sortConfig.key === 'createdAt'} /></div>
+                                </th>
+                                <th className="px-6 py-4 text-right">{t.admin.visits.actions}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                            {displayedReservations.length === 0 ? (
+                            {paginatedReservations.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="px-6 py-12 text-center text-gray-400">
-                                        {searchTerm ? '沒有找到匹配的記錄' : '暫無預約記錄'}
+                                    <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                                        <div className="flex flex-col items-center gap-2">
+                                            <AlertCircle className="h-8 w-8 text-gray-300" />
+                                            {searchTerm ? t.admin.visits.noMatch : t.admin.visits.noRecords}
+                                        </div>
                                     </td>
                                 </tr>
                             ) : (
-                                displayedReservations.map((reservation) => (
-                                    <tr key={reservation.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-700/50 transition-colors">
-                                        {editingId === reservation.id ? (
-                                            // Edit Mode
-                                            <>
-                                                <td className="px-6 py-4 align-top">
-                                                    <input
-                                                        type="date"
-                                                        value={editForm.visitDate}
-                                                        onChange={(e) => setEditForm({ ...editForm, visitDate: e.target.value })}
-                                                        className="w-full px-2 py-1 border rounded text-gray-900"
-                                                    />
-                                                </td>
-                                                <td className="px-6 py-4 align-top">
-                                                    <div className="space-y-2">
-                                                        {editForm.visitors?.map((v, idx) => (
-                                                            <div key={idx} className="flex gap-1">
-                                                                <input
-                                                                    type="text"
-                                                                    value={v}
-                                                                    onChange={(e) => handleVisitorChange(idx, e.target.value)}
-                                                                    className="w-full px-2 py-1 border rounded text-gray-900"
-                                                                    placeholder="姓名"
-                                                                />
-                                                                {editForm.visitors && editForm.visitors.length > 1 && (
-                                                                    <button onClick={() => removeVisitorField(idx)} className="text-red-500 hover:text-red-700">
-                                                                        <X size={16} />
-                                                                    </button>
-                                                                )}
-                                                            </div>
-                                                        ))}
-                                                        <button onClick={addVisitorField} className="text-xs text-primary flex items-center gap-1">
-                                                            <Plus size={14} /> 添加
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 align-top">
-                                                    <input
-                                                        type="text"
-                                                        value={editForm.introducer}
-                                                        onChange={(e) => setEditForm({ ...editForm, introducer: e.target.value })}
-                                                        className="w-full px-2 py-1 border rounded text-gray-900"
-                                                        placeholder="無"
-                                                    />
-                                                </td>
-                                                <td className="px-6 py-4 align-top">
-                                                    <select
-                                                        value={editForm.status}
-                                                        onChange={(e) => setEditForm({ ...editForm, status: e.target.value as any })}
-                                                        className="w-full px-2 py-1 border rounded text-gray-900"
-                                                    >
-                                                        <option value="pending">待處理</option>
-                                                        <option value="confirmed">已確認</option>
-                                                        <option value="completed">已接待</option>
-                                                        <option value="cancelled">已取消</option>
-                                                    </select>
-                                                </td>
-                                                <td className="px-6 py-4 text-gray-400 text-xs">
-                                                    {reservation.createdAt ? format(new Date(reservation.createdAt), 'yyyy-MM-dd HH:mm') : '-'}
-                                                </td>
-                                                <td className="px-6 py-4 text-right space-x-2 align-top">
-                                                    <button
-                                                        onClick={() => saveEdit(reservation.id)}
-                                                        className="text-green-600 hover:text-green-800 p-1"
-                                                        title="保存"
-                                                    >
-                                                        <Check size={18} />
-                                                    </button>
-                                                    <button
-                                                        onClick={cancelEdit}
-                                                        className="text-gray-400 hover:text-gray-600 p-1"
-                                                        title="取消"
-                                                    >
-                                                        <X size={18} />
-                                                    </button>
-                                                </td>
-                                            </>
-                                        ) : (
-                                            // View Mode
-                                            <>
-                                                <td className="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">
-                                                    {reservation.visitDate}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex flex-wrap gap-1">
-                                                        {reservation.visitors.map((v, i) => (
-                                                            <span key={i} className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-xs border border-blue-100">
-                                                                {v}
-                                                            </span>
-                                                        ))}
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 text-gray-500">
-                                                    {reservation.introducer || '-'}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <span className={`px-2 py-1 rounded-full text-xs font-medium border ${reservation.status === 'confirmed' ? 'bg-green-50 text-green-700 border-green-200' :
-                                                            reservation.status === 'completed' ? 'bg-gray-100 text-gray-700 border-gray-200' :
-                                                                reservation.status === 'cancelled' ? 'bg-red-50 text-red-700 border-red-200' :
-                                                                    'bg-yellow-50 text-yellow-700 border-yellow-200'
-                                                        }`}>
-                                                        {reservation.status === 'confirmed' ? '已確認' :
-                                                            reservation.status === 'completed' ? '已接待' :
-                                                                reservation.status === 'cancelled' ? '已取消' : '待處理'}
-                                                    </span>
-                                                </td>
-                                                <td className="px-6 py-4 text-gray-400 text-xs">
-                                                    {reservation.createdAt ? format(new Date(reservation.createdAt), 'yyyy-MM-dd HH:mm') : '-'}
-                                                </td>
-                                                <td className="px-6 py-4 text-right space-x-2">
-                                                    <button
-                                                        onClick={() => startEdit(reservation)}
-                                                        className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition-colors"
-                                                        title="編輯"
-                                                    >
-                                                        <Edit size={16} />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDelete(reservation.id)}
-                                                        className="text-red-400 hover:text-red-600 p-1 hover:bg-red-50 rounded transition-colors"
-                                                        title="刪除"
-                                                    >
-                                                        <Trash2 size={16} />
-                                                    </button>
-                                                </td>
-                                            </>
-                                        )}
+                                paginatedReservations.map((reservation) => (
+                                    <tr key={reservation.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors">
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="flex items-center gap-2">
+                                                <Calendar className="h-4 w-4 text-gray-400" />
+                                                <span className="font-medium text-gray-900 dark:text-gray-100">
+                                                    {reservation.visitDate ? new Date(reservation.visitDate).toLocaleDateString() : 'Pending'}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="font-medium text-gray-900 dark:text-white">{reservation.visitors.join(", ")}</div>
+                                            <div className="text-xs text-gray-500">
+                                                {reservation.visitors.length} {t.admin.visits.unit}
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 text-gray-600 dark:text-gray-400">
+                                            {reservation.introducer || '-'}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <StatusBadge status={reservation.status} />
+                                        </td>
+                                        <td className="px-6 py-4 text-gray-500 hidden md:table-cell">
+                                            {new Date(reservation.createdAt).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-6 py-4 text-right">
+                                            <div className="flex items-center justify-end gap-2">
+                                                <button
+                                                    onClick={() => openEditModal(reservation)}
+                                                    className="p-1.5 rounded-lg text-gray-400 hover:text-primary hover:bg-primary/5 transition-all"
+                                                >
+                                                    <Edit2 className="h-4 w-4" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(reservation.id)}
+                                                    className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </button>
+                                            </div>
+                                        </td>
                                     </tr>
                                 ))
                             )}
@@ -412,27 +322,27 @@ export default function VisitsClient() {
                     </table>
                 </div>
 
-                {/* Pagination Controls */}
+                {/* Pagination */}
                 {totalPages > 1 && (
-                    <div className="bg-gray-50 dark:bg-gray-900/50 border-t border-gray-100 dark:border-gray-700 p-4 flex items-center justify-between">
+                    <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
                         <div className="text-sm text-gray-500">
-                            显示 {(currentPage - 1) * itemsPerPage + 1} 到 {Math.min(currentPage * itemsPerPage, processedReservations.length)} 条，共 {processedReservations.length} 条
+                            {t.admin.visits.showing} <span className="font-medium text-gray-900 dark:text-white">{(currentPage - 1) * itemsPerPage + 1}</span> {t.admin.visits.to} <span className="font-medium text-gray-900 dark:text-white">{Math.min(currentPage * itemsPerPage, processedReservations.length)}</span> {t.admin.visits.total} <span className="font-medium text-gray-900 dark:text-white">{processedReservations.length}</span> {t.admin.visits.entries}
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex items-center gap-2">
                             <button
                                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1}
-                                className="p-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-white dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className="p-2 rounded-lg border border-gray-200 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                             >
                                 <ChevronLeft className="h-4 w-4" />
                             </button>
-                            <span className="px-4 py-2 text-sm font-medium bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg">
-                                {currentPage} / {totalPages}
+                            <span className="text-sm font-medium px-2">
+                                {t.admin.visits.page} {currentPage} {t.admin.visits.ofPages} {totalPages}
                             </span>
                             <button
                                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages}
-                                className="p-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-white dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className="p-2 rounded-lg border border-gray-200 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                             >
                                 <ChevronRight className="h-4 w-4" />
                             </button>
@@ -440,6 +350,82 @@ export default function VisitsClient() {
                     </div>
                 )}
             </div>
+
+            {/* Edit Modal */}
+            {isEditModalOpen && editingReservation && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
+                        <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                            <h3 className="font-semibold text-lg">{t.admin.visits.edit}</h3>
+                            <button onClick={() => setIsEditModalOpen(false)} className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        <div className="p-6 space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">{t.admin.visits.name}</label>
+                                    <input
+                                        type="text"
+                                        value={editingReservation.visitors.join(", ")}
+                                        onChange={e => setEditingReservation({ ...editingReservation, visitors: e.target.value.split(",").map(s => s.trim()) })}
+                                        className="w-full rounded-lg border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">{t.admin.visits.date}</label>
+                                    <input
+                                        type="date"
+                                        value={editingReservation.visitDate}
+                                        onChange={e => setEditingReservation({ ...editingReservation, visitDate: e.target.value })}
+                                        className="w-full rounded-lg border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">{t.admin.visits.introducer}</label>
+                                    <input
+                                        type="text"
+                                        value={editingReservation.introducer || ''}
+                                        placeholder={t.admin.visits.none}
+                                        onChange={e => setEditingReservation({ ...editingReservation, introducer: e.target.value })}
+                                        className="w-full rounded-lg border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">{t.admin.visits.status}</label>
+                                    <select
+                                        value={editingReservation.status}
+                                        onChange={(e) => setEditingReservation({ ...editingReservation, status: e.target.value as any })}
+                                        className="w-full rounded-lg border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                                    >
+                                        <option value="pending">{t.admin.visits.statuses.pending}</option>
+                                        <option value="confirmed">{t.admin.visits.statuses.confirmed}</option>
+                                        <option value="completed">{t.admin.visits.statuses.completed}</option>
+                                        <option value="cancelled">{t.admin.visits.statuses.cancelled}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="pt-4 flex justify-end gap-3">
+                                <button
+                                    onClick={() => setIsEditModalOpen(false)}
+                                    className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
+                                >
+                                    {t.admin.visits.cancel}
+                                </button>
+                                <button
+                                    onClick={handleUpdateStatus}
+                                    className="px-4 py-2 text-sm font-medium bg-primary text-white rounded-lg hover:bg-primary/90 flex items-center gap-2"
+                                >
+                                    <Save className="h-4 w-4" />
+                                    {t.admin.visits.save}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

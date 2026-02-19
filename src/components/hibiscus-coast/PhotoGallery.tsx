@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { useTranslation } from "@/i18n";
 
 const GALLERY_IMAGES = [
     "/images/hibiscus-coast/e10ba5_379616b3a6a14adcacbc3c3b87e60992~mv2.jpg",
@@ -12,14 +13,16 @@ const GALLERY_IMAGES = [
 ];
 
 export const PhotoGallery = () => {
+    const { t } = useTranslation();
+
     return (
         <section className="w-full bg-white dark:bg-background-dark py-16 border-t border-gray-100 dark:border-gray-800 transition-colors">
             <div className="w-full max-w-[1024px] mx-auto px-4 md:px-10">
                 <div className="flex flex-col items-center mb-12 text-center">
-                    <h2 className="text-3xl font-bold mb-4 tracking-tight">相片花絮</h2>
+                    <h2 className="text-3xl font-bold mb-4 tracking-tight">{t.hibiscusCoast.gallery.title}</h2>
                     <div className="w-16 h-1 bg-primary rounded-full mb-6"></div>
                     <p className="text-gray-600 dark:text-gray-400 max-w-2xl text-lg">
-                        記錄我們在木槿灣教會的點滴時光，分享上帝帶領我們的恩典足跡。
+                        {t.hibiscusCoast.gallery.description}
                     </p>
                 </div>
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/components/auth/AuthProvider";
+import { LanguageProvider } from "@/i18n";
 import { UserTracker } from "@/components/analytics/UserTracker";
 import { Inter, Noto_Sans_TC } from "next/font/google";
 import "./globals.css";
@@ -130,13 +131,31 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Google tag (gtag.js) */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-8FTSFRGBY1"
+        ></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-8FTSFRGBY1');
+            `,
+          }}
+        />
       </head>
       <body
         className={`${inter.variable} ${notoIsTC.variable} antialiased bg-[#f6f7f8] text-[#0d141b] dark:bg-[#101922] dark:text-white transition-colors duration-200`}
       >
         <AuthProvider>
-          <UserTracker />
-          {children}
+          <LanguageProvider>
+            <UserTracker />
+            {children}
+          </LanguageProvider>
         </AuthProvider>
       </body>
     </html>

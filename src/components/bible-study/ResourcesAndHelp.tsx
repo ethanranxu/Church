@@ -1,18 +1,25 @@
+"use client";
+
 import React from 'react';
 
-const tools = [
-    { name: '網上聖經', icon: 'menu_book', link: 'https://www.bible.com/zh-HK' },
-    { name: '聖經地圖', icon: 'map', link: 'https://www.biblestudytools.com/bible-atlas/' },
-    { name: '荒漠甘泉', icon: 'water_drop', link: 'https://xybk.fuyin.tv/Books/CCIM_Streams_Desert/b5/index.htm' },
-    { name: '神學辭典', icon: 'library_books', link: 'https://www.biblestudytools.com/dictionaries/bakers-evangelical-dictionary/' },
-];
+import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function ResourcesAndHelp() {
+    const { t } = useTranslation();
+
+    const tools = [
+        { name: t.bibleStudy.resources.bible, icon: 'menu_book', link: 'https://www.bible.com/zh-HK' },
+        { name: t.bibleStudy.resources.map, icon: 'map', link: 'https://www.biblestudytools.com/bible-atlas/' },
+        { name: t.bibleStudy.resources.streams, icon: 'water_drop', link: 'https://xybk.fuyin.tv/Books/CCIM_Streams_Desert/b5/index.htm' },
+        { name: t.bibleStudy.resources.dict, icon: 'library_books', link: 'https://www.biblestudytools.com/dictionaries/bakers-evangelical-dictionary/' },
+    ];
     return (
         <section className="relative z-10 w-full max-w-4xl pt-8 flex flex-col items-center">
             {/* Journey Step Dot */}
             <div className="mb-12">
-                <div className="size-12 rounded-full bg-slate-200 dark:bg-slate-700 border-4 border-white dark:border-[#101922]"></div>
+                <div className="size-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 border-4 border-white dark:border-[#101922]">
+                    <span className="material-symbols-outlined">import_contacts</span>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
@@ -20,7 +27,7 @@ export default function ResourcesAndHelp() {
                 <div className="bg-white dark:bg-[#1a2632] rounded-3xl p-8 border border-slate-100 dark:border-slate-800 shadow-sm">
                     <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
                         <span className="material-symbols-outlined text-primary">build</span>
-                        常用工具
+                        {t.bibleStudy.resources.toolsTitle}
                     </h3>
                     <div className="space-y-3">
                         {tools.map((tool) => (
@@ -53,13 +60,13 @@ export default function ResourcesAndHelp() {
                         <div className="size-16 rounded-full bg-white/20 flex items-center justify-center">
                             <span className="material-symbols-outlined text-3xl">help_center</span>
                         </div>
-                        <h3 className="text-2xl font-bold">需要協助？</h3>
+                        <h3 className="text-2xl font-bold">{t.bibleStudy.resources.helpTitle}</h3>
                         <p className="text-blue-50 leading-relaxed">
-                            如果您對查經材料有疑問，或需要尋找特定資源，請聯繫教育事工部。我們非常樂意陪伴您一起成長。
+                            {t.bibleStudy.resources.helpDesc}
                         </p>
                     </div>
                     <button className="mt-8 bg-white text-primary rounded-full py-4 px-10 font-black text-lg hover:bg-blue-50 transition-all w-full shadow-lg active:scale-95 cursor-pointer">
-                        聯絡同工
+                        {t.bibleStudy.resources.contactBtn}
                     </button>
                 </div>
             </div>

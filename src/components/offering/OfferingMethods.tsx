@@ -1,16 +1,19 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "@/i18n";
 
 export const OfferingMethods = () => {
+    const { t } = useTranslation();
+
     const handleCopyName = () => {
         navigator.clipboard.writeText("EFC of East Coast Bay");
-        alert("戶名已複製");
+        alert(t.offering.methods.copied);
     };
 
     const handleCopyAccount = () => {
         navigator.clipboard.writeText("12-3059-0500732-00");
-        alert("帳號已複製");
+        alert(t.offering.methods.copied);
     };
 
     return (
@@ -19,7 +22,7 @@ export const OfferingMethods = () => {
                 {/* Section Title */}
                 <div className="flex flex-col gap-4 mb-12 text-center">
                     <h2 className="text-[#111418] dark:text-white text-4xl font-black leading-tight">
-                        奉獻方式
+                        {t.offering.methods.title}
                     </h2>
                     <div className="h-1 w-20 bg-primary mx-auto rounded-full"></div>
                 </div>
@@ -35,10 +38,10 @@ export const OfferingMethods = () => {
                         </div>
                         <div>
                             <h3 className="text-2xl font-black text-[#111418] dark:text-white">
-                                銀行轉帳指南
+                                {t.offering.methods.bankTransferTitle}
                             </h3>
                             <p className="text-sm text-[#617589] dark:text-gray-400 font-medium">
-                                請依照以下步驟完成您的奉獻
+                                {t.offering.methods.bankTransferSubtitle}
                             </p>
                         </div>
                     </div>
@@ -55,7 +58,7 @@ export const OfferingMethods = () => {
                             </div>
                             <div className="flex-1 pb-4">
                                 <label className="block text-sm font-bold text-primary uppercase tracking-wider mb-2">
-                                    第一步：輸入收款帳戶名稱
+                                    {t.offering.methods.step1Label}
                                 </label>
                                 <div
                                     className="relative group cursor-pointer"
@@ -69,7 +72,7 @@ export const OfferingMethods = () => {
                                     />
                                     <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
                                         <span className="text-[10px] bg-primary/10 text-primary px-2 py-1 rounded font-bold">
-                                            點擊複製
+                                            {t.offering.methods.clickToCopy}
                                         </span>
                                         <span className="material-symbols-outlined text-primary text-xl">
                                             content_copy
@@ -77,7 +80,7 @@ export const OfferingMethods = () => {
                                     </div>
                                 </div>
                                 <p className="mt-2 text-sm text-gray-500 font-medium">
-                                    請在您的銀行 App 中準確輸入上述教會官方戶名。
+                                    {t.offering.methods.step1Hint}
                                 </p>
                             </div>
                         </div>
@@ -92,7 +95,7 @@ export const OfferingMethods = () => {
                             </div>
                             <div className="flex-1 pb-4">
                                 <label className="block text-sm font-bold text-primary uppercase tracking-wider mb-2">
-                                    第二步：輸入帳號 (ASB 銀行)
+                                    {t.offering.methods.step2Label}
                                 </label>
                                 <div
                                     className="relative group cursor-pointer"
@@ -106,7 +109,7 @@ export const OfferingMethods = () => {
                                     />
                                     <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
                                         <span className="text-[10px] bg-primary/10 text-primary px-2 py-1 rounded font-bold">
-                                            點擊複製
+                                            {t.offering.methods.clickToCopy}
                                         </span>
                                         <span className="material-symbols-outlined text-primary text-xl">
                                             content_copy
@@ -114,7 +117,7 @@ export const OfferingMethods = () => {
                                     </div>
                                 </div>
                                 <p className="mt-2 text-sm text-gray-500 font-medium">
-                                    請核對帳號是否正確，點擊輸入框可快速複製。
+                                    {t.offering.methods.step2Hint}
                                 </p>
                             </div>
                         </div>
@@ -128,35 +131,35 @@ export const OfferingMethods = () => {
                             </div>
                             <div className="flex-1">
                                 <label className="block text-sm font-bold text-primary uppercase tracking-wider mb-2">
-                                    第三步：填寫轉帳備註 (必要資訊)
+                                    {t.offering.methods.step3Label}
                                 </label>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-lg border border-blue-100 dark:border-blue-900/30">
                                         <p className="text-[11px] font-bold text-blue-600 dark:text-blue-400 mb-1 uppercase">
-                                            姓名及編號
+                                            {t.offering.methods.nameAndId}
                                         </p>
                                         <p className="text-base font-bold text-[#111418] dark:text-white">
-                                            請輸入您的中文或英文全名
+                                            {t.offering.methods.enterFullName}
                                         </p>
                                         <p className="text-xs text-blue-500 mt-1">
-                                            ※ 須與報稅收據姓名一致
+                                            {t.offering.methods.nameNote}
                                         </p>
                                     </div>
                                     <div className="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-lg border border-blue-100 dark:border-blue-900/30">
                                         <p className="text-[11px] font-bold text-blue-600 dark:text-blue-400 mb-1 uppercase">
-                                            奉獻類別
+                                            {t.offering.methods.offeringCategory}
                                         </p>
                                         <p className="text-base font-bold text-[#111418] dark:text-white">
-                                            什一、感恩、宣教、建堂等
+                                            {t.offering.methods.categoryExamples}
                                         </p>
                                         <p className="text-xs text-blue-500 mt-1">
-                                            ※ 若未註明將歸入一般奉獻
+                                            {t.offering.methods.categoryNote}
                                         </p>
                                     </div>
                                 </div>
                                 <div className="mt-4 p-4 bg-gray-50 dark:bg-[#101922] rounded-lg border border-dashed border-gray-300 dark:border-gray-600">
                                     <p className="text-sm text-[#617589] dark:text-gray-400 font-medium leading-relaxed">
-                                        常用類別參考：什一奉獻、感恩奉獻、建堂奉獻、梅西大學、宣教信心認獻。
+                                        {t.offering.methods.categoryReference}
                                     </p>
                                 </div>
                             </div>
@@ -176,10 +179,10 @@ export const OfferingMethods = () => {
                                 </div>
                                 <div>
                                     <h3 className="text-2xl font-black text-[#111418] dark:text-white">
-                                        主日現場奉獻
+                                        {t.offering.methods.cashTitle}
                                     </h3>
                                     <p className="text-[#617589] dark:text-gray-400 font-medium">
-                                        於教會實體聚會時奉獻
+                                        {t.offering.methods.cashSubtitle}
                                     </p>
                                 </div>
                             </div>
@@ -189,10 +192,10 @@ export const OfferingMethods = () => {
                                 </span>
                                 <div>
                                     <p className="text-[10px] font-bold text-primary uppercase">
-                                        崇拜時間
+                                        {t.offering.methods.serviceTimeLabel}
                                     </p>
                                     <p className="text-base font-bold text-[#111418] dark:text-white">
-                                        每週日上午 10:00
+                                        {t.offering.methods.cashNote}
                                     </p>
                                 </div>
                             </div>
@@ -203,19 +206,19 @@ export const OfferingMethods = () => {
                                 <div className="space-y-3">
                                     <h4 className="font-bold text-[#111418] dark:text-white flex items-center gap-2">
                                         <span className="size-2 bg-primary rounded-full"></span>
-                                        奉獻袋與奉獻箱
+                                        {t.offering.methods.bagAndBoxTitle}
                                     </h4>
                                     <p className="text-sm text-[#617589] dark:text-gray-400 leading-relaxed font-medium">
-                                        歡迎於主日崇拜期間，將您的奉獻投入傳遞的奉獻袋或設置於會堂後方的奉獻箱中。
+                                        {t.offering.methods.bagAndBoxDesc}
                                     </p>
                                 </div>
                                 <div className="space-y-3">
                                     <h4 className="font-bold text-[#111418] dark:text-white flex items-center gap-2">
                                         <span className="size-2 bg-primary rounded-full"></span>
-                                        申請奉獻收據
+                                        {t.offering.methods.receiptTitle}
                                     </h4>
                                     <p className="text-sm text-[#617589] dark:text-gray-400 leading-relaxed font-medium">
-                                        若您需要年度退稅收據，請務必使用奉獻信封，並清楚填寫您的全名。
+                                        {t.offering.methods.receiptDesc}
                                     </p>
                                 </div>
                             </div>

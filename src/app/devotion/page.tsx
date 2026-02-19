@@ -27,7 +27,7 @@ export default async function DevotionPage() {
     return (
         <div className="relative flex flex-col w-full min-h-screen overflow-x-hidden">
             <Navbar />
-            <main className="flex-grow flex flex-col items-center w-full">
+            <main className="flex-grow flex flex-col w-full">
                 <Hero />
 
                 <DevotionContentWrapper

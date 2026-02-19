@@ -1,31 +1,34 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
+import { useTranslation } from "@/i18n";
 import Link from "next/link";
-
-const NAV_LINKS = [
-    { name: "首頁", href: "/" },
-    {
-        name: "認識教會",
-        href: "#",
-        subMenu: [
-            { name: "長堤基督教會", href: "/east-coast-bays" },
-            { name: "木槿灣基督教會", href: "/hibiscus-coast" },
-            { name: "長灣基督教會", href: "/long-bay" },
-        ],
-    },
-    { name: "認識我們", href: "/ministry-team" },
-    { name: "影視資源", href: "/bible-study" },
-    { name: "每日靈修", href: "/devotion" },
-    { name: "奉獻資訊", href: "/offering" },
-    { name: "代禱需求", href: "/prayer" },
-];
 
 export const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
+    const { t } = useTranslation();
+
+    const NAV_LINKS = useMemo(() => [
+        { name: t.nav.home, href: "/" },
+        {
+            name: t.nav.aboutChurch,
+            href: "#",
+            subMenu: [
+                { name: t.nav.eastCoastBays, href: "/east-coast-bays" },
+                { name: t.nav.hibiscusCoast, href: "/hibiscus-coast" },
+                { name: t.nav.longBay, href: "/long-bay" },
+            ],
+        },
+        { name: t.nav.aboutUs, href: "/ministry-team" },
+        { name: t.nav.mediaResources, href: "/bible-study" },
+        { name: t.nav.dailyDevotion, href: "/devotion" },
+        { name: t.nav.offeringInfo, href: "/offering" },
+        { name: t.nav.prayerRequest, href: "/prayer" },
+    ], [t]);
 
     return (
         <header className="sticky top-0 z-50 w-full bg-white/90 dark:bg-[#101922]/90 backdrop-blur-md border-b border-[#e7edf3] dark:border-gray-800 transition-colors">
@@ -81,13 +84,14 @@ export const Navbar = () => {
                         ))}
                         <Link href="/welcome">
                             <Button size="sm" className="bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all shadow-sm hover:shadow-md">
-                                新朋友專區
+                                {t.nav.newFriends}
                             </Button>
                         </Link>
+                        <LanguageSwitcher />
                     </nav>
 
                     {/* Mobile Menu Button */}
-                    <div className="lg:hidden flex items-center">
+                    <div className="lg:hidden flex items-center gap-2">
                         <button
                             onClick={() => setIsOpen(!isOpen)}
                             className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 transition-colors"
@@ -149,10 +153,13 @@ export const Navbar = () => {
                                 )}
                             </div>
                         ))}
-                        <div className="pt-2">
+                        <div className="pt-2 flex flex-col gap-4">
                             <Link href="/welcome" onClick={() => setIsOpen(false)}>
-                                <Button className="w-full text-center">新朋友專區</Button>
+                                <Button className="w-full text-center">{t.nav.newFriends}</Button>
                             </Link>
+                            <div className="flex justify-center">
+                                <LanguageSwitcher />
+                            </div>
                         </div>
                     </nav>
                 )}

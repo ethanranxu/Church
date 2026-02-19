@@ -1,35 +1,40 @@
-import React from "react";
+"use client";
+
+import React, { useMemo } from "react";
 import { Container } from "@/components/ui/Container";
+import { useTranslation } from "@/i18n";
 import Link from "next/link";
 
-const FOOTER_SECTIONS = [
-    {
-        title: "教會資訊",
-        links: [
-            { name: "認識教會", href: "/east-coast-bays" },
-            { name: "認識我們", href: "/ministry-team" },
-            { name: "聯絡我們", href: "/#location" },
-        ],
-    },
-    {
-        title: "聚會與資源",
-        links: [
-            { name: "主日崇拜", href: "/#service-info" },
-            { name: "影視資源", href: "/bible-study" },
-            { name: "每日靈修", href: "/devotion" },
-        ],
-    },
-    {
-        title: "關懷與奉獻",
-        links: [
-            { name: "新朋友專區", href: "/welcome" },
-            { name: "代禱需求", href: "/prayer" },
-            { name: "奉獻資訊", href: "/offering" },
-        ],
-    },
-];
-
 export const Footer = () => {
+    const { t } = useTranslation();
+
+    const FOOTER_SECTIONS = useMemo(() => [
+        {
+            title: t.footer.churchInfo,
+            links: [
+                { name: t.footer.aboutChurch, href: "/east-coast-bays" },
+                { name: t.footer.aboutUs, href: "/ministry-team" },
+                { name: t.footer.contactUs, href: "/#location" },
+            ],
+        },
+        {
+            title: t.footer.servicesResources,
+            links: [
+                { name: t.footer.sundayService, href: "/#service-info" },
+                { name: t.footer.mediaResources, href: "/bible-study" },
+                { name: t.footer.dailyDevotion, href: "/devotion" },
+            ],
+        },
+        {
+            title: t.footer.careOffering,
+            links: [
+                { name: t.footer.newFriends, href: "/welcome" },
+                { name: t.footer.prayerRequest, href: "/prayer" },
+                { name: t.footer.offeringInfo, href: "/offering" },
+            ],
+        },
+    ], [t]);
+
     return (
         <footer className="bg-[#0d141b] text-slate-300 py-16 border-t border-gray-800">
             <Container>
@@ -43,8 +48,6 @@ export const Footer = () => {
                                 className="h-36 w-auto object-contain bg-white rounded p-1"
                             />
                         </div>
-
-
                     </div>
 
                     {/* Nav Columns */}
@@ -69,7 +72,7 @@ export const Footer = () => {
 
                 <div className="border-t border-gray-800 pt-8 mt-8 text-center">
                     <p className="text-sm text-gray-500">
-                        Copyright © 2026 長堤基督教會. All Rights Reserved.<br />
+                        Copyright © 2026 {t.footer.copyright}. {t.footer.allRights}<br />
                         Website design, development & maintenance by <a href="mailto:ethanranxu@gmail.com" className="hover:text-amber-500 transition-colors">Xu Ran</a>.
                     </p>
                 </div>

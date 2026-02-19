@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { getPrayers, updatePrayerStatus, deletePrayer } from "@/app/actions/prayer";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useTranslation } from "@/i18n/LanguageContext";
 import { PrayerRecord, PrayerStatus } from "@/types/prayer";
 import {
     CheckCircle2,
@@ -22,37 +23,36 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 
-const CATEGORY_LABELS: Record<string, string> = {
-    health: "健康與疾病",
-    family: "家庭與婚姻",
-    work: "工作與事業",
-    spiritual: "靈命成長",
-    other: "其他"
+const STATUS_ICONS = {
+    pending: Clock,
+    prayed: CheckCircle2,
+    archived: Archive,
 };
 
-const STATUS_CONFIG = {
-    pending: { label: "待處理", color: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400", icon: Clock },
-    prayed: { label: "已代禱", color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400", icon: CheckCircle2 },
-    archived: { label: "已存檔", color: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400", icon: Archive },
+const STATUS_COLORS = {
+    pending: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+    prayed: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+    archived: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400",
 };
 
 export default function PrayerManagementPage() {
     const { profile } = useAuth();
+    const { t } = useTranslation();
     const [prayers, setPrayers] = useState<PrayerRecord[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
-    const [statusFilter, setStatusFilter] = useState<string>("pending");
-
-    useEffect(() => {
-        loadPrayers();
-    }, []);
+    const [statusFilter, setStatusFilter] = useState<string>("all");
 
     async function loadPrayers() {
         setLoading(true);
         const data = await getPrayers();
-        setPrayers(data as PrayerRecord[]);
+        setPrayers(data);
         setLoading(false);
     }
+
+    useEffect(() => {
+        loadPrayers();
+    }, []);
 
     async function handleStatusChange(id: string, newStatus: PrayerStatus) {
         if (!profile) return;
@@ -66,7 +66,7 @@ export default function PrayerManagementPage() {
     }
 
     async function handleDelete(id: string) {
-        if (!profile || !confirm("確定要刪除此代禱需求嗎？此操作不可恢復。")) return;
+        if (!profile || !confirm(t.admin.prayers.confirmDelete)) return;
         const result = await deletePrayer(id, {
             name: profile.name,
             email: profile.email
@@ -92,15 +92,15 @@ export default function PrayerManagementPage() {
         <div className="space-y-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">代禱需求管理</h1>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">查看並管理弟兄姊妹提交的代禱請求</p>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t.admin.prayers.title}</h1>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{t.admin.prayers.subtitle}</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <div className="relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                         <input
                             type="text"
-                            placeholder="搜索姓名、內容..."
+                            placeholder={t.admin.prayers.searchPlaceholder}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1e293b] text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all w-64"
@@ -120,9 +120,9 @@ export default function PrayerManagementPage() {
                             : "bg-white dark:bg-[#1e293b] text-gray-600 dark:text-gray-400 hover:bg-gray-100"
                     )}
                 >
-                    全部 ({prayers.length})
+                    {t.admin.prayers.filterAll} ({prayers.length})
                 </button>
-                {Object.entries(STATUS_CONFIG).map(([key, config]) => (
+                {(Object.keys(STATUS_ICONS) as PrayerStatus[]).map((key) => (
                     <button
                         key={key}
                         onClick={() => setStatusFilter(key)}
@@ -133,8 +133,8 @@ export default function PrayerManagementPage() {
                                 : "bg-white dark:bg-[#1e293b] text-gray-600 dark:text-gray-400 hover:bg-gray-100"
                         )}
                     >
-                        <config.icon className="h-4 w-4" />
-                        {config.label} ({prayers.filter(p => p.status === key).length})
+                        {React.createElement(STATUS_ICONS[key], { className: "h-4 w-4" })}
+                        {t.admin.prayers.status[key]} ({prayers.filter(p => p.status === key).length})
                     </button>
                 ))}
             </div>
@@ -146,12 +146,13 @@ export default function PrayerManagementPage() {
             ) : filteredPrayers.length === 0 ? (
                 <div className="bg-white dark:bg-[#1e293b] rounded-2xl p-12 text-center border border-gray-100 dark:border-gray-800">
                     <HeartHandshake className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500">暫無匹配的代禱需求</p>
+                    <p className="text-gray-500">{t.admin.prayers.noPrayers}</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 gap-4">
                     {filteredPrayers.map((prayer) => {
-                        const status = STATUS_CONFIG[prayer.status];
+                        const statusColor = STATUS_COLORS[prayer.status];
+                        const StatusIcon = STATUS_ICONS[prayer.status];
                         return (
                             <div
                                 key={prayer.id}
@@ -166,20 +167,20 @@ export default function PrayerManagementPage() {
                                                 </div>
                                                 <div>
                                                     <h3 className="font-bold text-gray-900 dark:text-white">
-                                                        {prayer.name || "匿名信徒"}
+                                                        {prayer.name || t.admin.prayers.anonymous}
                                                     </h3>
                                                     <p className="text-xs text-gray-500">
-                                                        提交於 {prayer.createdAt ? new Date(prayer.createdAt).toLocaleString() : "未知時間"}
+                                                        {t.admin.prayers.submittedAt} {prayer.createdAt ? new Date(prayer.createdAt).toLocaleString() : "未知時間"}
                                                     </p>
                                                 </div>
-                                                <span className={clsx("px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1.5", status.color)}>
-                                                    <status.icon className="h-3.5 w-3.5" />
-                                                    {status.label}
+                                                <span className={clsx("px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1.5", statusColor)}>
+                                                    <StatusIcon className="h-3.5 w-3.5" />
+                                                    {t.admin.prayers.status[prayer.status]}
                                                 </span>
                                                 {prayer.isPrivate && (
                                                     <span className="bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1.5">
                                                         <Lock className="h-3.5 w-3.5" />
-                                                        保密
+                                                        {t.admin.prayers.private}
                                                     </span>
                                                 )}
                                             </div>
@@ -188,7 +189,7 @@ export default function PrayerManagementPage() {
                                                     <button
                                                         onClick={() => handleStatusChange(prayer.id!, 'prayed')}
                                                         className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
-                                                        title="標記為已代禱"
+                                                        title={t.admin.prayers.markPrayed}
                                                     >
                                                         <CheckCircle2 className="h-5 w-5" />
                                                     </button>
@@ -197,7 +198,7 @@ export default function PrayerManagementPage() {
                                                     <button
                                                         onClick={() => handleStatusChange(prayer.id!, 'archived')}
                                                         className="p-2 text-gray-400 hover:bg-gray-50 rounded-lg transition-colors"
-                                                        title="歸檔"
+                                                        title={t.admin.prayers.markArchived}
                                                     >
                                                         <Archive className="h-5 w-5" />
                                                     </button>
@@ -206,7 +207,7 @@ export default function PrayerManagementPage() {
                                                     <button
                                                         onClick={() => handleStatusChange(prayer.id!, 'pending')}
                                                         className="p-2 text-primary hover:bg-blue-50 rounded-lg transition-colors"
-                                                        title="恢復到待處理"
+                                                        title={t.admin.prayers.restore}
                                                     >
                                                         <RotateCcw className="h-5 w-5" />
                                                     </button>
@@ -214,7 +215,7 @@ export default function PrayerManagementPage() {
                                                 <button
                                                     onClick={() => handleDelete(prayer.id!)}
                                                     className="p-2 text-red-400 hover:bg-red-50 rounded-lg transition-colors"
-                                                    title="刪除"
+                                                    title={t.admin.prayers.delete}
                                                 >
                                                     <Trash2 className="h-5 w-5" />
                                                 </button>
@@ -230,11 +231,11 @@ export default function PrayerManagementPage() {
                                         <div className="flex flex-wrap gap-4 text-sm text-gray-500">
                                             <div className="flex items-center gap-2">
                                                 <Tag className="h-4 w-4 text-primary/60" />
-                                                <span>類別: {CATEGORY_LABELS[prayer.category] || prayer.category}</span>
+                                                <span>{t.admin.prayers.category}: {t.admin.prayers.categories[prayer.category as keyof typeof t.admin.prayers.categories] || prayer.category}</span>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <Phone className="h-4 w-4 text-primary/60" />
-                                                <span>聯絡: {prayer.contact || "未提供"}</span>
+                                                <span>{t.admin.prayers.contact}: {prayer.contact || t.admin.prayers.notProvided}</span>
                                             </div>
                                         </div>
                                     </div>

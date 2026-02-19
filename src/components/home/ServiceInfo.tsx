@@ -1,7 +1,12 @@
+"use client";
+
 import React from "react";
 import { Container } from "@/components/ui/Container";
+import { useTranslation } from "@/i18n";
 
 export const ServiceInfo = () => {
+    const { t } = useTranslation();
+
     return (
         <div id="service-info" className="relative z-30 -mt-20">
             <Container>
@@ -12,8 +17,8 @@ export const ServiceInfo = () => {
                             <span className="material-symbols-outlined !text-3xl">schedule</span>
                         </div>
                         <div>
-                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">主日崇拜時間</h3>
-                            <p className="text-gray-600 dark:text-gray-300">每週日 上午 10:00</p>
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t.home.serviceInfo.serviceTime}</h3>
+                            <p className="text-gray-600 dark:text-gray-300">{t.home.serviceInfo.serviceTimeValue}</p>
                             <p className="text-sm text-primary font-medium mt-1 uppercase tracking-wider">Sunday Service 10:00 AM</p>
                         </div>
                     </div>
@@ -26,7 +31,7 @@ export const ServiceInfo = () => {
                             <span className="material-symbols-outlined !text-3xl">location_on</span>
                         </div>
                         <div>
-                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">聚會地點</h3>
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t.home.serviceInfo.location}</h3>
                             <p className="text-gray-600 dark:text-gray-300">Mairangi Bay Primary School Hall</p>
                             <a
                                 href="https://www.google.com/maps/search/?api=1&query=Mairangi+Bay+School"
@@ -34,7 +39,7 @@ export const ServiceInfo = () => {
                                 rel="noopener noreferrer"
                                 className="text-sm text-primary hover:underline font-medium mt-1 inline-flex items-center gap-1 group"
                             >
-                                查看地圖
+                                {t.home.serviceInfo.viewMap}
                                 <span className="material-symbols-outlined text-[16px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
                                     open_in_new
                                 </span>

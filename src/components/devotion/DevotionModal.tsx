@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef } from 'react';
 import { Devotion } from '@/app/actions/devotions';
 import 'suneditor/dist/css/suneditor.min.css'; // 保持与后台编辑器一致的样式
@@ -7,7 +9,10 @@ interface DevotionModalProps {
     onClose: () => void;
 }
 
+import { useTranslation } from "@/i18n/LanguageContext";
+
 export default function DevotionModal({ devotion, onClose }: DevotionModalProps) {
+    const { t } = useTranslation();
     const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -77,7 +82,7 @@ export default function DevotionModal({ devotion, onClose }: DevotionModalProps)
                         onClick={onClose}
                         className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors font-medium text-sm"
                     >
-                        關閉
+                        {t.devotion.modal.close}
                     </button>
                 </div>
             </div>

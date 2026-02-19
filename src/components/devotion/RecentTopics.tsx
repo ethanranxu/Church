@@ -7,7 +7,10 @@ interface RecentTopicsProps {
     onSelectDevotion: (devotion: Devotion) => void;
 }
 
+import { useTranslation } from "@/i18n/LanguageContext";
+
 export default function RecentTopics({ devotions, onSelectDevotion }: RecentTopicsProps) {
+    const { t } = useTranslation();
     const truncateTitle = (title: string, maxLen: number) => {
         if (title.length <= maxLen) return title;
         return title.substring(0, maxLen) + '...';
@@ -15,7 +18,7 @@ export default function RecentTopics({ devotions, onSelectDevotion }: RecentTopi
 
     return (
         <div className="bg-white dark:bg-[#101922] p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col">
-            <h4 className="font-bold text-gray-900 dark:text-white mb-4">熱門主題</h4>
+            <h4 className="font-bold text-gray-900 dark:text-white mb-4">{t.devotion.sider.recentTopics}</h4>
             <div className="flex flex-col gap-0 pr-2">
                 {devotions.map((topic, index) => (
                     <button
@@ -34,7 +37,7 @@ export default function RecentTopics({ devotions, onSelectDevotion }: RecentTopi
                     </button>
                 ))}
                 {devotions.length === 0 && (
-                    <div className="text-sm text-gray-500 py-4 text-center">暫无數據</div>
+                    <div className="text-sm text-gray-500 py-4 text-center">{t.devotion.feed.noData}</div>
                 )}
             </div>
         </div>

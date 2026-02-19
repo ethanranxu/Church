@@ -1,28 +1,33 @@
-import React from "react";
+"use client";
+
+import React, { useMemo } from "react";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
+import { useTranslation } from "@/i18n";
 import Link from "next/link";
 
-const MINISTRIES = [
-    {
-        title: "兒童主日學",
-        subtitle: "",
-        description: "專為兒童設計的聖經課程，透過生動的故事與活動，從小建立對神的認識與信心。",
-        image: "/images/children-ministry.jpg",
-        icon: "",
-        iconColor: "text-yellow-400",
-    },
-    {
-        title: "青少年團契",
-        subtitle: " ",
-        description: "在歡樂與真誠的氛圍中，陪伴青少年探索信仰，建立深厚的屬靈友誼，共同面對成長的挑戰。",
-        image: "/images/youth-fellowship.jpg",
-        icon: "",
-        iconColor: "text-sky-400",
-    },
-];
-
 export const Ministries = () => {
+    const { t } = useTranslation();
+
+    const MINISTRIES = useMemo(() => [
+        {
+            title: t.home.ministries.childrenSS,
+            subtitle: "",
+            description: t.home.ministries.childrenSSDesc,
+            image: "/images/children-ministry.jpg",
+            icon: "",
+            iconColor: "text-yellow-400",
+        },
+        {
+            title: t.home.ministries.youthFellowship,
+            subtitle: " ",
+            description: t.home.ministries.youthFellowshipDesc,
+            image: "/images/youth-fellowship.jpg",
+            icon: "",
+            iconColor: "text-sky-400",
+        },
+    ], [t]);
+
     return (
         <Section className="bg-background-light dark:bg-background-dark">
             <Container>

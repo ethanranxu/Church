@@ -29,7 +29,7 @@ export interface Devotion {
     content: string;
     publishDate: string;
     status: 'draft' | 'published';
-    createdAt?: any; // Firestore Timestamp
+    createdAt?: string | null; // ISO Date String or Null
     views?: number;
 }
 
@@ -40,6 +40,7 @@ export async function getDevotions(): Promise<Devotion[]> {
     try {
         const snapshot = await db.collection('Articles')
             .orderBy('publishDate', 'desc')
+            .limit(100)
             .get();
 
         return snapshot.docs.map(doc => {
@@ -113,7 +114,7 @@ export async function getPublishedDevotions(
 /**
  * 創建靈修記錄（寫入 Articles 集合）
  */
-export async function createDevotion(data: Omit<Devotion, 'id' | 'createdAt'>, operator?: { name: string, email: string }) {
+export async function createDevotion(data: Omit<Devotion, 'id' | 'createdAt'>, operator?: { name: string, email: string }): Promise<{ success: boolean; id?: string; error?: string }> {
     try {
         const newArticle = {
             ...data,
@@ -142,7 +143,7 @@ export async function createDevotion(data: Omit<Devotion, 'id' | 'createdAt'>, o
 /**
  * 更新靈修記錄
  */
-export async function updateDevotion(id: string, data: Partial<Omit<Devotion, 'id' | 'createdAt'>>, operator?: { name: string, email: string }) {
+export async function updateDevotion(id: string, data: Partial<Omit<Devotion, 'id' | 'createdAt'>>, operator?: { name: string, email: string }): Promise<{ success: boolean; error?: string }> {
     try {
         await db.collection('Articles').doc(id).update({
             ...data,
@@ -174,7 +175,7 @@ export async function updateDevotion(id: string, data: Partial<Omit<Devotion, 'i
 /**
  * 刪除靈修記錄
  */
-export async function deleteDevotion(id: string, operator?: { name: string, email: string }) {
+export async function deleteDevotion(id: string, operator?: { name: string, email: string }): Promise<{ success: boolean; error?: string }> {
     try {
         // Fetch title before delete
         const doc = await db.collection('Articles').doc(id).get();
@@ -204,7 +205,7 @@ export async function deleteDevotion(id: string, operator?: { name: string, emai
 /**
  * 增加靈修文章的閱讀計數
  */
-export async function incrementDevotionView(id: string) {
+export async function incrementDevotionView(id: string): Promise<{ success: boolean; error?: string }> {
     try {
         await db.collection('Articles').doc(id).update({
             views: FieldValue.increment(1)
@@ -231,11 +232,12 @@ export async function getPopularDevotions(limitCount: number = 5): Promise<Devot
         const startDay = String(thirtyDaysAgo.getDate()).padStart(2, '0');
         const thirtyDaysAgoStr = `${startYear}-${startMonth}-${startDay}`;
 
-        // 获取最近30天内已发布的所有文章
+        // 获取最近30天内已发布的所有文章，这里不需要全量 content
         const snapshot = await db.collection('Articles')
             .where('status', '==', 'published')
             .where('publishDate', '<=', todayStr)
             .where('publishDate', '>=', thirtyDaysAgoStr)
+            .select('title', 'publishDate', 'views', 'createdAt', 'status') // Optimize fetch payload
             .get();
 
         const devotions = snapshot.docs.map(doc => {
@@ -263,20 +265,19 @@ export async function getCalendarDevotions(): Promise<Devotion[]> {
     try {
         const todayStr = getNzTodayStr();
 
-        // 計算 6 個月前的日期
-        const sixMonthsAgo = new Date();
-        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-        const sy = sixMonthsAgo.getFullYear();
-        const sm = String(sixMonthsAgo.getMonth() + 1).padStart(2, '0');
-        const sd = String(sixMonthsAgo.getDate()).padStart(2, '0');
-        const sixMonthsAgoStr = `${sy}-${sm}-${sd}`;
-
-
+        // 計算 3 個月前的日期
+        const threeMonthsAgo = new Date();
+        threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+        const sy = threeMonthsAgo.getFullYear();
+        const sm = String(threeMonthsAgo.getMonth() + 1).padStart(2, '0');
+        const sd = String(threeMonthsAgo.getDate()).padStart(2, '0');
+        const threeMonthsAgoStr = `${sy}-${sm}-${sd}`;
 
         const snapshot = await db.collection('Articles')
             .where('status', '==', 'published')
-            .where('publishDate', '>=', sixMonthsAgoStr)
+            .where('publishDate', '>=', threeMonthsAgoStr)
             .where('publishDate', '<=', todayStr)
+            .select('title', 'publishDate', 'status') // 🔥 MAJOR OPTIMIZATION: Do not fetch 'content' for the calendar!
             .get();
 
         const devotions = snapshot.docs.map(doc => {
@@ -284,11 +285,9 @@ export async function getCalendarDevotions(): Promise<Devotion[]> {
             return {
                 ...data,
                 id: doc.id,
-                createdAt: data.createdAt?.toDate?.() ? data.createdAt.toDate().toISOString() : null
+                content: "", // mock content since it's just for calendar
             } as Devotion;
         });
-
-
 
         return devotions;
     } catch (error) {

@@ -8,13 +8,16 @@ interface CalendarProps {
     onSelectDevotion?: (devotion: Devotion) => void;
 }
 
+import { useTranslation } from "@/i18n/LanguageContext";
+
 export default function Calendar({ devotions = [], onSelectDevotion }: CalendarProps) {
+    const { t } = useTranslation();
     const [currentDate, setCurrentDate] = useState(new Date());
 
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
-    const daysOfWeek = ['日', '一', '二', '三', '四', '五', '六'];
+    const daysOfWeek = t.devotion.calendar.days;
 
     // Helper to format date to YYYY-MM-DD in local time
     const formatDate = (date: Date) => {
@@ -71,7 +74,7 @@ export default function Calendar({ devotions = [], onSelectDevotion }: CalendarP
         <div className="bg-white dark:bg-[#101922] p-6 rounded-2xl shadow-lg border border-gray-100/80 dark:border-gray-800 transition-shadow duration-300 hover:shadow-xl">
             <div className="flex items-center justify-between mb-8">
                 <div className="flex flex-col">
-                    <h4 className="font-serif-content font-bold text-xl text-gray-900 dark:text-white tracking-wide">靈修曆</h4>
+                    <h4 className="font-serif-content font-bold text-xl text-gray-900 dark:text-white tracking-wide">{t.devotion.calendar.title}</h4>
                 </div>
                 <div className="flex gap-1">
                     <button
@@ -90,7 +93,7 @@ export default function Calendar({ devotions = [], onSelectDevotion }: CalendarP
             </div>
 
             <div className="text-center font-medium text-base text-gray-800 dark:text-gray-200 mb-6 font-display tracking-widest uppercase">
-                {year}年 {monthNames[month]}
+                {year}年 {t.devotion.calendar.months[month]}
             </div>
 
             <div className="grid grid-cols-7 gap-x-2 gap-y-3 text-center">

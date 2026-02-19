@@ -7,7 +7,9 @@ import { User } from "@/types/user";
 import { createUser, updateUser, deleteUser } from "@/app/actions/users";
 import { resetUserPasswordByEmail, getUserProvider } from "@/app/actions/auth";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useRouter } from "next/navigation";
 import { Copy, Check, Key } from "lucide-react";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 interface UsersClientProps {
     initialUsers: User[];
@@ -17,6 +19,8 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
     const [users, setUsers] = useState<User[]>(initialUsers);
     const [searchTerm, setSearchTerm] = useState("");
     const { profile } = useAuth();
+    const router = useRouter();
+    const { t } = useTranslation();
 
     // Modal State
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,24 +52,19 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
 
     // Role Mapping Helper
     const getRoleName = (level: string) => {
-        switch (level) {
-            case 'super_admin': return '超級管理員';
-            case 'manager': return '系統管理員';
-            case 'admin': return '管理員';
-            default: return '管理員';
-        }
+        return t.admin.users.levels[level as keyof typeof t.admin.users.levels] || level;
     };
 
     const handleOpenCreate = () => {
         setIsEditing(false);
-        setCurrentUser({ level: 'admin', roleName: '管理員' });
+        setCurrentUser({ level: 'admin', roleName: t.admin.users.levels.admin });
         setIsModalOpen(true);
     };
 
     const handleOpenEdit = (user: User) => {
         // Double check permissions (though UI should hide these rows)
         if (profile?.level === 'manager' && user.level === 'super_admin') {
-            alert("您沒有權限編輯超級管理員");
+            alert(t.admin.users.permissionDenied);
             return;
         }
         setIsEditing(true);
@@ -76,11 +75,11 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
     const handleDelete = async (id: string, name: string) => {
         const targetUser = users.find(u => u.id === id);
         if (profile?.level === 'manager' && targetUser?.level === 'super_admin') {
-            alert("您沒有權限刪除超級管理員");
+            alert(t.admin.users.deleteDenied);
             return;
         }
 
-        if (confirm(`確定要刪除用戶 ${name} 嗎？此操作無法撤銷。`)) {
+        if (confirm(t.admin.users.confirmDelete.replace('{{name}}', name))) {
             const operator = profile ? { name: profile.name, email: profile.email } : undefined;
             await deleteUser(id, operator);
         }
@@ -90,7 +89,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
         // Check provider first
         const result = await getUserProvider(email);
         if (result.providerId === 'google.com') {
-            alert("Google賬戶登錄用戶，請直接用Google賬戶認證登錄，無需重置密碼！");
+            alert(t.admin.users.googleLogin);
             return;
         }
 
@@ -114,13 +113,13 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                 email: profile.email
             });
             if (result.success) {
-                alert("密碼重置成功！");
+                alert(t.admin.users.passwordResetSuccess);
                 setIsResetModalOpen(false);
             } else {
-                alert("重置失敗: " + (result.error || "未知錯誤"));
+                alert(t.admin.users.resetFailed + (result.error || "未知錯誤"));
             }
         } catch (error) {
-            alert("操作發生錯誤");
+            alert(t.admin.users.saveFailed);
         } finally {
             setIsResetting(false);
         }
@@ -132,9 +131,6 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
         setTimeout(() => setIsCopied(false), 2000);
     };
 
-    // We need router to refresh the page data
-    const { useRouter } = require("next/navigation");
-    const router = useRouter();
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -200,7 +196,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                 setCurrentUser({ ...currentUser, avatar: resultDataUrl });
             } catch (error) {
                 console.error("Image processing failed", error);
-                alert("圖片處理失敗，請重試");
+                alert(t.admin.users.imageFailed);
             }
         }
     };
@@ -234,7 +230,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
             setIsModalOpen(false);
             router.refresh(); // Refresh server data
         } catch (error) {
-            alert("操作失敗，請重試");
+            alert(t.admin.users.saveFailed);
         } finally {
             setIsSubmitting(false);
         }
@@ -245,8 +241,8 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
             <div className="flex h-[600px] items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50/30">
                 <div className="text-center">
                     <ShieldAlert className="mx-auto h-12 w-12 text-gray-400" />
-                    <h2 className="mt-4 text-lg font-semibold text-gray-900">訪問受限</h2>
-                    <p className="mt-2 text-sm text-gray-500">管理員賬號僅擁靈修文章管理權限，無法訪問用戶管理。</p>
+                    <h2 className="mt-4 text-lg font-semibold text-gray-900">{t.admin.users.accessDenied}</h2>
+                    <p className="mt-2 text-sm text-gray-500">{t.admin.users.accessDeniedDesc}</p>
                 </div>
             </div>
         );
@@ -257,15 +253,15 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
             {/* Page Header */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 text-shadow-sm">系統用戶管理</h1>
-                    <p className="text-sm text-gray-500">管理擁有後臺訪問權限的管理員賬戶</p>
+                    <h1 className="text-2xl font-bold text-gray-900 text-shadow-sm">{t.admin.users.title}</h1>
+                    <p className="text-sm text-gray-500">{t.admin.users.subtitle}</p>
                 </div>
                 <button
                     onClick={handleOpenCreate}
                     className="flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-emerald-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
                 >
                     <Plus className="mr-2 h-4 w-4" />
-                    添加用戶
+                    {t.admin.users.addUser}
                 </button>
             </div>
 
@@ -277,7 +273,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
-                            placeholder="搜索姓名、郵箱或電話..."
+                            placeholder={t.admin.users.searchPlaceholder}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full rounded-lg border-gray-200 bg-gray-50 py-2 pl-10 pr-4 text-sm focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500 outline-none transition-all placeholder:text-gray-400"
@@ -290,12 +286,12 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                     <table className="w-full text-left text-sm">
                         <thead className="bg-gray-50/50 text-gray-500">
                             <tr>
-                                <th className="px-6 py-4 font-medium">用戶姓名</th>
-                                <th className="px-6 py-4 font-medium">郵箱</th>
-                                <th className="px-6 py-4 font-medium">電話</th>
-                                <th className="px-6 py-4 font-medium">創建時間</th>
-                                <th className="px-6 py-4 font-medium">用戶等級</th>
-                                <th className="px-6 py-4 font-medium text-right">操作</th>
+                                <th className="px-6 py-4 font-medium">{t.admin.users.name}</th>
+                                <th className="px-6 py-4 font-medium">{t.admin.users.email}</th>
+                                <th className="px-6 py-4 font-medium">{t.admin.users.phone}</th>
+                                <th className="px-6 py-4 font-medium">{t.admin.users.createdAt}</th>
+                                <th className="px-6 py-4 font-medium">{t.admin.users.role}</th>
+                                <th className="px-6 py-4 font-medium text-right">{t.admin.users.actions}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
@@ -366,21 +362,21 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                             <button
                                                 onClick={() => handleOpenEdit(user)}
                                                 className="rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                                                title="編輯"
+                                                title={t.admin.users.edit}
                                             >
                                                 <Edit2 className="h-4 w-4" />
                                             </button>
                                             <button
                                                 onClick={() => handleOpenResetPassword(user.email)}
                                                 className="rounded p-1.5 text-amber-500 hover:bg-amber-50 hover:text-amber-700"
-                                                title="重置密碼"
+                                                title={t.admin.users.resetPassword}
                                             >
                                                 <Key className="h-4 w-4" />
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(user.id, user.name)}
                                                 className="rounded p-1.5 text-red-500 hover:bg-red-50 hover:text-red-700"
-                                                title="刪除"
+                                                title={t.admin.users.delete}
                                             >
                                                 <Trash2 className="h-4 w-4" />
                                             </button>
@@ -391,7 +387,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                             {filteredUsers.length === 0 && (
                                 <tr>
                                     <td colSpan={6} className="py-12 text-center text-gray-500">
-                                        未找到匹配的用戶
+                                        {t.admin.visits.noMatch}
                                     </td>
                                 </tr>
                             )}
@@ -402,7 +398,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                 {/* Footer / Pagination Placeholder */}
                 <div className="flex items-center justify-between border-t border-gray-100 px-6 py-4">
                     <span className="text-sm text-gray-500">
-                        顯示 {filteredUsers.length} 個結果
+                        {t.admin.users.totalUsers.replace('{{count}}', filteredUsers.length.toString())}
                     </span>
                 </div>
             </div>
@@ -413,7 +409,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                     <div className="w-full max-w-md rounded-xl bg-white shadow-2xl animate-in fade-in zoom-in duration-200">
                         <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
                             <h3 className="text-lg font-semibold text-gray-900">
-                                {isEditing ? "編輯用戶" : "添加新用戶"}
+                                {isEditing ? t.admin.users.editUser : t.admin.users.addUserTitle}
                             </h3>
                             <button
                                 onClick={() => setIsModalOpen(false)}
@@ -426,7 +422,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                         <form onSubmit={handleSubmit} className="p-6 space-y-4">
                             {/* Avatar Upload */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">頭像</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">{t.admin.users.avatar}</label>
                                 <div className="flex items-center gap-4">
                                     <div
                                         onClick={() => currentUser.avatar && setPreviewImage(currentUser.avatar)}
@@ -438,14 +434,14 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                         {currentUser.avatar ? (
                                             <img src={currentUser.avatar} alt="Preview" className="h-full w-full object-cover" />
                                         ) : (
-                                            <span className="text-gray-400 text-xs">無頭像</span>
+                                            <span className="text-gray-400 text-xs">{t.admin.users.noAvatar}</span>
                                         )}
                                     </div>
                                     <div className="flex flex-col gap-1">
                                         <label className="cursor-pointer inline-flex items-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-emerald-600 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 bg-white whitespace-nowrap w-fit">
                                             <div className="flex items-center gap-2">
                                                 <Upload className="h-4 w-4" />
-                                                <span>上傳圖片</span>
+                                                <span>{t.admin.users.uploadImage}</span>
                                             </div>
                                             <input
                                                 type="file"
@@ -454,13 +450,13 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                                 onChange={handleFileChange}
                                             />
                                         </label>
-                                        <span className="text-xs text-gray-400">支持 jpg/png, 大圖將自動壓縮 (100KB)</span>
+                                        <span className="text-xs text-gray-400">{t.admin.users.imageHelp}</span>
                                     </div>
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">姓名</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">{t.admin.users.name}</label>
                                 <input
                                     required
                                     type="text"
@@ -471,7 +467,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">郵箱</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">{t.admin.users.email}</label>
                                 <input
                                     required
                                     type="email"
@@ -482,7 +478,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">電話</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">{t.admin.users.phone}</label>
                                 <input
                                     type="tel"
                                     maxLength={20}
@@ -492,7 +488,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">等級</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">{t.admin.users.level}</label>
                                 <select
                                     className="w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-2 px-3 text-sm disabled:bg-gray-100 disabled:text-gray-500"
                                     value={currentUser.level || 'admin'}
@@ -505,11 +501,11 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                 >
                                     {/* Super Admins can assign any role */}
                                     {profile?.level === 'super_admin' && (
-                                        <option value="super_admin">超級管理員</option>
+                                        <option value="super_admin">{t.admin.users.levels.super_admin}</option>
                                     )}
                                     {/* System Admins can only assign manager or admin */}
-                                    <option value="manager">系統管理員</option>
-                                    <option value="admin">管理員</option>
+                                    <option value="manager">{t.admin.users.levels.manager}</option>
+                                    <option value="admin">{t.admin.users.levels.admin}</option>
                                 </select>
                                 {profile?.level === 'manager' && (
                                     <p className="mt-1 text-xs text-gray-500"></p>
@@ -522,7 +518,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                     onClick={() => setIsModalOpen(false)}
                                     className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
                                 >
-                                    取消
+                                    {t.admin.users.cancel}
                                 </button>
                                 <button
                                     type="submit"
@@ -530,7 +526,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                     className="flex items-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-70"
                                 >
                                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    {isEditing ? "保存修改" : "立即創建"}
+                                    {isEditing ? t.admin.users.save : t.admin.users.create}
                                 </button>
                             </div>
                         </form>
@@ -566,7 +562,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                         <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4 bg-amber-50">
                             <h3 className="text-lg font-semibold text-amber-900 flex items-center gap-2">
                                 <Key className="h-5 w-5" />
-                                重置用戶密碼
+                                {t.admin.users.resetModalTitle}
                             </h3>
                             <button
                                 onClick={() => setIsResetModalOpen(false)}
@@ -578,7 +574,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                         <div className="p-6 space-y-6">
                             <div className="space-y-2">
                                 <p className="text-sm text-gray-600">
-                                    確定要將用戶 <span className="font-semibold text-gray-900">{resetTargetEmail}</span> 的密碼重置為以下隨機密碼嗎？
+                                    {t.admin.users.resetConfirmText.split('{{email}}')[0]} <span className="font-semibold text-gray-900">{resetTargetEmail}</span> {t.admin.users.resetConfirmText.split('{{email}}')[1]}
                                 </p>
                                 <div className="mt-4 flex items-center gap-2 rounded-xl bg-gray-50 border border-gray-200 p-4">
                                     <div className="flex-1 font-mono text-xl font-bold tracking-wider text-emerald-600 text-center">
@@ -590,13 +586,13 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                             "flex h-10 w-10 items-center justify-center rounded-lg transition-all",
                                             isCopied ? "bg-emerald-100 text-emerald-600" : "bg-white text-gray-400 hover:text-gray-600 border border-gray-200 shadow-sm"
                                         )}
-                                        title="複製密碼"
+                                        title={t.admin.users.copyPassword}
                                     >
                                         {isCopied ? <Check className="h-5 w-5" /> : <Copy className="h-5 w-5" />}
                                     </button>
                                 </div>
                                 <p className="text-xs text-gray-400 italic">
-                                    * 請務必通知用戶其新密碼，並建議其登錄後及時修改。
+                                    {t.admin.users.resetNote}
                                 </p>
                             </div>
 
@@ -605,7 +601,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                     onClick={() => setIsResetModalOpen(false)}
                                     className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 border border-transparent"
                                 >
-                                    取消
+                                    {t.admin.users.cancel}
                                 </button>
                                 <button
                                     onClick={handleResetPassword}
@@ -613,7 +609,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                     className="flex items-center rounded-lg bg-amber-600 px-6 py-2 text-sm font-medium text-white hover:bg-amber-700 shadow-sm transition-all active:scale-[0.98] disabled:opacity-50"
                                 >
                                     {isResetting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    確認重置
+                                    {t.admin.users.confirmReset}
                                 </button>
                             </div>
                         </div>

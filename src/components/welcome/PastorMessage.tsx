@@ -1,6 +1,12 @@
+
+'use client';
+
+import { useTranslation } from "@/i18n/LanguageContext";
 import React from "react";
 
 export const PastorMessage = () => {
+    const { t } = useTranslation();
+
     return (
         <section className="py-12 px-4 md:px-10 bg-white dark:bg-[#101922]">
             <div className="mx-auto max-w-6xl">
@@ -16,20 +22,25 @@ export const PastorMessage = () => {
                         </div>
                     </div>
                     <div className="w-full md:w-1/2 flex flex-col gap-6">
-                        <div>
-                            <h2 className="text-primary font-bold tracking-wide uppercase text-sm mb-2">
-                                牧者寄語
-                            </h2>
-                            <h3 className="text-3xl md:text-4xl font-bold text-[#111418] dark:text-white mb-4">
-                                願恩惠與平安臨到您
-                            </h3>
+                        <div className="flex items-center gap-2 mb-4">
+                            <span className="w-12 h-1 bg-amber-500 rounded-full"></span>
+                            <span className="text-amber-600 dark:text-amber-400 font-bold tracking-wider uppercase text-sm">
+                                {t.welcome.pastor.label}
+                            </span>
                         </div>
-                        <p className="text-[#617589] dark:text-gray-300 text-lg leading-relaxed">
-                            很高興能在這裡遇見您！長堤基督教會是一個充滿愛與包容的大家庭。我們相信心，教會不僅僅是一個聚會的地方，更是一個彼此扶持、共同成長的生命共同體。
-                        </p>
-                        <p className="text-[#617589] dark:text-gray-300 text-lg leading-relaxed">
-                            無論您是剛剛來到奧克蘭，還是正在尋找一個屬靈的家，我們都張開雙臂歡迎您。期待在這個主日見到您！
-                        </p>
+
+                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+                            {t.welcome.pastor.title}
+                        </h2>
+
+                        <div className="text-gray-600 dark:text-gray-300 space-y-4 leading-relaxed text-lg">
+                            <p>
+                                {t.welcome.pastor.p1}
+                            </p>
+                            <p>
+                                {t.welcome.pastor.p2}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

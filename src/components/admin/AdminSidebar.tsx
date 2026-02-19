@@ -6,22 +6,35 @@ import { Users, BookOpen, LayoutDashboard, Settings, LogOut, Church, Lock, Heart
 import { useAuth } from "@/components/auth/AuthProvider";
 import clsx from "clsx";
 
-const navigation = [
-    { name: "儀表板", href: "/admin", icon: LayoutDashboard },
-    { name: "系統用戶", href: "/admin/users", icon: Users },
-    { name: "每日靈修", href: "/admin/devotions", icon: BookOpen },
-    { name: "代禱需求", href: "/admin/prayers", icon: HeartHandshake },
-    { name: "預約參訪", href: "/admin/visits", icon: UserPlus },
-    { name: "系統設置", href: "/admin/settings", icon: Settings },
-];
+// Navigation moved inside component to access t
+// const navigation = [
+//     { name: "儀表板", href: "/admin", icon: LayoutDashboard },
+//     { name: "系統用戶", href: "/admin/users", icon: Users },
+//     { name: "每日靈修", href: "/admin/devotions", icon: BookOpen },
+//     { name: "代禱需求", href: "/admin/prayers", icon: HeartHandshake },
+//     { name: "預約參訪", href: "/admin/visits", icon: UserPlus },
+//     { name: "系統設置", href: "/admin/settings", icon: Settings },
+// ];
+
+import { useTranslation } from "@/i18n/LanguageContext";
 
 export function AdminSidebar() {
+    const { t } = useTranslation();
     const pathname = usePathname();
     const { user, profile, logout } = useAuth();
 
+    const navigation = [
+        { name: t.admin.sidebar.dashboard, href: "/admin", icon: LayoutDashboard },
+        { name: t.admin.sidebar.users, href: "/admin/users", icon: Users },
+        { name: t.admin.sidebar.devotions, href: "/admin/devotions", icon: BookOpen },
+        { name: t.admin.sidebar.prayers, href: "/admin/prayers", icon: HeartHandshake },
+        { name: t.admin.sidebar.visits, href: "/admin/visits", icon: UserPlus },
+        { name: t.admin.sidebar.settings, href: "/admin/settings", icon: Settings },
+    ];
+
     const displayUser = {
-        name: profile?.name || user?.displayName || user?.email?.split('@')[0] || "管理員",
-        roleName: profile?.roleName || "系統管理員",
+        name: profile?.name || user?.displayName || user?.email?.split('@')[0] || t.admin.sidebar.admin,
+        roleName: profile?.roleName || t.admin.sidebar.systemAdmin,
         avatar: profile?.avatar || user?.photoURL || null
     };
 
@@ -29,7 +42,7 @@ export function AdminSidebar() {
         <div className="flex h-full w-64 flex-col bg-gradient-to-br from-primary/90 to-blue-600/90 text-white shadow-xl transition-all">
             <div className="flex h-16 items-center border-b border-white/10 px-6">
                 <Church className="mr-2 h-6 w-6 text-white" />
-                <span className="text-lg font-bold tracking-wide text-white">教會後臺管理</span>
+                <span className="text-lg font-bold tracking-wide text-white">{t.admin.sidebar.title}</span>
             </div>
 
             <div className="flex-1 overflow-y-auto py-6">
@@ -63,7 +76,7 @@ export function AdminSidebar() {
                                             isActive ? "text-white" : "text-white/60 group-hover:text-white"
                                         )}
                                     />
-                                    修改密碼
+                                    {t.admin.sidebar.changePassword}
                                 </Link>
                             );
                         }
@@ -125,7 +138,7 @@ export function AdminSidebar() {
                     className="group flex w-full items-center rounded-lg px-3 py-2 text-sm font-medium text-white/70 transition-colors hover:bg-red-500/20 hover:text-white"
                 >
                     <LogOut className="mr-3 h-4 w-4 transition-colors group-hover:text-white" />
-                    登出
+                    {t.admin.sidebar.logout}
                 </button>
             </div>
         </div>

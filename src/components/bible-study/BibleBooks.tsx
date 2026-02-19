@@ -1,21 +1,26 @@
+'use client';
+
 import React from 'react';
+import { useTranslation } from "@/i18n/LanguageContext";
 
-const oldTestamentBooks = [
-    { name: '創世記', subtitle: '起源與約', icon: 'eco', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaU02f9zzO9bD_K1gduUoNjE' },
-    { name: '出埃及記', subtitle: '拯救與律法', icon: 'waves', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaWSZWlHWfmCzgjEjRnJzWGo' },
-    { name: '申命記', subtitle: '重申誡命', icon: 'gavel', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaUJYwyquxkPvcqsyPWs5h_2' },
-];
+const BibleBooks = () => {
+    const { t } = useTranslation();
 
-const newTestamentBooks = [
-    { name: '啟示錄', icon: 'auto_awesome', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaUA0lNNXN6wG7EooQmK7fwp' },
-    { name: '馬可福音', icon: 'face_6', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaU8a9x7nYQ-J_JUdEOtO9Da' },
-    { name: '以弗所書', icon: 'forward_to_inbox', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaXlMOCNYUpq4Vowd10aV-S6' },
-    { name: '希伯來書', icon: 'account_balance', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaUEZCf_GzkdiP41UCAo__3d' },
-    { name: '使徒行傳', icon: 'footprint', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaUurqmm7_Kz-IPPg29KJWZg' },
-    { name: '提摩太前後書', icon: 'person_pin', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaUGE_COV0p297YLFjOcX2n8' },
-];
+    const oldTestament = [
+        { name: t.bibleStudy.books.genesis.name, subtitle: t.bibleStudy.books.genesis.subtitle, icon: 'eco', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaU02f9zzO9bD_K1gduUoNjY' },
+        { name: t.bibleStudy.books.exodus.name, subtitle: t.bibleStudy.books.exodus.subtitle, icon: 'waves', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaWSZWlHWfmCzgjEjRnJzWGo' },
+        { name: t.bibleStudy.books.deuteronomy.name, subtitle: t.bibleStudy.books.deuteronomy.subtitle, icon: 'gavel', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaUJYwyquxkPvcqsyPWs5h_2' },
+    ];
 
-export default function BibleBooks() {
+    const newTestament = [
+        { name: t.bibleStudy.books.revelation, icon: 'auto_awesome', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaUA0lNNXN6wG7EooQmK7fwp' },
+        { name: t.bibleStudy.books.mark, icon: 'face_6', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaU8a9x7nYQ-J_JUdEOtO9Da' },
+        { name: t.bibleStudy.books.ephesians, icon: 'forward_to_inbox', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaXlMOCNYUpq4Vowd10aV-S6' },
+        { name: t.bibleStudy.books.hebrews, icon: 'account_balance', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaUEZCf_GzkdiP41UCAo__3d' },
+        { name: t.bibleStudy.books.acts, icon: 'footprint', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaUurqmm7_Kz-IPPg29KJWZg' },
+        { name: t.bibleStudy.books.timothy, icon: 'person_pin', link: 'https://www.youtube.com/playlist?list=PLP7Y2-_kjaaUGE_COV0p297YLFjOcX2n8' },
+    ];
+
     return (
         <section className="relative z-10 w-full max-w-7xl mb-12 px-4">
             {/* Journey Step Dot */}
@@ -30,10 +35,12 @@ export default function BibleBooks() {
                 <div className="flex flex-col gap-8">
                     <div className="flex items-center gap-4 text-amber-700 dark:text-amber-500 border-b-2 border-amber-100 dark:border-amber-900/30 pb-4 md:flex-row-reverse md:text-right">
                         <span className="material-symbols-outlined text-4xl">history_edu</span>
-                        <h2 className="text-4xl font-black w-full">舊約查經課程</h2>
+                        <h3 className="text-xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400 bg-clip-text text-transparent">
+                            {t.bibleStudy.books.oldTestament}
+                        </h3>
                     </div>
                     <div className="flex flex-col gap-4 md:items-end">
-                        {oldTestamentBooks.map((book) => (
+                        {oldTestament.map((book) => (
                             <a
                                 key={book.name}
                                 href={book.link}
@@ -59,10 +66,12 @@ export default function BibleBooks() {
                 <div className="flex flex-col gap-8">
                     <div className="flex items-center justify-end md:justify-start gap-4 text-emerald-700 dark:text-emerald-500 border-b-2 border-emerald-100 dark:border-emerald-900/30 pb-4">
                         <span className="material-symbols-outlined text-4xl">local_library</span>
-                        <h2 className="text-4xl font-black">新約查經課程</h2>
+                        <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text text-transparent">
+                            {t.bibleStudy.books.newTestament}
+                        </h3>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {newTestamentBooks.map((book) => (
+                        {newTestament.map((book) => (
                             <a
                                 key={book.name}
                                 href={book.link}
@@ -89,7 +98,7 @@ export default function BibleBooks() {
                                 <span className="material-symbols-outlined text-xl">school</span>
                             </div>
                             <span className="text-md font-bold text-primary dark:text-blue-400">
-                                2025同工造就訓練
+                                {t.bibleStudy.books.training}
                             </span>
                         </a>
                     </div>
@@ -98,3 +107,5 @@ export default function BibleBooks() {
         </section>
     );
 }
+
+export default BibleBooks;

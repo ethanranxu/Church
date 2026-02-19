@@ -3,6 +3,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
+import { useTranslation } from "@/i18n/LanguageContext";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {
     ssr: false,
@@ -161,6 +162,7 @@ interface RichTextEditorProps {
 }
 
 export const RichTextEditor = React.memo(function RichTextEditor({ label, placeholder, value, onChange }: RichTextEditorProps) {
+    const { t, locale } = useTranslation();
     return (
         <div className="w-full space-y-2">
             <label className="block text-sm font-medium text-gray-700">{label}</label>
@@ -170,7 +172,7 @@ export const RichTextEditor = React.memo(function RichTextEditor({ label, placeh
                     setContents={value}
                     onChange={onChange}
                     placeholder={placeholder}
-                    lang={zh_tw}
+                    lang={locale === 'zh-TW' ? zh_tw : undefined}
                     setOptions={{
                         height: "auto",
                         minHeight: "300px",
@@ -199,7 +201,7 @@ export const RichTextEditor = React.memo(function RichTextEditor({ label, placeh
                 />
             </div>
             <p className="text-xs text-gray-500 mt-2">
-                支持拖拽上傳圖片/影片。富文本編輯器由 SunEditor 提供。
+                {t.admin.devotions.editorHelp}
             </p>
         </div>
     );

@@ -8,9 +8,9 @@ import { revalidatePath } from 'next/cache';
 /**
  * 提交新的代禱事項到 Firestore 的 'Prays' 集合
  */
-export async function submitPrayer(formData: PrayerFormData) {
+export async function submitPrayer(formData: PrayerFormData): Promise<{ success: boolean; id?: string; message?: string; error?: string }> {
     try {
-        const newPrayer: Omit<PrayerRecord, 'id'> = {
+        const newPrayer = {
             ...formData,
             status: 'pending',
             createdAt: FieldValue.serverTimestamp(),
@@ -37,7 +37,7 @@ export async function submitPrayer(formData: PrayerFormData) {
 /**
  * 获取所有代祷事项（管理后台使用）
  */
-export async function getPrayers() {
+export async function getPrayers(): Promise<PrayerRecord[]> {
     try {
         const snapshot = await db.collection('Prays')
             .orderBy('createdAt', 'desc')
@@ -48,7 +48,7 @@ export async function getPrayers() {
             ...doc.data(),
             createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || null,
             updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || null,
-        }));
+        } as PrayerRecord));
     } catch (error) {
         console.error('Failed to fetch prayers:', error);
         return [];
@@ -58,7 +58,7 @@ export async function getPrayers() {
 /**
  * 更新代禱事項狀態
  */
-export async function updatePrayerStatus(id: string, status: PrayerStatus, operator: { name: string, email: string }) {
+export async function updatePrayerStatus(id: string, status: PrayerStatus, operator: { name: string, email: string }): Promise<{ success: boolean; error?: string }> {
     try {
         await db.collection('Prays').doc(id).update({
             status,
@@ -84,7 +84,7 @@ export async function updatePrayerStatus(id: string, status: PrayerStatus, opera
 /**
  * 刪除代禱事項
  */
-export async function deletePrayer(id: string, operator: { name: string, email: string }) {
+export async function deletePrayer(id: string, operator: { name: string, email: string }): Promise<{ success: boolean; error?: string }> {
     try {
         await db.collection('Prays').doc(id).delete();
 

@@ -6,7 +6,11 @@ import { revalidatePath } from 'next/cache';
 
 export async function getUsers(): Promise<User[]> {
     try {
-        const snapshot = await db.collection('Users').get();
+        const snapshot = await db.collection('Users')
+            .orderBy('createdAt', 'desc')
+            .limit(100)
+            .get();
+
         const users = snapshot.docs.map(doc => ({
             ...doc.data(),
             id: doc.id,
@@ -18,7 +22,7 @@ export async function getUsers(): Promise<User[]> {
     }
 }
 
-export async function createUser(data: Omit<User, 'id' | 'createdAt'>, operator?: { name: string, email: string }) {
+export async function createUser(data: Omit<User, 'id' | 'createdAt'>, operator?: { name: string, email: string }): Promise<{ success: boolean; id?: string; error?: string }> {
     try {
         const newUser = {
             ...data,
@@ -44,7 +48,7 @@ export async function createUser(data: Omit<User, 'id' | 'createdAt'>, operator?
     }
 }
 
-export async function updateUser(id: string, data: Partial<Omit<User, 'id' | 'createdAt'>>, operator?: { name: string, email: string }) {
+export async function updateUser(id: string, data: Partial<Omit<User, 'id' | 'createdAt'>>, operator?: { name: string, email: string }): Promise<{ success: boolean; error?: string }> {
     try {
         await db.collection('Users').doc(id).update(data);
 
@@ -70,7 +74,7 @@ export async function updateUser(id: string, data: Partial<Omit<User, 'id' | 'cr
     }
 }
 
-export async function deleteUser(id: string, operator?: { name: string, email: string }) {
+export async function deleteUser(id: string, operator?: { name: string, email: string }): Promise<{ success: boolean; error?: string }> {
     try {
         // Fetch user name before delete for log
         const doc = await db.collection('Users').doc(id).get();

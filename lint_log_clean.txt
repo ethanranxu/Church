@@ -1,0 +1,336 @@
+﻿
+> church-app@0.1.0 lint
+> eslint
+
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\scripts\clear-logs.js
+  1:33  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\scripts\clear-logs.ts
+  12:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  12:54  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  24:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\scripts\debug-pagination.ts
+  3:10  warning  'db' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\actions\auth.ts
+   90:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  123:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  145:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\actions\log.ts
+  79:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\actions\visit.ts
+  14:17  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  52:21  warning  '_' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  52:35  warning  '__' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  52:65  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\devotions\DevotionsClient.tsx
+   32:12  warning  'status' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  156:18  warning  'error' is defined but never used            @typescript-eslint/no-unused-vars
+  169:22  warning  'error' is defined but never used            @typescript-eslint/no-unused-vars
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\login\page.tsx
+  21:11  warning  'router' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\page.tsx
+  1:10  warning  'Users' is defined but never used     @typescript-eslint/no-unused-vars
+  1:17  warning  'BookOpen' is defined but never used  @typescript-eslint/no-unused-vars
+  1:27  warning  'Eye' is defined but never used       @typescript-eslint/no-unused-vars
+  1:32  warning  'Activity' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\prayers\page.tsx
+  17:5  warning  'Unlock' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+  18:5  warning  'MoreVertical' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  20:5  warning  'Filter' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+  54:9  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\prayers\page.tsx:54:9
+  52 |
+  53 |     useEffect(() => {
+> 54 |         loadPrayers();
+     |         ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  55 |     }, []);
+  56 |
+  57 |     async function handleStatusChange(id: string, newStatus: PrayerStatus) {  react-hooks/set-state-in-effect
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\settings\password\PasswordClient.tsx
+  43:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\users\UsersClient.tsx
+   19:19  warning  'setUsers' is assigned a value but never used                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+  121:18  warning  'error' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  232:18  warning  'error' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  310:53  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  435:45  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  498:66  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  550:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\visits\VisitsClient.tsx
+    6:18   warning  'Filter' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+    6:26   warning  'Download' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+    6:87   warning  'MoreHorizontal' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+    6:118  warning  'Eye' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+   21:12   warning  'loading' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+   37:11   warning  'router' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+   49:13   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\visits\VisitsClient.tsx:49:13
+  47 |         // Initial load if initialReservations is empty or not provided
+  48 |         if (!initialReservations || initialReservations.length === 0) {
+> 49 |             loadReservations();
+     |             ^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  50 |         }
+  51 |     }, [initialReservations]);
+  52 |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react-hooks/set-state-in-effect
+   81:25   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-explicit-any
+   82:25   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-explicit-any
+   88:17   error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/ban-ts-comment
+   90:17   error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/ban-ts-comment
+  251:95   error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\visits\VisitsClient.tsx:251:95
+  249 |                             <tr>
+  250 |                                 <th onClick={() => handleSort('visitDate')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors">
+> 251 |                                     <div className="flex items-center">{t.admin.visits.date} <SortIcon active={sortConfig.key === 'visitDate'} /></div>
+      |                                                                                               ^^^^^^^^ This component is created during render
+  252 |                                 </th>
+  253 |                                 <th onClick={() => handleSort('visitorName')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors">
+  254 |                                     <div className="flex items-center">{t.admin.visits.visitors} <SortIcon active={sortConfig.key === 'visitorName'} /></div>
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\visits\VisitsClient.tsx:180:22
+  178 |     };
+  179 |
+> 180 |     const SortIcon = ({ active }: { active: boolean }) => {
+      |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 181 |         if (!active) return <ArrowUpRight className="h-4 w-4 opacity-0 group-hover:opacity-30 transition-opacity ml-1" />;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 182 |         return sortConfig.direction === 'asc' ?
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 183 |             <ArrowUpRight className="h-4 w-4 ml-1 rotate-0 transition-transform" /> :
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 184 |             <ArrowUpRight className="h-4 w-4 ml-1 rotate-180 transition-transform" />;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 185 |     };
+      | ^^^^^^ The component is created during render here
+  186 |
+  187 |     return (
+  188 |         <div className="container mx-auto p-6 space-y-6">                                                                             react-hooks/static-components
+  254:99   error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\visits\VisitsClient.tsx:254:99
+  252 |                                 </th>
+  253 |                                 <th onClick={() => handleSort('visitorName')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors">
+> 254 |                                     <div className="flex items-center">{t.admin.visits.visitors} <SortIcon active={sortConfig.key === 'visitorName'} /></div>
+      |                                                                                                   ^^^^^^^^ This component is created during render
+  255 |                                 </th>
+  256 |                                 <th className="px-6 py-4">{t.admin.visits.introducer}</th>
+  257 |                                 <th onClick={() => handleSort('status')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors">
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\visits\VisitsClient.tsx:180:22
+  178 |     };
+  179 |
+> 180 |     const SortIcon = ({ active }: { active: boolean }) => {
+      |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 181 |         if (!active) return <ArrowUpRight className="h-4 w-4 opacity-0 group-hover:opacity-30 transition-opacity ml-1" />;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 182 |         return sortConfig.direction === 'asc' ?
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 183 |             <ArrowUpRight className="h-4 w-4 ml-1 rotate-0 transition-transform" /> :
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 184 |             <ArrowUpRight className="h-4 w-4 ml-1 rotate-180 transition-transform" />;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 185 |     };
+      | ^^^^^^ The component is created during render here
+  186 |
+  187 |     return (
+  188 |         <div className="container mx-auto p-6 space-y-6">                                                                                                                                    react-hooks/static-components
+  258:97   error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\visits\VisitsClient.tsx:258:97
+  256 |                                 <th className="px-6 py-4">{t.admin.visits.introducer}</th>
+  257 |                                 <th onClick={() => handleSort('status')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors">
+> 258 |                                     <div className="flex items-center">{t.admin.visits.status} <SortIcon active={sortConfig.key === 'status'} /></div>
+      |                                                                                                 ^^^^^^^^ This component is created during render
+  259 |                                 </th>
+  260 |                                 <th onClick={() => handleSort('createdAt')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors hidden md:table-cell">
+  261 |                                     <div className="flex items-center">{t.admin.visits.submitTime} <SortIcon active={sortConfig.key === 'createdAt'} /></div>
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\visits\VisitsClient.tsx:180:22
+  178 |     };
+  179 |
+> 180 |     const SortIcon = ({ active }: { active: boolean }) => {
+      |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 181 |         if (!active) return <ArrowUpRight className="h-4 w-4 opacity-0 group-hover:opacity-30 transition-opacity ml-1" />;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 182 |         return sortConfig.direction === 'asc' ?
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 183 |             <ArrowUpRight className="h-4 w-4 ml-1 rotate-0 transition-transform" /> :
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 184 |             <ArrowUpRight className="h-4 w-4 ml-1 rotate-180 transition-transform" />;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 185 |     };
+      | ^^^^^^ The component is created during render here
+  186 |
+  187 |     return (
+  188 |         <div className="container mx-auto p-6 space-y-6">  react-hooks/static-components
+  261:101  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\visits\VisitsClient.tsx:261:101
+  259 |                                 </th>
+  260 |                                 <th onClick={() => handleSort('createdAt')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors hidden md:table-cell">
+> 261 |                                     <div className="flex items-center">{t.admin.visits.submitTime} <SortIcon active={sortConfig.key === 'createdAt'} /></div>
+      |                                                                                                     ^^^^^^^^ This component is created during render
+  262 |                                 </th>
+  263 |                                 <th className="px-6 py-4 text-right">{t.admin.visits.actions}</th>
+  264 |                             </tr>
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\admin\visits\VisitsClient.tsx:180:22
+  178 |     };
+  179 |
+> 180 |     const SortIcon = ({ active }: { active: boolean }) => {
+      |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 181 |         if (!active) return <ArrowUpRight className="h-4 w-4 opacity-0 group-hover:opacity-30 transition-opacity ml-1" />;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 182 |         return sortConfig.direction === 'asc' ?
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 183 |             <ArrowUpRight className="h-4 w-4 ml-1 rotate-0 transition-transform" /> :
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 184 |             <ArrowUpRight className="h-4 w-4 ml-1 rotate-180 transition-transform" />;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 185 |     };
+      | ^^^^^^ The component is created during render here
+  186 |
+  187 |     return (
+  188 |         <div className="container mx-auto p-6 space-y-6">                                                                                                                                                                                                                              react-hooks/static-components
+  399:131  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-explicit-any
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\app\layout.tsx
+  126:9  warning  Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\admin\ActivityFeed.tsx
+    5:20  warning  'User' is defined but never used                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+   14:20  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+   32:12  warning  'exportProgress' is assigned a value but never used                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  126:51  warning  The ref value 'observerTarget.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'observerTarget.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+  134:18  warning  'e' is defined but never used                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\admin\AdminSidebar.tsx
+  126:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\admin\DashboardStats.tsx
+  4:42  warning  'LucideIcon' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\admin\GlobalVisitsMap.tsx
+   4:44  warning  'Pin' is defined but never used                     @typescript-eslint/no-unused-vars
+   7:41  warning  'format' is defined but never used                  @typescript-eslint/no-unused-vars
+  27:21  error    'endDate' is never reassigned. Use 'const' instead  prefer-const
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\analytics\UserTracker.tsx
+  11:41  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\analytics\UserTracker.tsx:11:41
+   9 |     const pathname = usePathname();
+  10 |     const logIdRef = useRef<string | null>(null);
+> 11 |     const startTimeRef = useRef<number>(Date.now());
+     |                                         ^^^^^^^^^^ Cannot call impure function
+  12 |
+  13 |     useEffect(() => {
+  14 |         // Get or create session ID  react-hooks/purity
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\auth\AuthProvider.tsx
+   69:25  error    Unexpected any. Specify a different type                                                                                   @typescript-eslint/no-explicit-any
+   86:29  error    Unexpected any. Specify a different type                                                                                   @typescript-eslint/no-explicit-any
+  121:8   warning  React Hook useEffect has a missing dependency: 'handleAuthVerification'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  154:25  error    Unexpected any. Specify a different type                                                                                   @typescript-eslint/no-explicit-any
+  165:41  error    Unexpected any. Specify a different type                                                                                   @typescript-eslint/no-explicit-any
+  183:25  error    Unexpected any. Specify a different type                                                                                   @typescript-eslint/no-explicit-any
+  220:25  error    Unexpected any. Specify a different type                                                                                   @typescript-eslint/no-explicit-any
+  246:25  error    Unexpected any. Specify a different type                                                                                   @typescript-eslint/no-explicit-any
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\beliefs\FundamentalTruths.tsx
+  7:99  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\beliefs\HistoryTimeline.tsx
+  42:37  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  49:37  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  78:37  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  85:37  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\beliefs\JoinCTA.tsx
+  24:29  error  Do not use an `<a>` element to navigate to `/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+  27:29  error  Do not use an `<a>` element to navigate to `/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\bible-study\BibleOverview.tsx
+  34:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\devotion\Calendar.tsx
+  33:11  warning  'daysInPrevMonth' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  71:11  warning  'monthNames' is assigned a value but never used       @typescript-eslint/no-unused-vars
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\devotion\DevotionContentWrapper.tsx
+  25:60  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\devotion\DevotionFeed.tsx
+   78:51  warning  The ref value 'observerTarget.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'observerTarget.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+   81:8   warning  React Hook useEffect has a missing dependency: 'loadMoreDevotions'. Either include it or remove the dependency array                                                                                                                                                         react-hooks/exhaustive-deps
+  104:33  error    'cleanHtml' is never reassigned. Use 'const' instead                                                                                                                                                                                                                         prefer-const
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\devotion\ImageQuote.tsx
+  8:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\layout\Footer.tsx
+  45:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\components\layout\Navbar.tsx
+  39:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\i18n\LanguageContext.tsx
+  36:61  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-explicit-any
+  51:9   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\RX\Documents\寮€鍙戞祴璇昞Church\Church\src\i18n\LanguageContext.tsx:51:9
+  49 |     useEffect(() => {
+  50 |         const detected = detectBrowserLanguage();
+> 51 |         setLocaleState(detected);
+     |         ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  52 |         setMounted(true);
+  53 |     }, []);
+  54 |  react-hooks/set-state-in-effect
+
+鉁?90 problems (42 errors, 48 warnings)
+  2 errors and 0 warnings potentially fixable with the `--fix` option.
+

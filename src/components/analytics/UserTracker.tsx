@@ -22,25 +22,19 @@ export function UserTracker() {
             // 1. End previous log if exists
             if (logIdRef.current) {
                 const duration = Math.floor((Date.now() - startTimeRef.current) / 1000);
-                // Fire and forget - use sendBeacon-like behavior logic if possible, 
-                // but for server actions we just call it.
-                // Note: updating duration is best effort on route change
+                // Fire and forget
                 logUserDuration(logIdRef.current!, duration);
             }
 
             // 2. Start new log
             startTimeRef.current = Date.now();
-            // Don't log admin pages for "UserLogs" (optional, but good practice to separate traffic)
-            // But requirement says "User access logs", so we might log everything but maybe tag it?
-            // For now, log everything.
 
             try {
-                const newLogId = await logUserVisit(
-                    pathname,
-                    navigator.userAgent,
-                    sessionId!
-                );
-                logIdRef.current = newLogId;
+                const id = await logUserVisit(pathname, navigator.userAgent, sessionId!);
+
+                if (id) {
+                    logIdRef.current = id;
+                }
             } catch (error) {
                 console.error("Tracking Error", error);
             }

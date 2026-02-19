@@ -1,46 +1,51 @@
-import React from "react";
+"use client";
+
+import React, { useMemo } from "react";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
-
-const VALUES = [
-    {
-        icon: "diversity_3",
-        title: "團契生活",
-        description: "我們重視肢體間的連結，透過小組與聚會，學習彼此相愛，互相扶持，在主裡成為一家人。",
-        color: "bg-blue-50 dark:bg-blue-900/20",
-        borderColor: "border-t-blue-500",
-        iconColor: "text-blue-600 dark:text-blue-400",
-    },
-    {
-        icon: "auto_stories",
-        title: "聖經教導",
-        description: "扎根於神的話語，透過主日講道、查經班與門徒訓練，使信徒生命成熟，活出基督的樣式。",
-        color: "bg-amber-50 dark:bg-amber-900/20",
-        borderColor: "border-t-amber-500",
-        iconColor: "text-amber-600 dark:text-amber-400",
-    },
-    {
-        icon: "volunteer_activism",
-        title: "社區服事",
-        description: "走出教會四牆，關懷社區需要，以實際行動分享神的愛，作光作鹽，榮神益人。",
-        color: "bg-emerald-50 dark:bg-emerald-900/20",
-        borderColor: "border-t-emerald-500",
-        iconColor: "text-emerald-600 dark:text-emerald-400",
-    },
-];
+import { useTranslation } from "@/i18n";
 
 export const CoreValues = () => {
+    const { t } = useTranslation();
+
+    const VALUES = useMemo(() => [
+        {
+            icon: "diversity_3",
+            title: t.home.coreValues.fellowship,
+            description: t.home.coreValues.fellowshipDesc,
+            color: "bg-blue-50 dark:bg-blue-900/20",
+            borderColor: "border-t-blue-500",
+            iconColor: "text-blue-600 dark:text-blue-400",
+        },
+        {
+            icon: "auto_stories",
+            title: t.home.coreValues.bibleTeaching,
+            description: t.home.coreValues.bibleTeachingDesc,
+            color: "bg-amber-50 dark:bg-amber-900/20",
+            borderColor: "border-t-amber-500",
+            iconColor: "text-amber-600 dark:text-amber-400",
+        },
+        {
+            icon: "volunteer_activism",
+            title: t.home.coreValues.communityService,
+            description: t.home.coreValues.communityServiceDesc,
+            color: "bg-emerald-50 dark:bg-emerald-900/20",
+            borderColor: "border-t-emerald-500",
+            iconColor: "text-emerald-600 dark:text-emerald-400",
+        },
+    ], [t]);
+
     return (
         <Section className="bg-white dark:bg-[#101922] py-12 md:py-12">
             <Container>
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-4xl font-bold text-[#111418] dark:text-white mb-4">
-                        核心價值
+                        {t.home.coreValues.title}
                     </h2>
                     <Container className="max-w-[1134px]">
                         <div className="w-12 h-1 bg-[#FBBF24] mx-auto mb-6"></div>
                         <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                            在愛中建立團契，在真理中彼此教導，在社區中熱心服事
+                            {t.home.coreValues.subtitle}
                         </p>
                     </Container>
                 </div>

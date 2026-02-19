@@ -2,7 +2,11 @@
 
 import React from "react";
 
+import { useTranslation } from "@/i18n/LanguageContext";
+
 export const WelcomeHero = () => {
+    const { t } = useTranslation();
+
     return (
         <div
             className="relative flex min-h-[400px] w-full flex-col items-center justify-center overflow-hidden bg-cover bg-center p-4 text-center md:p-10"
@@ -11,12 +15,12 @@ export const WelcomeHero = () => {
             }}
         >
             <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-4 drop-shadow-2xl tracking-[0.2em]">
-                歡迎來到長堤大家庭
+                {t.welcome.hero.title}
             </h1>
             <p className="text-white text-lg md:text-xl font-medium max-w-3xl opacity-90 drop-shadow-md">
-                「願你們彼此相愛，像主愛我們一樣。」
+                {t.welcome.hero.scripture}
                 <br />
-                約翰福音 15:12
+                <span className="text-sm md:text-base opacity-80">{t.welcome.hero.reference}</span>
             </p>
             <div className="w-24 h-1.5 bg-[#FBBF24] mt-8 rounded-full"></div>
         </div>

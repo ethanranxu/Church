@@ -4,8 +4,11 @@ import React from "react";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
+import { useTranslation } from "@/i18n";
 
 export const Location = () => {
+    const { t } = useTranslation();
+
     return (
         <Section id="location" className="bg-white dark:bg-background-dark">
             <Container>
@@ -25,16 +28,16 @@ export const Location = () => {
 
                         {/* Directions Content */}
                         <div className="flex flex-col justify-center p-6 lg:pr-12">
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">如何到達</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">{t.home.location.howToGet}</h2>
                             <div className="space-y-6">
                                 <div className="flex gap-4">
                                     <div className="mt-1 bg-primary/10 p-2 rounded-lg text-primary h-fit">
                                         <span className="material-symbols-outlined">directions_car</span>
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-gray-900 dark:text-white mb-1">自行開車</h3>
+                                        <h3 className="font-bold text-gray-900 dark:text-white mb-1">{t.home.location.byCar}</h3>
                                         <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                                            教會位於 Mairangi Bay Primary School Hall。學校內設有充足的停車位供會眾使用。請從 Galaxy Drive 入口進入。
+                                            {t.home.location.byCarDesc}
                                         </p>
                                     </div>
                                 </div>
@@ -43,9 +46,9 @@ export const Location = () => {
                                         <span className="material-symbols-outlined">directions_bus</span>
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-gray-900 dark:text-white mb-1">大眾運輸</h3>
+                                        <h3 className="font-bold text-gray-900 dark:text-white mb-1">{t.home.location.byBus}</h3>
                                         <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                                            可搭乘奧克蘭公車至 Mairangi Bay Village，步行約 10 分鐘即可到達學校禮堂。
+                                            {t.home.location.byBusDesc}
                                         </p>
                                     </div>
                                 </div>
@@ -56,7 +59,7 @@ export const Location = () => {
                                         onClick={() => window.open('https://www.google.com/maps/search/?api=1&query=Mairangi+Bay+School', '_blank')}
                                     >
                                         <span className="material-symbols-outlined">map</span>
-                                        在 Google Maps 開啟
+                                        {t.home.location.openInMaps}
                                     </Button>
                                 </div>
                             </div>

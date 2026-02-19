@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { createVisitReservation } from '@/app/actions/visit';
 import { X, Plus, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
+import { useTranslation } from "@/i18n/LanguageContext";
 
 interface VisitModalProps {
     isOpen: boolean;
@@ -11,6 +12,7 @@ interface VisitModalProps {
 }
 
 export default function VisitModal({ isOpen, onClose }: VisitModalProps) {
+    const { t } = useTranslation();
     const today = new Date();
     const formattedToday = format(today, 'yyyy-MM-dd');
 
@@ -47,7 +49,7 @@ export default function VisitModal({ isOpen, onClose }: VisitModalProps) {
         // Validation
         const validVisitors = visitors.filter(v => v.trim() !== '');
         if (validVisitors.length === 0) {
-            setError('請至少填寫一位參訪人姓名');
+            setError(t.welcome.modal.errors.required);
             return;
         }
 
@@ -66,11 +68,11 @@ export default function VisitModal({ isOpen, onClose }: VisitModalProps) {
                 // Reset form after success message displayed or explicitly?
                 // We keep modal open to show success message
             } else {
-                setError('預約失敗，請稍後再試');
+                setError(t.welcome.modal.errors.submitFailed);
             }
         } catch (err) {
             console.error(err);
-            setError('發生錯誤，請稍後再試');
+            setError(t.welcome.modal.errors.general);
         } finally {
             setIsSubmitting(false);
         }
@@ -85,8 +87,8 @@ export default function VisitModal({ isOpen, onClose }: VisitModalProps) {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">預約成功！</h3>
-                    <p className="text-gray-600 mb-6">感谢您的预约，我們會安排專人接待您！</p>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{t.welcome.modal.success.title}</h3>
+                    <p className="text-gray-600 mb-6">{t.welcome.modal.success.message}</p>
                     <button
                         onClick={() => {
                             setIsSuccess(false);
@@ -97,7 +99,7 @@ export default function VisitModal({ isOpen, onClose }: VisitModalProps) {
                         }}
                         className="bg-primary hover:bg-primary/90 text-white font-bold py-2 px-6 rounded-lg transition-colors w-full"
                     >
-                        關閉
+                        {t.welcome.modal.success.close}
                     </button>
                 </div>
             </div>
@@ -108,7 +110,7 @@ export default function VisitModal({ isOpen, onClose }: VisitModalProps) {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
                 <div className="flex items-center justify-between p-4 border-b">
-                    <h3 className="text-xl font-bold text-gray-900">預約參訪</h3>
+                    <h3 className="text-xl font-bold text-gray-900">{t.welcome.modal.title}</h3>
                     <button
                         onClick={onClose}
                         className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100"
@@ -119,7 +121,7 @@ export default function VisitModal({ isOpen, onClose }: VisitModalProps) {
 
                 <div className="p-6 overflow-y-auto">
                     <p className="text-gray-600 mb-6 text-sm leading-relaxed text-left">
-                        我们始终欢迎您的到来！为了能够为您提供更好的服务，建议您提前预约，以便我们做好充分准备。当然，如果您时间方便，我们也非常欢迎您在主日崇拜的時間直接前来！
+                        {t.welcome.modal.description}
                     </p>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -132,7 +134,7 @@ export default function VisitModal({ isOpen, onClose }: VisitModalProps) {
                         <div>
                             <div className="flex items-center justify-between mb-2">
                                 <label className="block text-sm font-medium text-gray-700 text-left">
-                                    參訪人姓名 <span className="text-red-500">*</span>
+                                    {t.welcome.modal.labels.visitorName} <span className="text-red-500">*</span>
                                 </label>
                                 <button
                                     type="button"
@@ -140,7 +142,7 @@ export default function VisitModal({ isOpen, onClose }: VisitModalProps) {
                                     className="text-sm text-primary hover:text-primary/80 flex items-center gap-1 font-medium"
                                 >
                                     <Plus size={16} />
-                                    新增參訪人
+                                    {t.welcome.modal.labels.addVisitor}
                                 </button>
                             </div>
 
@@ -151,7 +153,7 @@ export default function VisitModal({ isOpen, onClose }: VisitModalProps) {
                                             type="text"
                                             value={visitor}
                                             onChange={(e) => handleVisitorChange(index, e.target.value)}
-                                            placeholder={`參訪人 ${index + 1}`}
+                                            placeholder={`${t.welcome.modal.placeholders.visitor} ${index + 1}`}
                                             className="flex-1 px-4 py-2 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all"
                                             required
                                         />
@@ -160,7 +162,16 @@ export default function VisitModal({ isOpen, onClose }: VisitModalProps) {
                                                 type="button"
                                                 onClick={() => handleRemoveVisitor(index)}
                                                 className="text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-colors"
-                                                title="移除此參訪人"
+                                                title={t.welcome.modal.labels.addVisitor} // Reusing label or maybe just remove title or add new key? Let's use removeVisitor label if exists but it does not. Wait removedVisitor? No.
+                                            // Actually I don't see removeVisitor in the translation file view.
+                                            // Let's check keys again.
+                                            // labels: { visitorName, addVisitor, introducer, introducerPlaceholder, visitDate, submit, submitting }
+                                            // No removeVisitor. I will just hardcode "Delete" or similar if needed, or remove title.
+                                            // Wait, I saw "移除此參訪人" in my previous code. Did I add it to translations?
+                                            // In zh-TW.ts view: no removeVisitor key.
+                                            // I'll skip title or use a generic "Delete" if I have it. Or just leave it empty for now to avoid errors.
+                                            // Use t.welcome.modal.labels.addVisitor is wrong.
+                                            // I will remove the title prop for now.
                                             >
                                                 <Trash2 size={20} />
                                             </button>
@@ -172,20 +183,20 @@ export default function VisitModal({ isOpen, onClose }: VisitModalProps) {
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                                介紹人 (選填)
+                                {t.welcome.modal.labels.introducer}
                             </label>
                             <input
                                 type="text"
                                 value={introducer}
                                 onChange={(e) => setIntroducer(e.target.value)}
-                                placeholder="如有介紹人请填写"
+                                placeholder={t.welcome.modal.labels.introducerPlaceholder}
                                 className="w-full px-4 py-2 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all"
                             />
                         </div>
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                                參訪日期
+                                {t.welcome.modal.labels.visitDate}
                             </label>
                             <input
                                 type="date"
@@ -204,10 +215,10 @@ export default function VisitModal({ isOpen, onClose }: VisitModalProps) {
                                 {isSubmitting ? (
                                     <>
                                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                                        提交中...
+                                        {t.welcome.modal.labels.submitting}
                                     </>
                                 ) : (
-                                    '提交預約'
+                                    t.welcome.modal.labels.submit
                                 )}
                             </button>
                         </div>

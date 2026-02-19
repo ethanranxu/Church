@@ -1,39 +1,42 @@
 'use client';
 
-import React, { useState } from "react";
-import VisitModal from "./VisitModal";
+import React from "react";
+import { useTranslation } from "@/i18n/LanguageContext";
 
-export const VisitCTA = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+interface VisitCTAProps {
+    onOpenModal: () => void;
+}
+
+export const VisitCTA = ({ onOpenModal }: VisitCTAProps) => {
+    const { t } = useTranslation();
 
     return (
         <section className="py-20 px-4 text-center bg-primary text-white">
-            <div className="max-w-3xl mx-auto flex flex-col gap-6 items-center">
-                <h2 className="text-3xl md:text-4xl font-bold">
-                    準備好造訪我們了嗎？
+            <div className="mx-auto max-w-4xl text-center">
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                    {t.welcome.cta.title}
                 </h2>
-                <p className="text-lg md:text-xl text-blue-100 max-w-2xl">
-                    我們已經為您預備好了位置。您可以填寫下方的表單，讓我們知道您即將到來，我們會安排專人接待您。
+                <p className="text-white/90 text-xl mb-10 max-w-2xl mx-auto">
+                    {t.welcome.cta.description}
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 mt-4 w-full justify-center">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="bg-white text-primary hover:bg-gray-100 font-bold py-3 px-8 rounded-lg shadow-lg transition-colors w-full sm:w-auto"
+                        onClick={onOpenModal}
+                        className="px-8 py-4 bg-white text-blue-600 rounded-full font-bold text-lg shadow-lg hover:shadow-xl hover:bg-gray-100 transition-all transform hover:-translate-y-1"
                     >
-                        預約參訪
+                        {t.welcome.cta.bookBtn}
                     </button>
-                    <a href="/#location" className="w-full sm:w-auto">
-                        <button className="w-full bg-blue-700 text-white hover:bg-blue-800 border border-blue-500 font-bold py-3 px-8 rounded-lg transition-colors">
-                            查看地圖位置
-                        </button>
+                    <a
+                        href="https://maps.app.goo.gl/..."
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-bold text-lg hover:bg-white/10 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
+                    >
+                        <span className="material-symbols-outlined">map</span>
+                        {t.welcome.cta.mapBtn}
                     </a>
                 </div>
             </div>
-
-            <VisitModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-            />
         </section>
     );
 };

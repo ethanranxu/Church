@@ -3,8 +3,11 @@
 import React from "react";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
+import { useTranslation } from "@/i18n";
 
 export const AnnualThemeBanner = () => {
+    const { t } = useTranslation();
+
     return (
         <Section className="relative overflow-hidden py-16 md:py-20">
             {/* Background with gradient */}
@@ -31,14 +34,14 @@ export const AnnualThemeBanner = () => {
                 <div className="flex flex-col items-center text-center">
                     {/* Main Title */}
                     <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 md:mb-4 tracking-wide">
-                        2026年教會年度主題
+                        {t.home.annualTheme.title}
                     </h2>
 
                     {/* Subtitle with highlight effect */}
                     <div className="relative inline-block">
                         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-blue-400/30 to-blue-500/20 blur-xl" />
                         <p className="relative text-2xl md:text-3xl lg:text-4xl font-semibold text-blue-100 tracking-wider">
-                            在真道上紮根，在聖靈中結果
+                            {t.home.annualTheme.subtitle}
                         </p>
                     </div>
                 </div>

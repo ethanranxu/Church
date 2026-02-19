@@ -1,15 +1,7 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import {
-    WelcomeHero,
-    PastorMessage,
-    NewcomerGuide,
-    WorshipSchedule,
-    FAQ,
-    Testimonials,
-    VisitCTA,
-} from "@/components/welcome";
+import WelcomeContent from "@/components/welcome/WelcomeContent";
 
 export const metadata: Metadata = {
     title: "新朋友專區",
@@ -25,13 +17,7 @@ export default function WelcomePage() {
         <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden">
             <Navbar />
             <main className="flex-1">
-                <WelcomeHero />
-                <PastorMessage />
-                <NewcomerGuide />
-                <WorshipSchedule />
-                <FAQ />
-                <Testimonials />
-                <VisitCTA />
+                <WelcomeContent />
             </main>
             <Footer />
         </div>

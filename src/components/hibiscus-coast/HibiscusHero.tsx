@@ -1,8 +1,11 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "@/i18n";
 
 export const HibiscusHero = () => {
+    const { t } = useTranslation();
+
     return (
         <div
             className="relative flex min-h-[400px] w-full flex-col items-center justify-center overflow-hidden bg-cover bg-center p-4 text-center md:p-10"
@@ -18,10 +21,10 @@ export const HibiscusHero = () => {
             </div>
 
             <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-4 drop-shadow-2xl tracking-[0.2em]">
-                木槿灣基督教會
+                {t.nav.hibiscusCoast}
             </h1>
             <p className="text-white text-lg md:text-xl font-medium max-w-2xl opacity-90 drop-shadow-md">
-                植堂教會
+                {t.hibiscusCoast.hero.subtitle}
             </p>
             <div className="w-24 h-1.5 bg-[#FBBF24] mt-8 rounded-full"></div>
         </div>

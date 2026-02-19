@@ -8,7 +8,10 @@ interface DevotionFeedProps {
     onSelectDevotion: (devotion: Devotion) => void;
 }
 
+import { useTranslation } from "@/i18n/LanguageContext";
+
 export default function DevotionFeed({ devotions: initialDevotions, onSelectDevotion }: DevotionFeedProps) {
+    const { t } = useTranslation();
     const [devotions, setDevotions] = useState<Devotion[]>(initialDevotions);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
@@ -31,7 +34,7 @@ export default function DevotionFeed({ devotions: initialDevotions, onSelectDevo
                 return;
             }
 
-            const newDevotions = await getPublishedDevotions(10, lastDevotion.publishDate, lastDevotion.createdAt);
+            const newDevotions = await getPublishedDevotions(10, lastDevotion.publishDate ?? undefined, lastDevotion.createdAt ?? undefined);
 
             if (newDevotions.length < 10) {
                 setHasMore(false);
@@ -81,7 +84,7 @@ export default function DevotionFeed({ devotions: initialDevotions, onSelectDevo
         <div className="flex flex-col gap-6">
             <div className="flex items-center gap-2 mb-2">
                 <span className="w-1 h-6 bg-primary rounded-full"></span>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white font-display">靈修分享</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white font-display">{t.devotion.feed.title}</h3>
             </div>
 
             {devotions.map((article) => (
@@ -124,7 +127,7 @@ export default function DevotionFeed({ devotions: initialDevotions, onSelectDevo
                             onClick={() => handleDevotionClick(article)}
                             className="mt-4 flex items-center gap-2 text-primary font-bold text-sm cursor-pointer hover:underline inline-flex"
                         >
-                            繼續閱讀
+                            {t.devotion.feed.readMore}
                             <span className="material-symbols-outlined text-sm">arrow_forward</span>
                         </button>
                     </div>
@@ -136,15 +139,15 @@ export default function DevotionFeed({ devotions: initialDevotions, onSelectDevo
                 {loading && (
                     <div className="flex items-center gap-2 text-gray-500">
                         <span className="material-symbols-outlined animate-spin">refresh</span>
-                        <span>載入中...</span>
+                        <span>{t.devotion.feed.loading}</span>
                     </div>
                 )}
                 {!hasMore && devotions.length > 0 && (
-                    <div className="text-gray-400 text-sm">沒有更多內容了</div>
+                    <div className="text-gray-400 text-sm">{t.devotion.feed.noMore}</div>
                 )}
             </div>
 
 
-        </div>
+        </div >
     );
 }

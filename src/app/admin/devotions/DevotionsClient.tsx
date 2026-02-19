@@ -7,6 +7,7 @@ import clsx from "clsx";
 import { Devotion, createDevotion, updateDevotion, deleteDevotion } from "@/app/actions/devotions";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 interface DevotionsClientProps {
     initialDevotions: Devotion[];
@@ -23,6 +24,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
     }>({ key: "publishDate", direction: "desc" });
     const router = useRouter();
     const { profile } = useAuth();
+    const { t } = useTranslation();
 
     // Editor State
     const [title, setTitle] = useState("");
@@ -129,7 +131,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
 
     const handleSave = async (saveStatus: 'draft' | 'published' = 'published') => {
         if (!title) {
-            alert("請輸入標題");
+            alert(t.admin.devotions.inputTitle);
             return;
         }
 
@@ -152,20 +154,20 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
             router.refresh();
             setView("list");
         } catch (error) {
-            alert("保存失敗，請重試");
+            alert(t.admin.devotions.saveFailed);
         } finally {
             setIsLoading(false);
         }
     };
 
     const handleDelete = async (id: string, devTitle: string) => {
-        if (confirm(`確定要刪除「${devTitle}」嗎？`)) {
+        if (confirm(t.admin.devotions.confirmDelete.replace("{title}", devTitle))) {
             try {
                 const operator = profile ? { name: profile.name, email: profile.email } : undefined;
                 await deleteDevotion(id, operator);
                 router.refresh();
             } catch (error) {
-                alert("刪除失敗");
+                alert(t.admin.devotions.deleteFailed);
             }
         }
     };
@@ -182,7 +184,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                             <ChevronLeft className="h-5 w-5" />
                         </button>
                         <h1 className="text-2xl font-bold text-gray-900">
-                            {view === "create" ? "發佈新靈修" : "編輯靈修內容"}
+                            {view === "create" ? t.admin.devotions.createTitle : t.admin.devotions.editTitle}
                         </h1>
                     </div>
                     <div className="flex items-center gap-3">
@@ -190,14 +192,14 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                             onClick={() => setView("list")}
                             className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
                         >
-                            取消
+                            {t.admin.devotions.cancel}
                         </button>
                         <button
                             onClick={() => handleSave('draft')}
                             disabled={isLoading}
                             className="hidden sm:flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 disabled:opacity-70"
                         >
-                            暫存草稿
+                            {t.admin.devotions.saveDraft}
                         </button>
                         <button
                             onClick={() => handleSave('published')}
@@ -209,7 +211,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                             ) : (
                                 <Save className="mr-2 h-4 w-4" />
                             )}
-                            {isLoading ? "儲存中..." : "儲存發佈"}
+                            {isLoading ? t.admin.devotions.saving : t.admin.devotions.savePublish}
                         </button>
                     </div>
                 </div>
@@ -217,7 +219,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                 <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm space-y-6">
                     <div className="flex flex-col md:flex-row gap-6">
                         <div className="space-y-2 w-full md:w-48">
-                            <label className="block text-sm font-medium text-gray-700">發佈日期</label>
+                            <label className="block text-sm font-medium text-gray-700">{t.admin.devotions.publishDate}</label>
                             <div className="relative">
                                 <input
                                     type="date"
@@ -230,10 +232,10 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                             </div>
                         </div>
                         <div className="space-y-2 flex-1">
-                            <label className="block text-sm font-medium text-gray-700">標題</label>
+                            <label className="block text-sm font-medium text-gray-700">{t.admin.devotions.titleLabel}</label>
                             <input
                                 type="text"
-                                placeholder="請輸入靈修標題"
+                                placeholder={t.admin.devotions.titlePlaceholder}
                                 className="w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-2.5 px-3 text-sm h-[42px]"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
@@ -242,8 +244,8 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                     </div>
 
                     <RichTextEditor
-                        label="靈修內容"
-                        placeholder="在此輸入正文內容（支持圖文混排）..."
+                        label={t.admin.devotions.content}
+                        placeholder={t.admin.devotions.contentPlaceholder}
                         value={editorInitialContent}
                         onChange={handleContentChange}
                     />
@@ -256,7 +258,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
         <div className="space-y-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">每日靈修管理</h1>
+                    <h1 className="text-2xl font-bold text-gray-900">{t.admin.devotions.title}</h1>
                     <p className="text-sm text-gray-500"></p>
                 </div>
                 <button
@@ -264,7 +266,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                     className="flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-emerald-700"
                 >
                     <Plus className="mr-2 h-4 w-4" />
-                    發佈新靈修
+                    {t.admin.devotions.createNew}
                 </button>
             </div>
 
@@ -274,7 +276,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
-                            placeholder="搜索標題..."
+                            placeholder={t.admin.devotions.searchPlaceholder}
                             value={searchTerm}
                             onChange={handleSearchChange}
                             className="w-full rounded-lg border-gray-200 bg-gray-50 py-2 pl-10 pr-4 text-sm focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
@@ -296,7 +298,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                                     : "bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100"
                             )}
                         >
-                            已發佈
+                            {t.admin.devotions.published}
                         </button>
                         <button
                             onClick={() => {
@@ -313,7 +315,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                                     : "bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100"
                             )}
                         >
-                            草稿
+                            {t.admin.devotions.draft}
                         </button>
                     </div>
                 </div>
@@ -327,7 +329,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                                     onClick={() => setSort("publishDate")}
                                 >
                                     <div className="flex items-center">
-                                        發佈時間
+                                        {t.admin.devotions.publishTime}
                                         <SortIcon columnKey="publishDate" />
                                     </div>
                                 </th>
@@ -336,7 +338,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                                     onClick={() => setSort("title")}
                                 >
                                     <div className="flex items-center">
-                                        標題
+                                        {t.admin.devotions.title2}
                                         <SortIcon columnKey="title" />
                                     </div>
                                 </th>
@@ -345,7 +347,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                                     onClick={() => setSort("views")}
                                 >
                                     <div className="flex items-center justify-center">
-                                        閱讀
+                                        {t.admin.devotions.reads}
                                         <SortIcon columnKey="views" />
                                     </div>
                                 </th>
@@ -354,7 +356,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                                     onClick={() => setSort("createdAt")}
                                 >
                                     <div className="flex items-center">
-                                        創建時間
+                                        {t.admin.devotions.createdAt}
                                         <SortIcon columnKey="createdAt" />
                                     </div>
                                 </th>
@@ -363,18 +365,18 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                                     onClick={() => setSort("status")}
                                 >
                                     <div className="flex items-center">
-                                        狀態
+                                        {t.admin.devotions.status}
                                         <SortIcon columnKey="status" />
                                     </div>
                                 </th>
-                                <th className="px-6 py-4 font-medium text-right">操作</th>
+                                <th className="px-6 py-4 font-medium text-right">{t.admin.devotions.actions}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
                             {currentDevotions.map((item) => (
                                 <tr key={item.id} className="group transition-colors hover:bg-gray-50/50">
                                     <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
-                                        {item.publishDate || "未定"}
+                                        {item.publishDate || t.admin.devotions.undetermined}
                                     </td>
                                     <td className="px-6 py-4">
                                         <span
@@ -401,7 +403,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                                                     : "bg-gray-100 text-gray-700"
                                             )}
                                         >
-                                            {item.status === "published" ? "已發佈" : "草稿"}
+                                            {item.status === "published" ? t.admin.devotions.published : t.admin.devotions.draft}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 text-right">
@@ -425,7 +427,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                             {filteredDevotions.length === 0 && (
                                 <tr>
                                     <td colSpan={4} className="py-12 text-center text-gray-500">
-                                        暫無靈修文章
+                                        {t.admin.devotions.noDevotions}
                                     </td>
                                 </tr>
                             )}
@@ -437,7 +439,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                 {totalPages > 1 && (
                     <div className="flex items-center justify-between border-t border-gray-100 px-6 py-4">
                         <div className="text-sm text-gray-500">
-                            顯示 {(currentPage - 1) * itemsPerPage + 1} 到 {Math.min(currentPage * itemsPerPage, sortedDevotions.length)} 筆，共 {sortedDevotions.length} 筆
+                            {t.admin.devotions.showing} {(currentPage - 1) * itemsPerPage + 1} {t.admin.devotions.to} {Math.min(currentPage * itemsPerPage, sortedDevotions.length)} {t.admin.devotions.total} {sortedDevotions.length} {t.admin.devotions.entries}
                         </div>
                         <div className="flex items-center gap-2">
                             <button
@@ -445,17 +447,17 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                                 disabled={currentPage === 1}
                                 className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                上一頁
+                                {t.admin.devotions.prevPage}
                             </button>
                             <span className="text-sm font-medium text-gray-900">
-                                第 {currentPage} / {totalPages} 頁
+                                {t.admin.devotions.page} {currentPage} / {totalPages} {t.admin.devotions.ofPages}
                             </span>
                             <button
                                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages}
                                 className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                下一頁
+                                {t.admin.devotions.nextPage}
                             </button>
                         </div>
                     </div>

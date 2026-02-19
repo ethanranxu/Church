@@ -8,8 +8,8 @@ export interface PrayerRecord {
     content: string;
     isPrivate: boolean;
     status: PrayerStatus;
-    createdAt: any; // Firestore Timestamp
-    updatedAt: any; // Firestore Timestamp
+    createdAt: string | null;
+    updatedAt: string | null;
 }
 
 export interface PrayerFormData {

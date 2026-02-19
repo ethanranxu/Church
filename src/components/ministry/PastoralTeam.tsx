@@ -1,11 +1,16 @@
+"use client";
+
 import React from 'react';
+import { useTranslation } from "@/i18n";
 
 export default function PastoralTeam() {
+    const { t } = useTranslation();
+
     return (
         <section className="flex flex-col gap-8">
             {/* Section Title */}
             <div className="flex flex-col items-center text-center gap-2 mb-4">
-                <h2 className="text-[#111418] dark:text-white text-3xl md:text-4xl font-bold leading-tight">牧養團隊</h2>
+                <h2 className="text-[#111418] dark:text-white text-3xl md:text-4xl font-bold leading-tight">{t.ministry.pastoralTeam.title}</h2>
                 <div className="h-1 w-20 bg-primary rounded-full mt-2"></div>
             </div>
 
@@ -20,12 +25,12 @@ export default function PastoralTeam() {
                 <div className="md:w-3/5 p-8 flex flex-col justify-center gap-4">
                     <div>
                         <div className="flex items-baseline gap-3 mb-1">
-                            <h3 className="text-2xl font-bold text-[#111418] dark:text-white">龔偉鴻 牧師</h3>
+                            <h3 className="text-2xl font-bold text-[#111418] dark:text-white">{t.ministry.pastoralTeam.pastorKungName}</h3>
                         </div>
-                        <p className="text-primary font-bold">長堤基督教會主任牧師</p>
+                        <p className="text-primary font-bold">{t.ministry.pastoralTeam.pastorKungRole}</p>
                     </div>
                     <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                        龔牧師於2003年領受從神而來的異象與使命後創立長堤基督教會，擁有豐富的牧養經驗與神學背景。他致力於推動以聖經為中心的講道與門徒訓練，渴望看見每一位信徒都能在真理中成長，活出基督的樣式。
+                        {t.ministry.pastoralTeam.pastorKungBio}
                     </p>
                     <div className="pt-4 mt-auto">
                         <a
@@ -33,7 +38,7 @@ export default function PastoralTeam() {
                             href="#"
                         >
                             <span className="material-symbols-outlined">mail</span>
-                            <span>聯絡牧師</span>
+                            <span>{t.ministry.pastoralTeam.contactPastor}</span>
                         </a>
                     </div>
                 </div>
@@ -50,12 +55,12 @@ export default function PastoralTeam() {
                 <div className="md:w-3/5 p-8 flex flex-col justify-center gap-4">
                     <div>
                         <div className="flex items-baseline gap-3 mb-1">
-                            <h3 className="text-2xl font-bold text-[#111418] dark:text-white">倪耿忠 牧師</h3>
+                            <h3 className="text-2xl font-bold text-[#111418] dark:text-white">{t.ministry.pastoralTeam.pastorNiName}</h3>
                         </div>
-                        <p className="text-primary font-bold">長灣基督教會駐堂牧師</p>
+                        <p className="text-primary font-bold">{t.ministry.pastoralTeam.pastorNiRole}</p>
                     </div>
                     <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                        倪牧師委身於福音事工多年，擁有深厚的聖經造詣與牧養熱忱。他專注於家庭牧養與宣教推展，致力於引領信徒在日常生活中實踐信仰，建立活潑且充滿愛的屬靈生命。
+                        {t.ministry.pastoralTeam.pastorNiBio}
                     </p>
                     <div className="pt-4 mt-auto">
                         <a
@@ -63,7 +68,7 @@ export default function PastoralTeam() {
                             href="#"
                         >
                             <span className="material-symbols-outlined">mail</span>
-                            <span>聯絡牧師</span>
+                            <span>{t.ministry.pastoralTeam.contactPastor}</span>
                         </a>
                     </div>
                 </div>
@@ -81,8 +86,8 @@ export default function PastoralTeam() {
                     ></div>
                     <div className="p-6 flex flex-col gap-3">
                         <div>
-                            <h3 className="text-xl font-bold text-[#111418] dark:text-white text-center">王愛萍傳道</h3>
-                            <p className="text-primary font-medium text-center">木槿灣基督教會駐堂傳道</p>
+                            <h3 className="text-xl font-bold text-[#111418] dark:text-white text-center">{t.ministry.pastoralTeam.preacher1Name}</h3>
+                            <p className="text-primary font-medium text-center">{t.ministry.pastoralTeam.preacher1Role}</p>
                         </div>
 
                     </div>
@@ -98,8 +103,8 @@ export default function PastoralTeam() {
                     ></div>
                     <div className="p-6 flex flex-col gap-3">
                         <div>
-                            <h3 className="text-xl font-bold text-[#111418] dark:text-white text-center">Lina易傳道</h3>
-                            <p className="text-primary font-medium text-center">木槿灣基督教會青年及兒童傳道</p>
+                            <h3 className="text-xl font-bold text-[#111418] dark:text-white text-center">{t.ministry.pastoralTeam.preacher2Name}</h3>
+                            <p className="text-primary font-medium text-center">{t.ministry.pastoralTeam.preacher2Role}</p>
                         </div>
 
                     </div>
@@ -115,8 +120,8 @@ export default function PastoralTeam() {
                     ></div>
                     <div className="p-6 flex flex-col gap-3">
                         <div>
-                            <h3 className="text-xl font-bold text-[#111418] dark:text-white text-center">鍾學謙傳道</h3>
-                            <p className="text-primary font-medium text-center">長堤基督教會青年傳道</p>
+                            <h3 className="text-xl font-bold text-[#111418] dark:text-white text-center">{t.ministry.pastoralTeam.preacher3Name}</h3>
+                            <p className="text-primary font-medium text-center">{t.ministry.pastoralTeam.preacher3Role}</p>
                         </div>
 
                     </div>
