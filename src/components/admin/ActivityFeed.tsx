@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { fetchUserLogs, fetchAdminLogs } from '@/app/actions/log';
-import { Activity, User, Shield, MapPin, Clock, Globe, Download, Calendar } from 'lucide-react';
+import { Activity, User, Shield, MapPin, Clock, Globe, Calendar } from 'lucide-react';
 import clsx from 'clsx';
 import { formatDistanceToNow, subDays, startOfDay, endOfDay, format } from 'date-fns';
 import { zhTW } from 'date-fns/locale';
@@ -26,11 +26,6 @@ export function ActivityFeed() {
     // Date Range State
     const [startDate, setStartDate] = useState<string>(format(subDays(new Date(), 7), 'yyyy-MM-dd'));
     const [endDate, setEndDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
-
-    // Export State
-    const [isExporting, setIsExporting] = useState(false);
-    const [exportProgress, setExportProgress] = useState(0);
-    const [exportStatus, setExportStatus] = useState('');
 
     const loadLogs = useCallback(async (isRefresh = false) => {
         if (loading && !isRefresh) return;
@@ -136,82 +131,6 @@ export function ActivityFeed() {
         }
     };
 
-    const handleExport = async () => {
-        if (isExporting) return;
-        setIsExporting(true);
-        setExportProgress(0);
-        setExportStatus('准备导出...');
-
-        try {
-            const start = startOfDay(new Date(startDate)).toISOString();
-            const end = endOfDay(new Date(endDate)).toISOString();
-            let allLogs: LogItem[] = [];
-            let lastExportId: string | undefined = undefined;
-            let hasMoreExport = true;
-            const batchSize = 100; // Chunk size
-
-            // Allow user to cancel? For now, simplistic implementation
-
-            while (hasMoreExport) {
-                const result = await fetchUserLogs(batchSize, lastExportId, start, end);
-                const newLogs = result.logs;
-
-                if (newLogs.length === 0) {
-                    hasMoreExport = false;
-                } else {
-                    allLogs = [...allLogs, ...newLogs];
-                    lastExportId = result.lastId || undefined;
-                    hasMoreExport = !!result.lastId;
-
-                    // Update progress (approximate since we don't know total)
-                    setExportStatus(`已获取 ${allLogs.length} 條記錄...`);
-                    // Create a fake progress effect or just show count
-                }
-
-                // Add a small delay to allow UI update and prevent freezing
-                await new Promise(resolve => setTimeout(resolve, 50));
-            }
-
-            setExportStatus('生成 CSV...');
-
-            // Generate CSV
-            const headers = ['ID', 'Location', 'Page', 'IP', 'Duration (s)', 'Created At', 'User Agent'];
-            const csvContent = [
-                headers.join(','),
-                ...allLogs.map(log => [
-                    log.id,
-                    `"${log.location || ''}"`,
-                    `"${log.page || ''}"`,
-                    log.ip,
-                    log.duration,
-                    log.createdAt,
-                    `"${log.userAgent || ''}"`
-                ].join(','))
-            ].join('\n');
-
-            // Download
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `user_visits_${startDate}_${endDate}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            setExportStatus('导出完成!');
-            setTimeout(() => {
-                setIsExporting(false);
-                setExportStatus('');
-            }, 2000);
-
-        } catch (error) {
-            console.error("Export failed", error);
-            setExportStatus('导出失败');
-            setTimeout(() => setIsExporting(false), 3000);
-        }
-    };
-
     return (
         <div className="rounded-xl border border-gray-200 bg-white shadow-sm h-[600px] flex flex-col">
             <div className="p-6 border-b border-gray-100 flex flex-col gap-4">
@@ -266,23 +185,6 @@ export function ActivityFeed() {
                                 className="bg-transparent text-sm border-none focus:ring-0 p-0 text-gray-600"
                             />
                         </div>
-                        <button
-                            onClick={handleExport}
-                            disabled={isExporting}
-                            className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
-                        >
-                            <Download className="size-4" />
-                            {isExporting ? exportStatus : '导出日志'}
-                        </button>
-                    </div>
-                )}
-
-                {isExporting && (
-                    <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-                        <div
-                            className="bg-blue-600 h-1.5 rounded-full animate-pulse"
-                            style={{ width: '100%' }} // Generic indeterminate progress for now
-                        ></div>
                     </div>
                 )}
             </div>

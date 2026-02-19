@@ -55,6 +55,21 @@ export async function writeUserLog(data: {
     sessionId: string;
 }) {
     try {
+        // Anonymize IP (keep only 3 segments e.g. 192.168.1.*)
+        let anonymizedIp = data.ip;
+        if (anonymizedIp && anonymizedIp !== '::1' && anonymizedIp !== '127.0.0.1') {
+            const parts = anonymizedIp.split('.');
+            if (parts.length === 4) {
+                anonymizedIp = `${parts[0]}.${parts[1]}.${parts[2]}.*`;
+            } else if (anonymizedIp.includes(':')) {
+                // Basic IPv6 truncation (keep first 3 blocks)
+                const v6parts = anonymizedIp.split(':');
+                if (v6parts.length >= 3) {
+                    anonymizedIp = `${v6parts[0]}:${v6parts[1]}:${v6parts[2]}::*`;
+                }
+            }
+        }
+
         const locationData = await resolveIpLocation(data.ip);
 
         // Handle both object (new format) and string (fallback/old format)
@@ -66,13 +81,18 @@ export async function writeUserLog(data: {
             locationString = locationData;
         } else {
             locationString = `${locationData.country}, ${locationData.city}`;
-            latitude = locationData.latitude;
-            longitude = locationData.longitude;
+            // Round coordinates to 0.01 grid for privacy
+            if (locationData.latitude !== undefined) {
+                latitude = Math.round(locationData.latitude * 100) / 100;
+            }
+            if (locationData.longitude !== undefined) {
+                longitude = Math.round(locationData.longitude * 100) / 100;
+            }
         }
 
         const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
         const statsRef = db.collection('DailyStats').doc(today);
-        const ipRef = statsRef.collection('ips').doc(data.ip);
+        const ipRef = statsRef.collection('ips').doc(anonymizedIp);
 
         // 1. Create ref outside transaction to access ID later
         const newLogRef = db.collection('UserLogs').doc();
@@ -88,15 +108,15 @@ export async function writeUserLog(data: {
             }
 
             // Update Location Stats
-            if (latitude && longitude) {
+            if (latitude !== null && longitude !== null) {
                 const locKey = `${latitude}_${longitude}`.replace(/\./g, '_');
 
                 if (locations[locKey]) {
                     locations[locKey].count += 1;
                 } else {
                     locations[locKey] = {
-                        city: locationData && typeof locationData !== 'string' ? locationData.city : 'Unknown',
-                        country: locationData && typeof locationData !== 'string' ? locationData.country : 'Unknown',
+                        city: typeof locationData !== 'string' ? locationData.city : 'Unknown',
+                        country: typeof locationData !== 'string' ? locationData.country : 'Unknown',
                         lat: latitude,
                         lng: longitude,
                         count: 1
@@ -107,9 +127,10 @@ export async function writeUserLog(data: {
             const expiresAt = new Date();
             expiresAt.setDate(expiresAt.getDate() + 60);
 
-            // Write the raw log
+            // Write the raw log, putting `data` first so overrides work
             t.set(newLogRef, {
                 ...data,
+                ip: anonymizedIp, // Replace ip with 3-segment ip
                 location: locationString,
                 latitude,
                 longitude,
@@ -174,6 +195,21 @@ export async function writeAdminLog(data: {
     ip: string;
 }) {
     try {
+        // Anonymize IP (keep only 3 segments e.g. 192.168.1.*)
+        let anonymizedIp = data.ip || 'Unknown';
+        if (anonymizedIp !== 'Unknown' && anonymizedIp !== '::1' && anonymizedIp !== '127.0.0.1') {
+            const parts = anonymizedIp.split('.');
+            if (parts.length === 4) {
+                anonymizedIp = `${parts[0]}.${parts[1]}.${parts[2]}.*`;
+            } else if (anonymizedIp.includes(':')) {
+                // Basic IPv6 truncation (keep first 3 blocks)
+                const v6parts = anonymizedIp.split(':');
+                if (v6parts.length >= 3) {
+                    anonymizedIp = `${v6parts[0]}:${v6parts[1]}:${v6parts[2]}::*`;
+                }
+            }
+        }
+
         const locationData = await resolveIpLocation(data.ip);
         let locationString = 'Unknown';
 
@@ -188,6 +224,7 @@ export async function writeAdminLog(data: {
 
         await db.collection('AdminLogs').add({
             ...data,
+            ip: anonymizedIp,
             location: locationString,
             createdAt: FieldValue.serverTimestamp(),
             expiresAt,
@@ -300,18 +337,16 @@ export async function getTodayUniqueVisitorCount(): Promise<number> {
 }
 
 /**
- * 自动清理 60 天前的日志
+ * 自动清理历史日志 (根据 expiresAt)
  */
 export async function cleanupOldLogs() {
     try {
-        const sixtyDaysAgo = new Date();
-        sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
-
+        const now = new Date();
         const collections = ['UserLogs', 'AdminLogs'];
 
         for (const colName of collections) {
             const snapshot = await db.collection(colName)
-                .where('createdAt', '<', sixtyDaysAgo)
+                .where('expiresAt', '<', now)
                 .limit(500) // 每次清理上限，避免超时
                 .get();
 
@@ -320,7 +355,7 @@ export async function cleanupOldLogs() {
             const batch = db.batch();
             snapshot.docs.forEach(doc => batch.delete(doc.ref));
             await batch.commit();
-            console.log(`[Cleanup] Deleted ${snapshot.size} logs from ${colName}`);
+            console.log(`[Cleanup] Deleted ${snapshot.size} expired logs from ${colName}`);
         }
     } catch (error) {
         console.error('Cleanup old logs failed:', error);
