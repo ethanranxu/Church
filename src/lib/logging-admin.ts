@@ -17,6 +17,19 @@ interface LocationStats {
     count: number;
 }
 
+/**
+ * 獲取新西蘭當前日期字串（YYYY-MM-DD）
+ * 用於統計數據的分組，確保與本地時間一致
+ */
+function getTodayDateStr(): string {
+    const now = new Date();
+    const nzDate = new Date(now.toLocaleString("en-US", { timeZone: "Pacific/Auckland" }));
+    const year = nzDate.getFullYear();
+    const month = String(nzDate.getMonth() + 1).padStart(2, '0');
+    const day = String(nzDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
 export async function resolveIpLocation(ip: string): Promise<LogLocation | string> {
     if (!ip || ip === '::1' || ip === '127.0.0.1') {
         return {
@@ -90,7 +103,7 @@ export async function writeUserLog(data: {
             }
         }
 
-        const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+        const today = getTodayDateStr(); // YYYY-MM-DD in NZ Time
         const statsRef = db.collection('DailyStats').doc(today);
         const ipRef = statsRef.collection('ips').doc(anonymizedIp);
 
@@ -308,7 +321,7 @@ export async function getAdminLogs(limitCount: number = 20, lastId?: string) {
 
 export async function getTodayVisitCount(): Promise<number> {
     try {
-        const today = new Date().toISOString().split('T')[0];
+        const today = getTodayDateStr();
         const doc = await db.collection('DailyStats').doc(today).get();
 
         if (doc.exists) {
@@ -323,7 +336,7 @@ export async function getTodayVisitCount(): Promise<number> {
 
 export async function getTodayUniqueVisitorCount(): Promise<number> {
     try {
-        const today = new Date().toISOString().split('T')[0];
+        const today = getTodayDateStr();
         const doc = await db.collection('DailyStats').doc(today).get();
 
         if (doc.exists) {
