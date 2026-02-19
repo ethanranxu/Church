@@ -23,11 +23,15 @@ interface LocationStats {
  */
 function getTodayDateStr(): string {
     const now = new Date();
-    const nzDate = new Date(now.toLocaleString("en-US", { timeZone: "Pacific/Auckland" }));
-    const year = nzDate.getFullYear();
-    const month = String(nzDate.getMonth() + 1).padStart(2, '0');
-    const day = String(nzDate.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: "Pacific/Auckland",
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    });
+    const parts = formatter.formatToParts(now);
+    const part = (type: string) => parts.find(p => p.type === type)?.value;
+    return `${part('year')}-${part('month')}-${part('day')}`;
 }
 
 export async function resolveIpLocation(ip: string): Promise<LogLocation | string> {
@@ -323,6 +327,7 @@ export async function getTodayVisitCount(): Promise<number> {
     try {
         const today = getTodayDateStr();
         const doc = await db.collection('DailyStats').doc(today).get();
+        console.log(`[StatsReader] Today: ${today}, Exists: ${doc.exists}, Views: ${doc.data()?.pageViews}`);
 
         if (doc.exists) {
             return doc.data()?.pageViews || 0;
