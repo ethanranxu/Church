@@ -13,6 +13,15 @@ const zhTW = {
         offeringInfo: "奉獻資訊",
         prayerRequest: "代禱需求",
         newFriends: "新朋友專區",
+        share: {
+            title: "分享文章",
+            whatsapp: "分享到 WhatsApp",
+            telegram: "分享到 Telegram",
+            wechat: "複製連結 (微信)",
+            copySuccess: "連結已複製到剪貼簿！",
+            copyError: "複製失敗，請手動複製網址",
+            nativeShare: "更多分享選項...",
+        },
     },
 
     // ==================== 頁腳 ====================

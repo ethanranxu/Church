@@ -1,6 +1,7 @@
 'use client';
 
 import React from "react";
+import Link from 'next/link';
 import { useTranslation } from "@/i18n/LanguageContext";
 
 interface VisitCTAProps {
@@ -26,15 +27,13 @@ export const VisitCTA = ({ onOpenModal }: VisitCTAProps) => {
                     >
                         {t.welcome.cta.bookBtn}
                     </button>
-                    <a
-                        href="https://maps.app.goo.gl/..."
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <Link
+                        href="/#location"
                         className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-bold text-lg hover:bg-white/10 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
                     >
                         <span className="material-symbols-outlined">map</span>
                         {t.welcome.cta.mapBtn}
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>

@@ -2,7 +2,8 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Devotion } from '@/app/actions/devotions';
-import 'suneditor/dist/css/suneditor.min.css'; // 保持与后台编辑器一致的样式
+import ShareButton from './ShareButton';
+import 'suneditor/dist/css/suneditor.min.css';
 
 interface DevotionModalProps {
     devotion: Devotion | null;
@@ -63,7 +64,7 @@ export default function DevotionModal({ devotion, onClose }: DevotionModalProps)
                     </button>
                 </div>
 
-                {/* Content - 使用 sun-editor-editable 类以保持与后台编辑器一致 */}
+                {/* Content */}
                 <div className="overflow-y-auto pt-2 px-6 pb-6 md:px-8 custom-scrollbar">
                     <div
                         className="sun-editor-editable prose prose-lg dark:prose-invert max-w-none font-serif-content
@@ -77,7 +78,8 @@ export default function DevotionModal({ devotion, onClose }: DevotionModalProps)
                 </div>
 
                 {/* Footer */}
-                <div className="p-4 border-t border-gray-100 dark:border-gray-800 flex justify-end">
+                <div className="p-4 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center">
+                    <ShareButton title={devotion.title} id={devotion.id} />
                     <button
                         onClick={onClose}
                         className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors font-medium text-sm"

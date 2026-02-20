@@ -15,6 +15,15 @@ const en: TranslationKeys = {
         offeringInfo: "Offering",
         prayerRequest: "Prayer",
         newFriends: "New Friends",
+        share: {
+            title: "Share Article",
+            whatsapp: "Share to WhatsApp",
+            telegram: "Share to Telegram",
+            wechat: "Copy Link (WeChat)",
+            copySuccess: "Link copied to clipboard!",
+            copyError: "Failed to copy, please copy URL manually",
+            nativeShare: "More share options...",
+        },
     },
 
     // ==================== Footer ====================

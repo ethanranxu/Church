@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import { Devotion, getPublishedDevotions } from '@/app/actions/devotions';
+import ShareButton from './ShareButton';
 
 interface DevotionFeedProps {
     devotions: Devotion[];
@@ -16,11 +17,6 @@ export default function DevotionFeed({ devotions: initialDevotions, onSelectDevo
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const observerTarget = useRef<HTMLDivElement>(null);
-
-    // Update devotions if initial props change (though typically static from server)
-    // useEffect(() => {
-    //     setDevotions(initialDevotions);
-    // }, [initialDevotions]);
 
     const loadMoreDevotions = async () => {
         if (loading || !hasMore) return;
@@ -78,7 +74,7 @@ export default function DevotionFeed({ devotions: initialDevotions, onSelectDevo
                 observer.unobserve(observerTarget.current);
             }
         };
-    }, [hasMore, loading, devotions.length]); // Dependencies for re-creating/triggering observer
+    }, [hasMore, loading, devotions.length]);
 
     return (
         <div className="flex flex-col gap-6">
@@ -100,20 +96,18 @@ export default function DevotionFeed({ devotions: initialDevotions, onSelectDevo
                             </h4>
                         </button>
                         {(() => {
-                            // 移除链接、图片、音视频、iframe 等非纯文本元素
                             let cleanHtml = article.content
-                                .replace(/<a[^>]*>.*?<\/a>/gi, '') // 移除链接及其文本
-                                .replace(/<img[^>]*\/?>/gi, '')    // 移除图片
-                                .replace(/<video[^>]*>.*?<\/video>/gi, '') // 移除视频
-                                .replace(/<audio[^>]*>.*?<\/audio>/gi, '') // 移除音频
-                                .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '') // 移除iframe
-                                .replace(/<br\s*\/?>/gi, ' ');     // 换行转空格
+                                .replace(/<a[^>]*>.*?<\/a>/gi, '')
+                                .replace(/<img[^>]*\/?>/gi, '')
+                                .replace(/<video[^>]*>.*?<\/video>/gi, '')
+                                .replace(/<audio[^>]*>.*?<\/audio>/gi, '')
+                                .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '')
+                                .replace(/<br\s*\/?>/gi, ' ');
 
-                            // 提取纯文本
                             const cleanContent = cleanHtml
-                                .replace(/<[^>]+>/g, '')           // 移除所有HTML标签
-                                .replace(/&nbsp;/g, ' ')           // 替换 &nbsp;
-                                .replace(/\s+/g, ' ')              // 多个空格合并
+                                .replace(/<[^>]+>/g, '')
+                                .replace(/&nbsp;/g, ' ')
+                                .replace(/\s+/g, ' ')
                                 .trim();
 
                             const shouldTruncate = cleanContent.length > 300;
@@ -123,18 +117,20 @@ export default function DevotionFeed({ devotions: initialDevotions, onSelectDevo
                                 </div>
                             );
                         })()}
-                        <button
-                            onClick={() => handleDevotionClick(article)}
-                            className="mt-4 flex items-center gap-2 text-primary font-bold text-sm cursor-pointer hover:underline inline-flex"
-                        >
-                            {t.devotion.feed.readMore}
-                            <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                        </button>
+                        <div className="mt-4 flex items-center justify-between">
+                            <button
+                                onClick={() => handleDevotionClick(article)}
+                                className="flex items-center gap-2 text-primary font-bold text-sm cursor-pointer hover:underline inline-flex"
+                            >
+                                {t.devotion.feed.readMore}
+                                <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                            </button>
+                            <ShareButton title={article.title} id={article.id} />
+                        </div>
                     </div>
                 </article>
             ))}
 
-            {/* Loading Indicator / Sentinel */}
             <div ref={observerTarget} className="flex justify-center py-8 h-20">
                 {loading && (
                     <div className="flex items-center gap-2 text-gray-500">
@@ -146,8 +142,6 @@ export default function DevotionFeed({ devotions: initialDevotions, onSelectDevo
                     <div className="text-gray-400 text-sm">{t.devotion.feed.noMore}</div>
                 )}
             </div>
-
-
-        </div >
+        </div>
     );
 }

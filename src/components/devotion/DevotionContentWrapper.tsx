@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Devotion, incrementDevotionView } from '@/app/actions/devotions';
 import DevotionFeed from './DevotionFeed';
 import RecentTopics from './RecentTopics';
@@ -16,8 +17,9 @@ interface DevotionContentWrapperProps {
     calendarDevotions: Devotion[];
 }
 
-export default function DevotionContentWrapper({ initialDevotions, popularDevotions, calendarDevotions }: DevotionContentWrapperProps) {
+function DevotionContent({ initialDevotions, popularDevotions, calendarDevotions }: DevotionContentWrapperProps) {
     const [selectedDevotion, setSelectedDevotion] = useState<Devotion | null>(null);
+    const searchParams = useSearchParams();
 
     const handleSelectDevotion = async (devotion: Devotion) => {
         setSelectedDevotion(devotion);
@@ -27,6 +29,19 @@ export default function DevotionContentWrapper({ initialDevotions, popularDevoti
             );
         }
     };
+
+    // Handle deep linking via ?id=...
+    useEffect(() => {
+        const id = searchParams.get('id');
+        if (id) {
+            // Check in all available lists
+            const allDevotions = [...initialDevotions, ...popularDevotions, ...calendarDevotions];
+            const article = allDevotions.find(d => d.id === id);
+            if (article) {
+                handleSelectDevotion(article);
+            }
+        }
+    }, [searchParams, initialDevotions, popularDevotions, calendarDevotions]);
 
     return (
         <>
@@ -60,5 +75,13 @@ export default function DevotionContentWrapper({ initialDevotions, popularDevoti
                 onClose={() => setSelectedDevotion(null)}
             />
         </>
+    );
+}
+
+export default function DevotionContentWrapper(props: DevotionContentWrapperProps) {
+    return (
+        <Suspense>
+            <DevotionContent {...props} />
+        </Suspense>
     );
 }
