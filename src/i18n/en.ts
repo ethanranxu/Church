@@ -33,6 +33,7 @@ const en: TranslationKeys = {
         offeringInfo: "Offering",
         copyright: "EFC of East Coast Bays",
         allRights: "All Rights Reserved.",
+        privacyPolicy: "Privacy Policy",
     },
 
     // ==================== Home Page ====================
@@ -541,6 +542,76 @@ const en: TranslationKeys = {
         language: "Language",
         chinese: "繁體中文",
         english: "English",
+    },
+
+    // ==================== Privacy Policy ====================
+    privacyPolicy: {
+        title: "Privacy Policy",
+        effectiveDate: "Effective Date: February 20, 2026",
+        intro: "We value your privacy and are committed to protecting your personal information in accordance with the New Zealand Privacy Act 2020. Please read the following privacy statement carefully to understand how we collect, use, and protect your information.",
+        sections: [
+            {
+                title: "1. Information We Collect",
+                content: "When you visit our website, we may collect the following information:",
+                list: [
+                    "Access Log Information: Page access paths, time spent on pages, access time, and session ID.",
+                    "Device & Location Data: Browser type and operating system, aggregated geographic location (coordinates aggregated to a 0.01° grid to protect privacy).",
+                    "IP Address: Only the first 3 segments are retained (e.g., 192.168.1.*), with the final segment obfuscated.",
+                    "Google Analytics (GA) Data: We use GA to collect website usage, including page views, access times, traffic sources, and device information. GA anonymizes IP addresses and cannot directly identify individuals."
+                ],
+                warning: "Note: We do not collect your name, email, or other personally identifiable information unless you actively provide it."
+            },
+            {
+                title: "2. How We Use Data",
+                content: "The data collected is primarily used for the following purposes:",
+                list: [
+                    "Analyzing website traffic trends and usage",
+                    "Generating access heatmaps (using aggregated data only)",
+                    "Improving website performance and user experience",
+                    "Detecting and preventing abnormal access or security issues"
+                ]
+            },
+            {
+                title: "3. Data Storage & Retention",
+                list: [
+                    "Raw access logs (containing sessionId + IP + coordinates): Used only for security and troubleshooting.",
+                    "Aggregated analytics data (heatmaps, access statistics).",
+                    "Data is stored on secured servers with encryption and access control measures in place."
+                ]
+            },
+            {
+                title: "4. Data Sharing",
+                list: [
+                    "We will not sell or rent personal information to third parties.",
+                    "GA data may be shared with Google's analytics services, but Google anonymizes IPs.",
+                    "Aggregated statistical data may be used for reporting or internal analysis but will not contain details that identify individuals."
+                ]
+            },
+            {
+                title: "5. User Rights",
+                content: "Under the New Zealand Privacy Act 2020, you have the right to:",
+                list: [
+                    "Request access to or correction of the personal information we hold about you.",
+                    "Request deletion of your personal information (where permitted by law).",
+                    "Inquire about the purposes for which we collect and use data."
+                ],
+                contact: "Contact: Please email us at [ ethanranxu@gmail.com ] for relevant requests."
+            },
+            {
+                title: "6. Cookies & Tracking",
+                list: [
+                    "We use GA cookies to collect website access information.",
+                    "You can choose to decline cookies through your browser settings. This will not affect your normal visit, but may affect some website features."
+                ]
+            },
+            {
+                title: "7. Privacy Policy Updates",
+                list: [
+                    "This privacy policy may be updated from time to time.",
+                    "Any significant updates will be posted on the website with the effective date."
+                ]
+            }
+        ]
     },
 
     // ==================== Admin ====================

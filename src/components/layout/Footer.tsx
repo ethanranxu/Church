@@ -72,7 +72,12 @@ export const Footer = () => {
 
                 <div className="border-t border-gray-800 pt-8 mt-8 text-center">
                     <p className="text-sm text-gray-500">
-                        Copyright © 2026 {t.footer.copyright}. {t.footer.allRights}<br />
+                        Copyright © 2026 {t.footer.copyright}. {t.footer.allRights}
+                        <span className="mx-2">|</span>
+                        <Link href="/privacy-policy" className="hover:text-amber-500 transition-colors">
+                            {t.footer.privacyPolicy}
+                        </Link>
+                        <br />
                         Website design, development & maintenance by <a href="mailto:ethanranxu@gmail.com" className="hover:text-amber-500 transition-colors">Xu Ran</a>.
                     </p>
                 </div>
