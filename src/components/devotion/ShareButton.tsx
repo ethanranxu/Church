@@ -34,6 +34,7 @@ export default function ShareButton({ title, id, className = "" }: ShareButtonPr
             try {
                 await navigator.share({
                     title: title,
+                    text: `${title} - ${url}`,
                     url: url,
                 });
             } catch (error) {
@@ -43,7 +44,7 @@ export default function ShareButton({ title, id, className = "" }: ShareButtonPr
             }
         } else {
             // Fallback: Copy to clipboard
-            navigator.clipboard.writeText(url).then(() => {
+            navigator.clipboard.writeText(`${title} - ${url}`).then(() => {
                 setShowToast(true);
                 setTimeout(() => setShowToast(false), 2000);
             }).catch(() => {
