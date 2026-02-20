@@ -17,6 +17,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
         openGraph: {
             title: "每日靈修 - 長堤基督教會",
             description: "每日靈修分享，在神的話語中成長",
+            images: ['/images/bible.jpg'],
         },
     };
 
