@@ -59,6 +59,26 @@ export async function getDevotions(): Promise<Devotion[]> {
 }
 
 /**
+ * 獲取單篇靈修文章
+ */
+export async function getDevotionById(id: string): Promise<Devotion | null> {
+    try {
+        const doc = await db.collection('Articles').doc(id).get();
+        if (!doc.exists) return null;
+
+        const data = doc.data();
+        return {
+            ...data,
+            id: doc.id,
+            createdAt: data?.createdAt?.toDate?.() ? data.createdAt.toDate().toISOString() : null
+        } as Devotion;
+    } catch (error) {
+        console.error(`Failed to fetch article ${id}:`, error);
+        return null;
+    }
+}
+
+/**
  * 獲取已發佈的靈修文章（首頁顯示用）
  * 條件：status = 'published' 且 publishDate <= 今天
  */
