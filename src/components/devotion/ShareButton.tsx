@@ -34,6 +34,7 @@ export default function ShareButton({ title, id, className = "" }: ShareButtonPr
             try {
                 await navigator.share({
                     title: title,
+                    text: title,
                     url: url,
                 });
             } catch (error) {
