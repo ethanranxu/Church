@@ -31,16 +31,29 @@ export default function ShareButton({ title, id, className = "" }: ShareButtonPr
         const url = getShareUrl();
         const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
 
-        // In WeChat, prefer copying plain text (title + url) to clipboard
-        // because native share is either unsupported or behaves unpredictably
-        if (isWeChat) {
+        // WeChat browser OR iOS Safari: always copy plain text to clipboard
+        // iOS's native share sheet turns URLs into rich link cards in WeChat,
+        // which we cannot control. So we bypass navigator.share() on iOS entirely.
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        if (isWeChat || isIOS) {
             const textToCopy = `${title}\n${url}`;
-            navigator.clipboard.writeText(textToCopy).then(() => {
+            try {
+                await navigator.clipboard.writeText(textToCopy);
                 setShowToast(true);
                 setTimeout(() => setShowToast(false), 2000);
-            }).catch(() => {
-                alert(t.nav.share.copyError);
-            });
+            } catch {
+                // iOS clipboard fallback using textarea
+                const textarea = document.createElement('textarea');
+                textarea.value = textToCopy;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                setShowToast(true);
+                setTimeout(() => setShowToast(false), 2000);
+            }
             return;
         }
 
@@ -56,7 +69,7 @@ export default function ShareButton({ title, id, className = "" }: ShareButtonPr
             }
         } else {
             // Fallback: Copy to clipboard
-            navigator.clipboard.writeText(url).then(() => {
+            navigator.clipboard.writeText(`${title}\n${url}`).then(() => {
                 setShowToast(true);
                 setTimeout(() => setShowToast(false), 2000);
             }).catch(() => {
