@@ -3,6 +3,7 @@
 import React from 'react';
 import { Church, Users, Building, PartyPopper } from 'lucide-react';
 import { useTranslation } from '@/i18n';
+import Image from 'next/image';
 
 export default function HistoryTimeline() {
     const { t } = useTranslation();
@@ -38,15 +39,15 @@ export default function HistoryTimeline() {
                                 <div className="z-10 bg-[#1E3A8A] text-white p-3 rounded-full mb-6 md:mb-0 order-1 md:order-2">
                                     <Church className="w-8 h-8" />
                                 </div>
-                                <div className="w-full md:w-[45%] order-3">
-                                    <img alt="2003 Church Founding" className="w-full h-48 object-cover rounded-2xl shadow-lg" src="/images/assets/history-2003.jpg" />
+                                <div className="w-full md:w-[45%] order-3 h-48 relative rounded-2xl overflow-hidden shadow-lg">
+                                    <Image alt="2003 Church Founding" fill className="object-cover" src="/images/assets/history-2003.jpg" sizes="(max-width: 768px) 100vw, 50vw" />
                                 </div>
                             </div>
 
                             {/* 2015 Item (Right Aligned Text) */}
                             <div className="flex flex-col md:flex-row items-center justify-between w-full">
-                                <div className="w-full md:w-[45%] order-3 md:order-1">
-                                    <img alt="2015 Mission" className="w-full h-48 object-cover rounded-2xl shadow-lg" src="/images/assets/history-2015.jpg" />
+                                <div className="w-full md:w-[45%] order-3 md:order-1 h-48 relative rounded-2xl overflow-hidden shadow-lg">
+                                    <Image alt="2015 Mission" fill className="object-cover" src="/images/assets/history-2015.jpg" sizes="(max-width: 768px) 100vw, 50vw" />
                                 </div>
                                 <div className="z-10 bg-[#FBBF24] text-[#1E3A8A] p-3 rounded-full mb-6 md:mb-0 order-1 md:order-2">
                                     <Users className="w-8 h-8" />
@@ -74,15 +75,15 @@ export default function HistoryTimeline() {
                                 <div className="z-10 bg-[#1E3A8A] text-white p-3 rounded-full mb-6 md:mb-0 order-1 md:order-2">
                                     <Building className="w-8 h-8" />
                                 </div>
-                                <div className="w-full md:w-[45%] order-3">
-                                    <img alt="2019 Expansion" className="w-full h-48 object-cover rounded-2xl shadow-lg" src="/images/assets/history-2019.jpg" />
+                                <div className="w-full md:w-[45%] order-3 h-48 relative rounded-2xl overflow-hidden shadow-lg">
+                                    <Image alt="2019 Expansion" fill className="object-cover" src="/images/assets/history-2019.jpg" sizes="(max-width: 768px) 100vw, 50vw" />
                                 </div>
                             </div>
 
                             {/* 2023 Item (Right Aligned) */}
                             <div className="flex flex-col md:flex-row items-center justify-between w-full">
-                                <div className="w-full md:w-[45%] order-3 md:order-1">
-                                    <img alt="2023 New Chapter" className="w-full h-48 object-cover rounded-2xl shadow-lg" src="/images/assets/history-2023.jpg" />
+                                <div className="w-full md:w-[45%] order-3 md:order-1 h-48 relative rounded-2xl overflow-hidden shadow-lg">
+                                    <Image alt="2023 New Chapter" fill className="object-cover" src="/images/assets/history-2023.jpg" sizes="(max-width: 768px) 100vw, 50vw" />
                                 </div>
                                 <div className="z-10 bg-[#FBBF24] text-[#1E3A8A] p-3 rounded-full mb-6 md:mb-0 order-1 md:order-2">
                                     <PartyPopper className="w-8 h-8" />

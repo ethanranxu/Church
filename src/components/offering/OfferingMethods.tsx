@@ -68,10 +68,10 @@ export const OfferingMethods = () => {
                                         type="text"
                                         readOnly
                                         value="EFC of East Coast Bay"
-                                        className="w-full bg-gray-50 dark:bg-[#101922] border border-[#dbe0e6] dark:border-[#2a3441] rounded-lg py-4 px-4 font-bold text-lg text-[#111418] dark:text-white focus:ring-0 focus:border-primary cursor-pointer"
+                                        className="w-full bg-gray-50 dark:bg-[#101922] border border-[#dbe0e6] dark:border-[#2a3441] rounded-lg py-3 sm:py-4 pl-3 sm:pl-4 pr-12 sm:pr-28 font-bold text-base sm:text-lg text-[#111418] dark:text-white focus:ring-0 focus:border-primary cursor-pointer"
                                     />
-                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                                        <span className="text-[10px] bg-primary/10 text-primary px-2 py-1 rounded font-bold">
+                                    <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                                        <span className="hidden sm:inline text-[10px] bg-primary/10 text-primary px-2 py-1 rounded font-bold">
                                             {t.offering.methods.clickToCopy}
                                         </span>
                                         <span className="material-symbols-outlined text-primary text-xl">
@@ -105,10 +105,10 @@ export const OfferingMethods = () => {
                                         type="text"
                                         readOnly
                                         value="12-3059-0500732-00"
-                                        className="w-full bg-gray-50 dark:bg-[#101922] border border-[#dbe0e6] dark:border-[#2a3441] rounded-lg py-4 px-4 font-mono font-bold text-2xl text-primary focus:ring-0 focus:border-primary cursor-pointer"
+                                        className="w-full bg-gray-50 dark:bg-[#101922] border border-[#dbe0e6] dark:border-[#2a3441] rounded-lg py-3 sm:py-4 pl-3 sm:pl-4 pr-12 sm:pr-28 font-mono font-bold text-[17px] sm:text-2xl text-primary focus:ring-0 focus:border-primary cursor-pointer"
                                     />
-                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                                        <span className="text-[10px] bg-primary/10 text-primary px-2 py-1 rounded font-bold">
+                                    <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                                        <span className="hidden sm:inline text-[10px] bg-primary/10 text-primary px-2 py-1 rounded font-bold">
                                             {t.offering.methods.clickToCopy}
                                         </span>
                                         <span className="material-symbols-outlined text-primary text-xl">

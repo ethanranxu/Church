@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Devotion, incrementDevotionView } from '@/app/actions/devotions';
+import { Devotion, incrementDevotionView, getDevotionById } from '@/app/actions/devotions';
 import DevotionFeed from './DevotionFeed';
 import RecentTopics from './RecentTopics';
 import Calendar from './Calendar';
@@ -19,10 +19,28 @@ interface DevotionContentWrapperProps {
 
 function DevotionContent({ initialDevotions, popularDevotions, calendarDevotions }: DevotionContentWrapperProps) {
     const [selectedDevotion, setSelectedDevotion] = useState<Devotion | null>(null);
+    const [isLoadingModal, setIsLoadingModal] = useState(false);
     const searchParams = useSearchParams();
 
     const handleSelectDevotion = async (devotion: Devotion) => {
+        // Open immediately to show header/title
         setSelectedDevotion(devotion);
+
+        // Lazy fetch rich-text content if stripped to save payload
+        if (!devotion.content && devotion.id) {
+            setIsLoadingModal(true);
+            try {
+                const fullArticle = await getDevotionById(devotion.id);
+                if (fullArticle) {
+                    setSelectedDevotion(fullArticle);
+                }
+            } catch (err) {
+                console.error("Failed to lazy load content", err);
+            } finally {
+                setIsLoadingModal(false);
+            }
+        }
+
         if (devotion.id) {
             incrementDevotionView(devotion.id).catch((err: any) =>
                 console.error("Failed to increment view", err)
@@ -72,6 +90,7 @@ function DevotionContent({ initialDevotions, popularDevotions, calendarDevotions
 
             <DevotionModal
                 devotion={selectedDevotion}
+                isLoading={isLoadingModal}
                 onClose={() => setSelectedDevotion(null)}
             />
         </>

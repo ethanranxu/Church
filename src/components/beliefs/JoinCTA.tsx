@@ -3,6 +3,7 @@
 import React from 'react';
 import { HeartHandshake } from 'lucide-react';
 import { useTranslation } from '@/i18n';
+import Image from 'next/image';
 
 export default function JoinCTA() {
     const { t } = useTranslation();
@@ -11,7 +12,15 @@ export default function JoinCTA() {
         <div className="w-full pt-12 pb-12 px-4 md:px-8 bg-[#F9FAFB] dark:bg-[#101922]">
             <div className="max-w-[1140px] w-full mx-auto">
                 <div className="bg-gradient-to-br from-[#1E3A8A] to-[#152a6d] rounded-[2.5rem] p-10 md:p-16 text-center text-white shadow-xl relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'url("/images/assets/join-cta-bg.jpg")' }}></div>
+                    <div className="absolute inset-0 opacity-10">
+                        <Image
+                            src="/images/assets/join-cta-bg.jpg"
+                            alt="Join Texture"
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 1200px) 100vw, 1140px"
+                        />
+                    </div>
 
                     <div className="relative z-10 flex flex-col items-center">
                         <HeartHandshake className="text-[#FBBF24] mb-6 w-12 h-12" />

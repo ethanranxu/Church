@@ -38,9 +38,33 @@ export default function DevotionFeed({ devotions: initialDevotions, onSelectDevo
 
 
             if (newDevotions.length > 0) {
+                const optimizedNewDevotions = newDevotions.map(d => {
+                    let cleanContent = '';
+                    if (d.content) {
+                        const cleanHtml = d.content
+                            .replace(/<a[^>]*>.*?<\/a>/gi, '')
+                            .replace(/<img[^>]*\/?>/gi, '')
+                            .replace(/<video[^>]*>.*?<\/video>/gi, '')
+                            .replace(/<audio[^>]*>.*?<\/audio>/gi, '')
+                            .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '')
+                            .replace(/<br\s*\/?>/gi, ' ');
+                        cleanContent = cleanHtml
+                            .replace(/<[^>]+>/g, '')
+                            .replace(/&nbsp;/g, ' ')
+                            .replace(/\s+/g, ' ')
+                            .trim();
+                        cleanContent = cleanContent.length > 300 ? cleanContent.substring(0, 300) + "..." : cleanContent;
+                    }
+                    return {
+                        ...d,
+                        snippet: d.snippet || cleanContent || "",
+                        content: "" // free up memory
+                    };
+                });
+
                 setDevotions(prev => {
                     const existingIds = new Set(prev.map(d => d.id));
-                    const uniqueNew = newDevotions.filter(d => !existingIds.has(d.id));
+                    const uniqueNew = optimizedNewDevotions.filter(d => !existingIds.has(d.id));
                     return [...prev, ...uniqueNew];
                 });
             }
@@ -95,28 +119,9 @@ export default function DevotionFeed({ devotions: initialDevotions, onSelectDevo
                                 {article.title.length > 50 ? article.title.substring(0, 50) + "..." : article.title}
                             </h4>
                         </button>
-                        {(() => {
-                            let cleanHtml = article.content
-                                .replace(/<a[^>]*>.*?<\/a>/gi, '')
-                                .replace(/<img[^>]*\/?>/gi, '')
-                                .replace(/<video[^>]*>.*?<\/video>/gi, '')
-                                .replace(/<audio[^>]*>.*?<\/audio>/gi, '')
-                                .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '')
-                                .replace(/<br\s*\/?>/gi, ' ');
-
-                            const cleanContent = cleanHtml
-                                .replace(/<[^>]+>/g, '')
-                                .replace(/&nbsp;/g, ' ')
-                                .replace(/\s+/g, ' ')
-                                .trim();
-
-                            const shouldTruncate = cleanContent.length > 300;
-                            return (
-                                <div className="text-gray-700 dark:text-gray-300 font-serif-content leading-relaxed line-clamp-3">
-                                    {shouldTruncate ? cleanContent.substring(0, 300) + "..." : cleanContent}
-                                </div>
-                            );
-                        })()}
+                        <div className="text-gray-700 dark:text-gray-300 font-serif-content leading-relaxed line-clamp-3">
+                            {article.snippet || article.content}
+                        </div>
                         <div className="mt-4 flex items-center justify-between">
                             <button
                                 onClick={() => handleDevotionClick(article)}

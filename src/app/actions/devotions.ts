@@ -27,6 +27,7 @@ export interface Devotion {
     id?: string;
     title: string;
     content: string;
+    snippet?: string; // Client side light snippet without HTML chunk
     publishDate: string;
     status: 'draft' | 'published';
     createdAt?: string | null; // ISO Date String or Null

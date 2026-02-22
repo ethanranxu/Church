@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 import { Container } from "@/components/ui/Container";
 import { useTranslation } from "@/i18n";
 import Link from "next/link";
+import Image from "next/image";
 
 export const Footer = () => {
     const { t } = useTranslation();
@@ -41,11 +42,13 @@ export const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                     {/* Logo Column */}
                     <div className="flex flex-col gap-4">
-                        <div className="flex items-center text-white">
-                            <img
+                        <div className="flex items-center text-white relative h-36 w-full max-w-[200px]">
+                            <Image
                                 src="/images/footer-logo.jpg"
                                 alt="長堤基督教會 Logo"
-                                className="h-36 w-auto object-contain bg-white rounded p-1"
+                                fill
+                                className="object-contain bg-white rounded p-1"
+                                sizes="(max-width: 768px) 200px, 300px"
                             />
                         </div>
                     </div>

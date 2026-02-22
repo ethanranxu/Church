@@ -7,12 +7,13 @@ import 'suneditor/dist/css/suneditor.min.css';
 
 interface DevotionModalProps {
     devotion: Devotion | null;
+    isLoading?: boolean;
     onClose: () => void;
 }
 
 import { useTranslation } from "@/i18n/LanguageContext";
 
-export default function DevotionModal({ devotion, onClose }: DevotionModalProps) {
+export default function DevotionModal({ devotion, isLoading, onClose }: DevotionModalProps) {
     const { t } = useTranslation();
     const modalRef = useRef<HTMLDivElement>(null);
 
@@ -65,16 +66,23 @@ export default function DevotionModal({ devotion, onClose }: DevotionModalProps)
                 </div>
 
                 {/* Content */}
-                <div className="overflow-y-auto pt-2 px-6 pb-6 md:px-8 custom-scrollbar">
-                    <div
-                        className="sun-editor-editable prose prose-lg dark:prose-invert max-w-none font-serif-content
-                            prose-headings:font-display prose-headings:font-bold
-                            prose-p:leading-relaxed prose-p:mb-4
-                            prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-                            prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic
-                            prose-img:rounded-xl prose-img:shadow-md"
-                        dangerouslySetInnerHTML={{ __html: devotion.content }}
-                    />
+                <div className="overflow-y-auto pt-2 px-6 pb-6 md:px-8 custom-scrollbar min-h-[300px]">
+                    {isLoading ? (
+                        <div className="flex flex-col items-center justify-center h-full pt-10 pb-10 gap-4 text-gray-500">
+                            <span className="material-symbols-outlined animate-spin text-3xl">refresh</span>
+                            <span className="font-medium text-sm animate-pulse">{t.devotion.feed.loading || 'Loading...'}</span>
+                        </div>
+                    ) : (
+                        <div
+                            className="sun-editor-editable prose prose-lg dark:prose-invert max-w-none font-serif-content
+                                prose-headings:font-display prose-headings:font-bold
+                                prose-p:leading-relaxed prose-p:mb-4
+                                prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                                prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic
+                                prose-img:rounded-xl prose-img:shadow-md"
+                            dangerouslySetInnerHTML={{ __html: devotion.content || '' }}
+                        />
+                    )}
                 </div>
 
                 {/* Footer */}

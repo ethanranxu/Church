@@ -47,9 +47,7 @@ export default function ShareButton({ title, id, className = "" }: ShareButtonPr
         if (supportsNativeShare) {
             try {
                 await navigator.share({
-                    title: title,
-                    text: title,
-                    url: url,
+                    text: `${title}\n${url}`,
                 });
             } catch (error) {
                 if ((error as Error).name !== 'AbortError') {

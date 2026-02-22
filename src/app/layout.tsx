@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { LanguageProvider } from "@/i18n";
 import { UserTracker } from "@/components/analytics/UserTracker";
@@ -19,6 +19,13 @@ const notoIsTC = Noto_Sans_TC({
 const SITE_NAME = "長堤基督教會 East Coast Bays Christian Church";
 const SITE_DESCRIPTION =
   "長堤基督教會（East Coast Bays Christian Church）位於新西蘭奧克蘭北岸，下設木槿灣教會、長灣教會。歡迎您來認識我們，一同敬拜、靈修、禱告，在主愛中成長。";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://efcecb.org.nz"),

@@ -42,12 +42,38 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
 export const dynamic = "force-dynamic";
 
+function extractSnippet(html: string): string {
+    if (!html) return '';
+    let cleanHtml = html
+        .replace(/<a[^>]*>.*?<\/a>/gi, '')
+        .replace(/<img[^>]*\/?>/gi, '')
+        .replace(/<video[^>]*>.*?<\/video>/gi, '')
+        .replace(/<audio[^>]*>.*?<\/audio>/gi, '')
+        .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '')
+        .replace(/<br\s*\/?>/gi, ' ');
+
+    const cleanContent = cleanHtml
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    return cleanContent.length > 300 ? cleanContent.substring(0, 300) + "..." : cleanContent;
+}
+
 export default async function DevotionPage() {
     const [devotions, popularDevotions, calendarDevotions] = await Promise.all([
         getPublishedDevotions(),
         getPopularDevotions(),
         getCalendarDevotions()
     ]);
+
+    // Strip content out before sending JSON over Next.js client component boundary to save massive hydration/HTML download payload (up to 95% saving on lists)
+    const optimizedDevotions = devotions.map(d => ({
+        ...d,
+        snippet: extractSnippet(d.content),
+        content: ""
+    }));
 
     return (
         <div className="relative flex flex-col w-full min-h-screen overflow-x-hidden">
@@ -56,7 +82,7 @@ export default async function DevotionPage() {
                 <Hero />
 
                 <DevotionContentWrapper
-                    initialDevotions={devotions}
+                    initialDevotions={optimizedDevotions}
                     popularDevotions={popularDevotions}
                     calendarDevotions={calendarDevotions}
                 />

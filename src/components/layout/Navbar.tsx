@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { useTranslation } from "@/i18n";
 import Link from "next/link";
+import Image from "next/image";
 
 export const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -34,12 +35,14 @@ export const Navbar = () => {
         <header className="sticky top-0 z-50 w-full bg-white/90 dark:bg-[#101922]/90 backdrop-blur-md border-b border-[#e7edf3] dark:border-gray-800 transition-colors">
             <Container>
                 <div className="flex justify-between items-center h-24">
-                    {/* Logo - Updated to new image logo */}
-                    <Link href="/" className="flex items-center h-full py-4">
-                        <img
+                    <Link href="/" className="flex items-center h-full py-4 relative w-[180px]">
+                        <Image
                             src="/images/logo-icon.jpg"
                             alt="長堤基督教會"
-                            className="h-16 w-auto object-contain"
+                            fill
+                            priority
+                            className="object-contain"
+                            sizes="180px"
                         />
                     </Link>
 

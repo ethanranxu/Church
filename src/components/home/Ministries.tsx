@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { useTranslation } from "@/i18n";
 import Link from "next/link";
+import Image from "next/image";
 
 export const Ministries = () => {
     const { t } = useTranslation();
@@ -38,9 +39,12 @@ export const Ministries = () => {
                             className="flex-1 rounded-2xl overflow-hidden relative group h-[400px] shadow-lg"
                         >
                             {/* Image */}
-                            <div
-                                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                                style={{ backgroundImage: `url("${ministry.image}")` }}
+                            <Image
+                                src={ministry.image}
+                                alt={ministry.title}
+                                fill
+                                className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                                sizes="(max-width: 768px) 100vw, 50vw"
                             />
                             {/* Overlay */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
