@@ -81,7 +81,7 @@ export const Footer = () => {
                             {t.footer.privacyPolicy}
                         </Link>
                         <br />
-                        Website design, development & maintenance by <a href="https://nexus.duminet.com/" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors">Xu Ran</a>.
+                        Website design, development & maintenance by <a href="mailto:ethanranxu@gmail.com" className="hover:text-amber-500 transition-colors">Xu Ran</a>.
                     </p>
                 </div>
             </Container>
