@@ -31,11 +31,11 @@ export default function ShareButton({ title, id, className = "" }: ShareButtonPr
         const url = getShareUrl();
         const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
 
-        // WeChat browser OR Apple devices (iOS/macOS): always copy plain text to clipboard
-        // Apple's native share sheet extracts URLs from text and hands them to WeChat as rich link cards,
-        // which we cannot control. So we bypass navigator.share() on Apple ecosystem entirely.
-        const isApple = /(Mac|iPhone|iPod|iPad)/i.test(navigator.userAgent);
-        if (isWeChat || isApple) {
+        // WeChat browser OR iOS Safari: always copy plain text to clipboard
+        // iOS's native share sheet turns URLs into rich link cards in WeChat,
+        // which we cannot control. So we bypass navigator.share() on iOS entirely.
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        if (isWeChat || isIOS) {
             const textToCopy = `${title}\n${url}`;
             try {
                 await navigator.clipboard.writeText(textToCopy);
