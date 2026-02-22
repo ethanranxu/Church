@@ -29,6 +29,20 @@ export default function ShareButton({ title, id, className = "" }: ShareButtonPr
     const handleShareClick = async (e: React.MouseEvent) => {
         e.stopPropagation();
         const url = getShareUrl();
+        const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+
+        // In WeChat, prefer copying plain text (title + url) to clipboard
+        // because native share is either unsupported or behaves unpredictably
+        if (isWeChat) {
+            const textToCopy = `${title}\n${url}`;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                setShowToast(true);
+                setTimeout(() => setShowToast(false), 2000);
+            }).catch(() => {
+                alert(t.nav.share.copyError);
+            });
+            return;
+        }
 
         if (supportsNativeShare) {
             try {
