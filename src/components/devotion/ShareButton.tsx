@@ -31,35 +31,23 @@ export default function ShareButton({ title, id, className = "" }: ShareButtonPr
         const url = getShareUrl();
         const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
 
-        // WeChat browser OR iOS Safari: always copy plain text to clipboard
-        // iOS's native share sheet turns URLs into rich link cards in WeChat,
-        // which we cannot control. So we bypass navigator.share() on iOS entirely.
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-        if (isWeChat || isIOS) {
+        // In WeChat, prefer copying plain text to clipboard
+        // because native share is either unsupported or behaves unpredictably
+        if (isWeChat) {
             const textToCopy = `${title}\n${url}`;
-            try {
-                await navigator.clipboard.writeText(textToCopy);
+            navigator.clipboard.writeText(textToCopy).then(() => {
                 setShowToast(true);
                 setTimeout(() => setShowToast(false), 2000);
-            } catch {
-                // iOS clipboard fallback using textarea
-                const textarea = document.createElement('textarea');
-                textarea.value = textToCopy;
-                textarea.style.position = 'fixed';
-                textarea.style.opacity = '0';
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                setShowToast(true);
-                setTimeout(() => setShowToast(false), 2000);
-            }
+            }).catch(() => {
+                alert(t.nav.share.copyError);
+            });
             return;
         }
 
         if (supportsNativeShare) {
             try {
                 await navigator.share({
+                    // Only pass text, omitting url parameter, to force plain text sharing
                     text: `${title}\n${url}`,
                 });
             } catch (error) {
