@@ -922,7 +922,6 @@ const en: TranslationKeys = {
             hebrews: "Hebrews",
             acts: "Acts",
             timothy: "1 & 2 Timothy",
-            training: "2025 Coworker Training",
         },
         resources: {
             toolsTitle: "Useful Tools",
@@ -933,6 +932,17 @@ const en: TranslationKeys = {
             helpTitle: "Need Help?",
             helpDesc: "If you have questions about study materials or need to find specific resources, please contact the Education Ministry. We are happy to grow with you.",
             contactBtn: "Contact Staff",
+        },
+        courses: {
+            title: "Church Courses",
+            discipleship: {
+                title: "Discipleship Training",
+                subtitle: "Pressing Toward the Goal",
+            },
+            believer: {
+                title: "Believer Nurturing",
+                subtitle: "Family in the Bible",
+            },
         },
     },
     welcome: {
