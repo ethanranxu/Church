@@ -5,13 +5,13 @@ import { getFirestore } from 'firebase-admin/firestore';
 
 // Firebase Admin 初始化
 if (getApps().length === 0) {
-    const serviceAccountPath = path.join(__dirname, '..', 'service-account.json');
+    const serviceAccountPath = path.join(process.cwd(), 'service-account.json');
     initializeApp({ credential: cert(serviceAccountPath) });
 }
 
 const db = getFirestore();
 
-function htmlToMarkdown(html) {
+function htmlToMarkdown(html: string): string {
     if (!html) return '';
     let md = html;
 
@@ -62,11 +62,11 @@ async function exportDevotions() {
         const day = parseInt(parts[2], 10);
 
         mdContent += `# ${month}月${day}日｜${d.title}\n\n`;
-        mdContent += htmlToMarkdown(d.content) + '\n\n\n';
+        mdContent += htmlToMarkdown(d.content as string) + '\n\n\n';
     }
 
     // 导出到根目录
-    const outPath = path.join(__dirname, '..', 'devotions-backup.md');
+    const outPath = path.join(process.cwd(), 'devotions-backup.md');
     fs.writeFileSync(outPath, mdContent.trim());
 
     console.log(`导出完成！备份文件已保存至: ${outPath}`);
