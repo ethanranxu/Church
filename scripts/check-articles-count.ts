@@ -15,7 +15,7 @@ async function checkArticles() {
     const snapshot = await db.collection('Articles').get();
 
     let count = 0;
-    const months = { '1': 0, '2': 0, '3': 0, '4': 0, 'other': 0 };
+    const months: Record<string, number> = { '1': 0, '2': 0, '3': 0, '4': 0, 'other': 0 };
 
     snapshot.forEach(doc => {
         count++;
