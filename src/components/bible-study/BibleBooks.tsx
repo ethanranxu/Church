@@ -87,20 +87,7 @@ const BibleBooks = () => {
                                 </span>
                             </a>
                         ))}
-                        {/* Special Training Card - Moved to new row */}
-                        <a
-                            href="https://www.youtube.com/playlist?list=PLP7Y2-_kjaaW3CF35j6cWu40sGsPLTRm8"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group flex items-center gap-3 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-200 dark:border-blue-800 hover:shadow-lg transition-all hover:-translate-y-1 sm:col-start-1"
-                        >
-                            <div className="size-10 rounded-lg bg-primary text-white flex items-center justify-center shadow-md shrink-0">
-                                <span className="material-symbols-outlined text-xl">school</span>
-                            </div>
-                            <span className="text-md font-bold text-primary dark:text-blue-400">
-                                {t.bibleStudy.books.training}
-                            </span>
-                        </a>
+
                     </div>
                 </div>
             </div>

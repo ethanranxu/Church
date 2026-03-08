@@ -920,7 +920,17 @@ const zhTW = {
             hebrews: "希伯來書",
             acts: "使徒行傳",
             timothy: "提摩太前後書",
-            training: "2025同工造就訓練",
+        },
+        courses: {
+            title: "教會課程",
+            discipleship: {
+                title: "門徒訓練課程",
+                subtitle: "直奔標竿",
+            },
+            believer: {
+                title: "信徒培育課程",
+                subtitle: "聖經中的家庭",
+            },
         },
         resources: {
             toolsTitle: "實用工具",
