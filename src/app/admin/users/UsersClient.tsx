@@ -38,8 +38,8 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
 
     const filteredUsers = initialUsers.filter(
         (user) => {
-            // Permission check: managers cannot see/edit super_admins
-            if (profile?.level === 'manager' && user.level === 'super_admin') return false;
+            // Permission check: admins cannot see/edit super_admins
+            if (profile?.level !== 'super_admin' && user.level === 'super_admin') return false;
 
             return (
                 user.name.includes(searchTerm) ||
@@ -57,13 +57,12 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
 
     const handleOpenCreate = () => {
         setIsEditing(false);
-        setCurrentUser({ level: 'admin', roleName: t.admin.users.levels.admin });
+        setCurrentUser({ level: 'admin', roleName: t.admin.users.levels.admin, permissions: [] });
         setIsModalOpen(true);
     };
 
     const handleOpenEdit = (user: User) => {
-        // Double check permissions (though UI should hide these rows)
-        if (profile?.level === 'manager' && user.level === 'super_admin') {
+        if (profile?.level !== 'super_admin' && user.level === 'super_admin') {
             alert(t.admin.users.permissionDenied);
             return;
         }
@@ -74,7 +73,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
 
     const handleDelete = async (id: string, name: string) => {
         const targetUser = users.find(u => u.id === id);
-        if (profile?.level === 'manager' && targetUser?.level === 'super_admin') {
+        if (profile?.level !== 'super_admin' && targetUser?.level === 'super_admin') {
             alert(t.admin.users.deleteDenied);
             return;
         }
@@ -215,7 +214,8 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                     phone: currentUser.phone,
                     level: currentUser.level,
                     roleName: getRoleName(currentUser.level || 'admin'),
-                    avatar: currentUser.avatar
+                    avatar: currentUser.avatar,
+                    permissions: currentUser.permissions || []
                 }, operator);
             } else {
                 await createUser({
@@ -224,7 +224,8 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                     phone: currentUser.phone || '',
                     level: currentUser.level || 'admin',
                     roleName: getRoleName(currentUser.level || 'admin'),
-                    avatar: currentUser.avatar || null
+                    avatar: currentUser.avatar || null,
+                    permissions: currentUser.permissions || []
                 }, operator);
             }
             setIsModalOpen(false);
@@ -236,16 +237,9 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
         }
     };
 
-    if (profile?.level === 'admin') {
-        return (
-            <div className="flex h-[600px] items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50/30">
-                <div className="text-center">
-                    <ShieldAlert className="mx-auto h-12 w-12 text-gray-400" />
-                    <h2 className="mt-4 text-lg font-semibold text-gray-900">{t.admin.users.accessDenied}</h2>
-                    <p className="mt-2 text-sm text-gray-500">{t.admin.users.accessDeniedDesc}</p>
-                </div>
-            </div>
-        );
+    // This is handled by global route protection, but keep fallback just in case
+    if (!profile) {
+        return null;
     }
 
     return (
@@ -290,7 +284,6 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                 <th className="px-6 py-4 font-medium">{t.admin.users.email}</th>
                                 <th className="px-6 py-4 font-medium">{t.admin.users.phone}</th>
                                 <th className="px-6 py-4 font-medium">{t.admin.users.createdAt}</th>
-                                <th className="px-6 py-4 font-medium">{t.admin.users.role}</th>
                                 <th className="px-6 py-4 font-medium text-right">{t.admin.users.actions}</th>
                             </tr>
                         </thead>
@@ -338,25 +331,6 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                             minute: '2-digit'
                                         }) : '-'}
                                     </td>
-                                    <td className="px-6 py-4">
-                                        <span
-                                            className={clsx(
-                                                "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium",
-                                                user.level === "super_admin"
-                                                    ? "bg-purple-100 text-purple-700"
-                                                    : user.level === "manager"
-                                                        ? "bg-sky-100 text-sky-700"
-                                                        : "bg-emerald-100 text-emerald-700"
-                                            )}
-                                        >
-                                            {user.level === "super_admin" ? (
-                                                <ShieldAlert className="h-3.5 w-3.5" />
-                                            ) : (
-                                                <Shield className="h-3.5 w-3.5" />
-                                            )}
-                                            {user.roleName}
-                                        </span>
-                                    </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-2 opacity-0 transition-opacity group-hover:opacity-100">
                                             <button
@@ -386,7 +360,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                             ))}
                             {filteredUsers.length === 0 && (
                                 <tr>
-                                    <td colSpan={6} className="py-12 text-center text-gray-500">
+                                    <td colSpan={5} className="py-12 text-center text-gray-500">
                                         {t.admin.visits.noMatch}
                                     </td>
                                 </tr>
@@ -487,30 +461,39 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                     onChange={e => setCurrentUser({ ...currentUser, phone: e.target.value })}
                                 />
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">{t.admin.users.level}</label>
-                                <select
-                                    className="w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-2 px-3 text-sm disabled:bg-gray-100 disabled:text-gray-500"
-                                    value={currentUser.level || 'admin'}
-                                    disabled={isEditing && currentUser.level === 'super_admin'}
-                                    onChange={e => setCurrentUser({
-                                        ...currentUser,
-                                        level: e.target.value as any,
-                                        roleName: getRoleName(e.target.value)
-                                    })}
-                                >
-                                    {/* Super Admins can assign any role */}
-                                    {profile?.level === 'super_admin' && (
-                                        <option value="super_admin">{t.admin.users.levels.super_admin}</option>
-                                    )}
-                                    {/* System Admins can only assign manager or admin */}
-                                    <option value="manager">{t.admin.users.levels.manager}</option>
-                                    <option value="admin">{t.admin.users.levels.admin}</option>
-                                </select>
-                                {profile?.level === 'manager' && (
-                                    <p className="mt-1 text-xs text-gray-500"></p>
-                                )}
-                            </div>
+                            {currentUser.level !== 'super_admin' && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">頁面訪問權限</label>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {[
+                                            { value: '/admin', label: t.admin.sidebar.dashboard },
+                                            { value: '/admin/users', label: t.admin.sidebar.users },
+                                            { value: '/admin/devotions', label: t.admin.sidebar.devotions },
+                                            { value: '/admin/prayers', label: t.admin.sidebar.prayers },
+                                            { value: '/admin/visits', label: t.admin.sidebar.visits },
+                                            { value: '/admin/bulletins', label: t.admin.sidebar.bulletins },
+                                        ].map((perm) => (
+                                            <label key={perm.value} className="flex items-center gap-2 text-sm text-gray-700">
+                                                <input
+                                                    type="checkbox"
+                                                    disabled={isEditing && currentUser.level === 'super_admin'}
+                                                    checked={(currentUser.permissions || []).includes(perm.value)}
+                                                    onChange={(e) => {
+                                                        const currentPerms = currentUser.permissions || [];
+                                                        if (e.target.checked) {
+                                                            setCurrentUser({ ...currentUser, permissions: [...currentPerms, perm.value] });
+                                                        } else {
+                                                            setCurrentUser({ ...currentUser, permissions: currentPerms.filter(p => p !== perm.value) });
+                                                        }
+                                                    }}
+                                                    className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                                                />
+                                                {perm.label}
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
                             <div className="flex justify-end pt-4 gap-3">
                                 <button

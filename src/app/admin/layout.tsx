@@ -14,14 +14,23 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
     // Role-based Path Protection
     useEffect(() => {
         if (!loading && user && profile && !isLoginPage) {
-            // Manager (System Admin) cannot access Dashboard (root /admin)
-            if (profile.level === 'manager' && pathname === '/admin') {
-                router.replace('/admin/users');
-            }
-            // Admin cannot access Dashboard, Users or Settings (except password change)
-            if (profile.level === 'admin' &&
-                (pathname === '/admin' || pathname?.startsWith('/admin/users') || (pathname?.startsWith('/admin/settings') && !pathname?.startsWith('/admin/settings/password')))) {
-                router.replace('/admin/devotions');
+            if (profile.level !== 'super_admin') {
+                const userPermissions = profile.permissions || [];
+                let isAllowed = false;
+
+                if (pathname?.startsWith('/admin/settings/password')) {
+                    isAllowed = true;
+                } else {
+                    isAllowed = userPermissions.some(p => {
+                        if (p === '/admin') return pathname === '/admin';
+                        return pathname?.startsWith(p);
+                    });
+                }
+
+                if (!isAllowed) {
+                    const firstPerm = userPermissions.length > 0 ? userPermissions[0] : '/admin/settings/password';
+                    router.replace(firstPerm);
+                }
             }
         }
     }, [profile, pathname, loading, user, isLoginPage, router]);

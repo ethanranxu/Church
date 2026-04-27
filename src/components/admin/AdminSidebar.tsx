@@ -16,6 +16,7 @@ import clsx from "clsx";
 //     { name: "系統設置", href: "/admin/settings", icon: Settings },
 // ];
 
+import { Fragment } from "react";
 import { useTranslation } from "@/i18n/LanguageContext";
 
 export function AdminSidebar() {
@@ -29,7 +30,7 @@ export function AdminSidebar() {
         { name: t.admin.sidebar.devotions, href: "/admin/devotions", icon: BookOpen },
         { name: t.admin.sidebar.prayers, href: "/admin/prayers", icon: HeartHandshake },
         { name: t.admin.sidebar.visits, href: "/admin/visits", icon: UserPlus },
-        { name: t.admin.sidebar.settings, href: "/admin/settings", icon: Settings },
+        { name: t.admin.sidebar.bulletins, href: "/admin/bulletins", icon: BookOpen },
     ];
 
     const displayUser = {
@@ -48,47 +49,67 @@ export function AdminSidebar() {
             <div className="flex-1 overflow-y-auto py-6">
                 <nav className="space-y-1 px-3">
                     {navigation.map((item) => {
-                        // Special handling for System Settings / Change Password
-                        if (item.href === "/admin/settings") {
+                        // Special handling for bulletions / Change Password
+                        if (item.href === "/admin/bulletins") {
+                            // If they are password users, we inject a "Change password" button anyway.
                             const providerId = user?.providerData?.[0]?.providerId;
-
-                            // If not email login, hide this item completely
-                            if (providerId !== 'password') {
-                                return null;
-                            }
-
-                            // If Password login, show "Change Password" regardless of role restrictions on main "Settings"
-                            const isActive = pathname?.startsWith("/admin/settings/password");
+                            const isActivePass = pathname?.startsWith("/admin/settings/password");
+                            
+                            // Normal bulletin navigation checking (level based visibility)
+                            let canSeeBulletin = profile?.level === 'super_admin' || (profile?.permissions || []).includes('/admin/bulletins');
+                            
                             return (
-                                <Link
-                                    key="change-password"
-                                    href="/admin/settings/password"
-                                    className={clsx(
-                                        "group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
-                                        isActive
-                                            ? "bg-white/20 text-white font-semibold shadow-sm"
-                                            : "text-white/70 hover:bg-white/10 hover:text-white"
+                                <Fragment key={item.name}>
+                                    {canSeeBulletin && (
+                                        <Link
+                                            href={item.href}
+                                            className={clsx(
+                                                "group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                                                (pathname === item.href || pathname?.startsWith(item.href + "/"))
+                                                    ? "bg-white/20 text-white font-semibold shadow-sm"
+                                                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                                            )}
+                                        >
+                                            <item.icon
+                                                className={clsx(
+                                                    "mr-3 h-5 w-5 flex-shrink-0 transition-colors",
+                                                    (pathname === item.href || pathname?.startsWith(item.href + "/")) ? "text-white" : "text-white/60 group-hover:text-white"
+                                                )}
+                                            />
+                                            {item.name}
+                                        </Link>
                                     )}
-                                >
-                                    <Lock
-                                        className={clsx(
-                                            "mr-3 h-5 w-5 flex-shrink-0 transition-colors",
-                                            isActive ? "text-white" : "text-white/60 group-hover:text-white"
-                                        )}
-                                    />
-                                    {t.admin.sidebar.changePassword}
-                                </Link>
+                                    {providerId === 'password' && (
+                                        <Link
+                                            href="/admin/settings/password"
+                                            className={clsx(
+                                                "group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                                                isActivePass
+                                                    ? "bg-white/20 text-white font-semibold shadow-sm"
+                                                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                                            )}
+                                        >
+                                            <Lock
+                                                className={clsx(
+                                                    "mr-3 h-5 w-5 flex-shrink-0 transition-colors",
+                                                    isActivePass ? "text-white" : "text-white/60 group-hover:text-white"
+                                                )}
+                                            />
+                                            {t.admin.sidebar.changePassword}
+                                        </Link>
+                                    )}
+                                </Fragment>
                             );
                         }
 
+
                         // Level-based visibility check for other items
-                        if (profile?.level === 'admin') {
-                            // Regular admin only sees Devotions
-                            if (item.href === '/admin' || item.href === '/admin/users') return null;
-                        }
-                        if (profile?.level === 'manager') {
-                            // System admin sees Users and Devotions, but not Dashboard
-                            if (item.href === '/admin') return null;
+                        if (profile?.level !== 'super_admin') {
+                            const userPermissions = profile?.permissions || [];
+                            // Exact match for /admin, exact match for others
+                            if (!userPermissions.includes(item.href)) {
+                                return null;
+                            }
                         }
 
                         const isActive = item.href === "/admin"
@@ -130,7 +151,6 @@ export function AdminSidebar() {
                     </div>
                     <div className="ml-3 overflow-hidden">
                         <p className="truncate text-sm font-medium text-white">{displayUser.name}</p>
-                        <p className="truncate text-xs text-white/70">{displayUser.roleName}</p>
                     </div>
                 </div>
                 <button
