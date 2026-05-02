@@ -434,6 +434,7 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
                                 <th className="px-6 py-4 font-medium">出版日期</th>
                                 <th className="px-6 py-4 font-medium">標題</th>
                                 <th className="px-6 py-4 font-medium">狀態</th>
+                                <th className="px-6 py-4 font-medium">最後操作</th>
                                 <th className="px-6 py-4 font-medium text-right">操作</th>
                             </tr>
                         </thead>
@@ -456,6 +457,9 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
                                             {item.status === "published" ? "已下載" : "保存"}
                                         </span>
                                     </td>
+                                    <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        {item.lastOperator || '-'}
+                                    </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-2 opacity-0 transition-opacity group-hover:opacity-100">
                                             <button onClick={() => handleEdit(item)} className="rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
@@ -470,7 +474,7 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
                             ))}
                             {filteredBulletins.length === 0 && (
                                 <tr>
-                                    <td colSpan={4} className="py-12 text-center text-gray-500">
+                                    <td colSpan={5} className="py-12 text-center text-gray-500">
                                         暫無周報記錄
                                     </td>
                                 </tr>

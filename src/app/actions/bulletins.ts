@@ -13,6 +13,7 @@ export interface Bulletin {
     templateUrl?: string;
     pdfUrl?: string;
     contentData: Record<string, string>;
+    lastOperator?: string;
     views?: number;
 }
 
@@ -59,6 +60,7 @@ export async function createBulletin(data: Omit<Bulletin, 'id' | 'createdAt'>, o
         const newbulletin = {
             ...data,
             createdAt: FieldValue.serverTimestamp(),
+            lastOperator: operator?.name || '未知',
         };
         const docRef = await db.collection('Bulletins').add(newbulletin);
 
@@ -84,6 +86,7 @@ export async function updateBulletin(id: string, data: Partial<Omit<Bulletin, 'i
     try {
         await db.collection('Bulletins').doc(id).update({
             ...data,
+            lastOperator: operator?.name || '未知',
         });
 
         if (operator) {
