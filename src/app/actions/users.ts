@@ -49,17 +49,27 @@ export async function createUser(data: Omit<User, 'id' | 'createdAt'>, operator?
 }
 
 export async function updateUser(id: string, data: Partial<Omit<User, 'id' | 'createdAt'>>, operator?: { name: string, email: string }): Promise<{ success: boolean; error?: string }> {
+    console.log(`[updateUser] id: "${id}", type: ${typeof id}`);
+    if (!id || typeof id !== 'string' || id.trim() === '') {
+        console.error('UpdateUser failed: Invalid user ID:', id);
+        return { success: false, error: '缺少有效的用戶 ID' };
+    }
+
     try {
-        await db.collection('Users').doc(id).update(data);
+        // Use set with merge: true to be more robust (works even if document is missing, 
+        // though it shouldn't be missing for an existing user)
+        await db.collection('Users').doc(id).set(data, { merge: true });
 
         if (operator) {
             const { createAdminLog } = await import('@/app/actions/log');
-            let details = `更新了用戶ID: ${id}`;
+            let details = `更新了用戶資料 (ID: ${id})`;
             if (data.name) details += `, 改名為: ${data.name}`;
             if (data.level) details += `, 權限變更: ${data.level}`;
+            if (data.avatar) details += `, 更新了頭像`;
+            if (data.phone) details += `, 更新了電話: ${data.phone}`;
 
             await createAdminLog({
-                adminName: operator.name,
+                adminName: operator.name || operator.email,
                 adminEmail: operator.email,
                 action: '更新用戶',
                 details
@@ -67,10 +77,11 @@ export async function updateUser(id: string, data: Partial<Omit<User, 'id' | 'cr
         }
 
         revalidatePath('/admin/users');
+        revalidatePath('/admin/settings/password'); // Also revalidate current page
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error('Failed to update user:', error);
-        return { success: false, error: 'Failed to update user' };
+        return { success: false, error: error.message || '更新失敗' };
     }
 }
 

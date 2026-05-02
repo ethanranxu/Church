@@ -29,8 +29,8 @@ export async function verifyUser(email: string, shouldLog: boolean = true): Prom
 
         const doc = snapshot.docs[0];
         const userData = {
-            id: doc.id,
-            ...doc.data()
+            ...doc.data(),
+            id: doc.id
         } as User;
 
         console.log(`[Auth] Verified login for ${email} as ${userData.roleName}`);

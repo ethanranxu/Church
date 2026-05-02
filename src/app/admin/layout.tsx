@@ -35,7 +35,15 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
         }
     }, [profile, pathname, loading, user, isLoginPage, router]);
 
-    if (loading) {
+    const isAllowed = profile?.level === 'super_admin' || 
+                      isLoginPage || 
+                      (profile?.permissions || []).some(p => {
+                          if (p === '/admin') return pathname === '/admin';
+                          return pathname?.startsWith(p);
+                      }) ||
+                      pathname?.startsWith('/admin/settings/password');
+
+    if (loading || (!isAllowed && !isLoginPage && user)) {
         return (
             <div className="flex h-screen items-center justify-center bg-gray-50 dark:bg-[#0f172a]">
                 <div className="size-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />

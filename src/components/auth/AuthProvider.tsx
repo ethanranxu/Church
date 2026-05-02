@@ -22,6 +22,7 @@ interface AuthContextType {
     loginWithEmail: (email: string, password: string) => Promise<boolean>;
     registerWithEmail: (email: string, password: string, name: string) => Promise<boolean>;
     changePassword: (newPassword: string) => Promise<boolean>;
+    setProfile: React.Dispatch<React.SetStateAction<DBUser | null>>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -33,6 +34,7 @@ const AuthContext = createContext<AuthContextType>({
     loginWithEmail: async () => Promise.resolve(false),
     registerWithEmail: async () => Promise.resolve(false),
     changePassword: async () => Promise.resolve(false),
+    setProfile: () => { },
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -64,7 +66,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
 
             setProfile(verification.userData);
-            router.push('/admin');
+            
+            // Intelligent Redirect based on permissions
+            if (verification.userData.level === 'super_admin' || (verification.userData.permissions || []).includes('/admin')) {
+                router.push('/admin');
+            } else {
+                const firstPerm = verification.userData.permissions?.[0] || '/admin/settings/password';
+                router.push(firstPerm);
+            }
             return true;
         } catch (error: any) {
             console.error("Verification Error", error);
@@ -238,27 +247,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             const result = await updateUserPassword(auth.currentUser.uid, newPassword);
 
             if (result.success) {
-                alert("密碼修改成功");
+                // Return success to caller, avoid side-effect alerts
                 return true;
             } else {
                 throw new Error(result.error);
             }
         } catch (error: any) {
             console.error("Change Password Error", error);
-
-            let errorMessage = error.message || "密碼修改失敗";
-            // Map common error messages if needed, though server usually handles it
-            if (errorMessage.includes("password must be")) {
-                errorMessage = "新密碼強度不足（至少6位）";
-            }
-
-            alert(errorMessage);
+            // Re-throw or handle as false, avoiding alerts here
             return false;
         }
     };
 
     return (
-        <AuthContext.Provider value={{ user, profile, loading, logout, signInWithGoogle, loginWithEmail, registerWithEmail, changePassword }}>
+        <AuthContext.Provider value={{ user, profile, loading, logout, signInWithGoogle, loginWithEmail, registerWithEmail, changePassword, setProfile }}>
             {children}
         </AuthContext.Provider>
     );

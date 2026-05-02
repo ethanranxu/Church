@@ -59,6 +59,7 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
     const [status, setStatus] = useState<"draft" | "published">("draft");
     const [editId, setEditId] = useState<string | null>(null);
     const [contentData, setContentData] = useState<Record<string, string>>(DEFAULT_CONTENT_DATA);
+    const [successMessage, setSuccessMessage] = useState("");
     
     const [activeTab, setActiveTab] = useState<"basic" | "worship" | "reading">("basic");
 
@@ -88,10 +89,10 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
         setActiveTab("basic");
     };
 
-    const handleSave = async (saveStatus: 'draft' | 'published' = 'published') => {
+    const handleSave = async (saveStatus: 'draft' | 'published' = 'draft', redirect = true) => {
         if (!title) {
             alert("請輸入標題");
-            return;
+            return false;
         }
 
         setIsLoading(true);
@@ -108,12 +109,24 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
             if (view === "edit" && editId) {
                 await updateBulletin(editId, dataToSave, operator);
             } else {
-                await createBulletin(dataToSave, operator);
+                const result = await createBulletin(dataToSave, operator);
+                if (result.success && result.id) {
+                    setEditId(result.id);
+                    setView("edit");
+                }
             }
             router.refresh();
-            setView("list");
+
+            if (redirect) {
+                setView("list");
+            } else {
+                setSuccessMessage("數據保存成功");
+                setTimeout(() => setSuccessMessage(""), 3000);
+            }
+            return true;
         } catch (error) {
             alert("保存失敗");
+            return false;
         } finally {
             setIsLoading(false);
         }
@@ -132,6 +145,10 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
     };
 
     const handleGenerateDocx = async () => {
+        // 保存并标记为已下载 (published status)
+        const saved = await handleSave('published', false);
+        if (!saved) return;
+
         setIsGenerating(true);
         try {
             const response = await fetch('/templates/bulletin-template.docx');
@@ -139,6 +156,8 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
             const arrayBuffer = await response.arrayBuffer();
             
             await generateDocx(arrayBuffer, contentData, `${title || '周報'}.docx`);
+            // 更新本地状态，以便界面立即显示“已下载”
+            setStatus('published');
         } catch (error) {
             alert("生成周報失敗，請確保模板存在。");
             console.error(error);
@@ -162,18 +181,11 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
             const parts = line.trim().split(/\s+/);
             
             if (parts.length >= 3) {
-                // Try to match "Date Progress Title" pattern
-                // We assume Date is 2 parts (e.g. 星期一 4/20), Progress is 2 parts (e.g. 創世記 1章), and rest is Title
-                // But it might vary, so let's try a few common patterns or just use heuristics.
-                
-                // If it matches "Day Date Progress1 Progress2 Title..."
-                // Example: "星期一 4/20 創世記 1章 創造天地" -> parts: ["星期一", "4/20", "創世記", "1章", "創造天地"]
                 if (parts.length >= 5) {
                     newData[`日期${i}`] = `${parts[0]} ${parts[1]}`;
                     newData[`進度${i}`] = `${parts[2]} ${parts[3]}`;
                     newData[`主題${i}`] = parts.slice(4).join(" ");
                 } else {
-                    // Fallback for 3 or 4 parts
                     newData[`日期${i}`] = parts[0] || "";
                     newData[`進度${i}`] = parts[1] || "";
                     newData[`主題${i}`] = parts.slice(2).join(" ") || "";
@@ -209,19 +221,12 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
                             生成下載 DOCX
                         </button>
                         <button
-                            onClick={() => handleSave('draft')}
-                            disabled={isLoading}
-                            className="hidden sm:flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 disabled:opacity-70"
-                        >
-                            保存草稿
-                        </button>
-                        <button
-                            onClick={() => handleSave('published')}
+                            onClick={() => handleSave('draft', false)}
                             disabled={isLoading}
                             className="flex items-center rounded-lg bg-emerald-600 px-6 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-emerald-700 disabled:opacity-70"
                         >
                             {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-                            保存並發佈
+                            保存
                         </button>
                     </div>
                 </div>
@@ -378,6 +383,16 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
                         )}
                     </div>
                 </div>
+
+                {/* 成功提示 */}
+                {successMessage && (
+                    <div className="fixed bottom-8 left-1/2 z-50 animate-slide-up">
+                        <div className="flex items-center gap-2 rounded-full bg-emerald-600 px-6 py-3 text-white shadow-2xl">
+                            <Save className="h-4 w-4" />
+                            <span className="text-sm font-medium">{successMessage}</span>
+                        </div>
+                    </div>
+                )}
             </div>
         );
     }
@@ -437,8 +452,8 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
                                         </span>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <span className={clsx("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium", item.status === "published" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700")}>
-                                            {item.status === "published" ? "已發佈" : "草稿"}
+                                        <span className={clsx("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium", item.status === "published" ? "bg-indigo-100 text-indigo-700" : "bg-emerald-100 text-emerald-700")}>
+                                            {item.status === "published" ? "已下載" : "保存"}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 text-right">

@@ -1,43 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Church Management System
 
-## Getting Started
+本项目是一个基于 Next.js 构建的教会管理系统，旨在简化行政流程并增强会友连接。
 
-First, run the development server:
+## 核心功能
 
+- **自动化周报**：在线编辑周报内容并导出为 Word 格式（基于 `.docx` 模板）。
+- **每日灵修**：集成日历和灵修内容展示，支持多种格式。
+- **后台管理**：细粒度的权限控制，管理页面内容、会友信息及权限。
+- **多教会支持**：支持多个分堂（如木槿灣、長灣）的信息展示。
+
+## 快速开始
+
+### 1. 安装依赖
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. 运行开发服务器
+```bash
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. 环境配置
+在 `.env.local` 中配置以下变量：
+- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`: 地图 API。
+- `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`: Firebase Admin SDK 配置。
+- `DASHSCOPE_API_KEY`: 阿里云通义千问 API 密钥。
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 技术栈
+- **前端**: Next.js 16, React 19, Tailwind CSS
+- **后端**: Firebase Firestore, Firebase Auth
+- **文档生成**: docx, docxtemplater
 
-## Learn More
+## 部署
+推荐使用 [Vercel](https://vercel.com) 部署。确保在环境变量中正确配置 Firebase 和 Google Maps 密钥。
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new).
-
-### Deployment Steps:
-
-1. **Push your code** to a GitHub/GitLab/Bitbucket repository.
-2. **Import the project** in the Vercel dashboard.
-3. **Environment Variables**: You MUST add the following environment variable in the Vercel Project Settings:
-   - `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`: Get this from your Google Cloud Console. It's required for the map in the Location section.
-4. **Deploy**: Vercel will automatically detect the Next.js framework and deploy the site.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+*Last Updated: 2026-05-02*
 
