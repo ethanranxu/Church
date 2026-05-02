@@ -6,7 +6,7 @@ import { LogIn, Chrome, ShieldCheck, Mail, Lock, UserPlus, User } from 'lucide-r
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
-    const { signInWithGoogle, loginWithEmail, registerWithEmail, loading: authLoading } = useAuth();
+    const { user, profile, signInWithGoogle, loginWithEmail, registerWithEmail, loading: authLoading } = useAuth();
 
     // UI State
     const [isRegistering, setIsRegistering] = useState(false);
@@ -19,6 +19,17 @@ export default function LoginPage() {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
+
+    // Auto redirect if already logged in
+    React.useEffect(() => {
+        if (!authLoading && user && profile) {
+            // Already logged in, go to admin
+            const target = profile.level === 'super_admin' || (profile.permissions || []).includes('/admin') 
+                ? '/admin' 
+                : (profile.permissions?.[0] || '/admin/settings/password');
+            router.replace(target);
+        }
+    }, [user, profile, authLoading, router]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -58,6 +69,16 @@ export default function LoginPage() {
     };
 
     const isLoading = authLoading || isSubmitting;
+
+    // If we have a user and are loading profile, or already verified and redirecting, show full screen loader
+    if ((user && authLoading) || (user && profile)) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-[#f8fafc] dark:bg-[#0f172a]">
+                <div className="size-12 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin mb-4" />
+                <p className="text-gray-500 dark:text-gray-400 animate-pulse">正在進入系統...</p>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#f8fafc] dark:bg-[#0f172a] p-4 font-sans">

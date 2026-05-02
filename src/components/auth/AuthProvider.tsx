@@ -67,13 +67,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             setProfile(verification.userData);
             
-            // Intelligent Redirect based on permissions
-            if (verification.userData.level === 'super_admin' || (verification.userData.permissions || []).includes('/admin')) {
-                router.push('/admin');
-            } else {
-                const firstPerm = verification.userData.permissions?.[0] || '/admin/settings/password';
-                router.push(firstPerm);
-            }
+            // Intelligent Redirect based on permissions - use replace to avoid back-button loop
+            const target = verification.userData.level === 'super_admin' || (verification.userData.permissions || []).includes('/admin')
+                ? '/admin'
+                : (verification.userData.permissions?.[0] || '/admin/settings/password');
+            
+            router.replace(target);
             return true;
         } catch (error: any) {
             console.error("Verification Error", error);
@@ -105,13 +104,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setUser(user);
 
             if (user) {
+                // If we are currently in handleAuthVerification (loading is true), 
+                // don't start another verifyUser here to avoid double-work
+                if (profile && profile.email === user.email) {
+                    setLoading(false);
+                    return;
+                }
+
                 // Fetch profile if user is logged in
                 const email = user.email;
                 if (email) {
-                    const { verifyUser } = await import('@/app/actions/auth');
-                    const verification = await verifyUser(email, false); // Don't log repeated session verifications
-                    if (verification.isValid && verification.userData) {
-                        setProfile(verification.userData);
+                    try {
+                        const { verifyUser } = await import('@/app/actions/auth');
+                        const verification = await verifyUser(email, false); 
+                        if (verification.isValid && verification.userData) {
+                            setProfile(verification.userData);
+                        }
+                    } catch (e) {
+                        console.error("Silent session verification failed", e);
                     }
                 }
             } else {
@@ -122,12 +132,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             // Auto redirect if on admin pages and not logged in
             if (!user && pathname.startsWith('/admin') && pathname !== '/admin/login') {
-                router.push('/admin/login');
+                router.replace('/admin/login');
             }
         });
 
         return () => unsubscribe();
-    }, [pathname, router]);
+    }, [pathname, router, profile]); // Added profile to dependencies for the check
 
     const logout = async () => {
         try {
