@@ -5,6 +5,7 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { Lock, Save, AlertCircle, CheckCircle2, User as UserIcon, Camera, Phone, Loader2, Upload } from 'lucide-react';
 import { useTranslation } from "@/i18n/LanguageContext";
 import { updateUser } from '@/app/actions/users';
+import { Toast } from '@/components/ui/Toast';
 
 export default function PasswordClient() {
     const { t } = useTranslation();
@@ -182,13 +183,11 @@ export default function PasswordClient() {
             <div className="bg-white dark:bg-[#1e293b] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
                 <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-8">
                     {message && (
-                        <div className={`p-4 rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300 ${message.type === 'success'
-                            ? 'bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400 border border-green-100 dark:border-green-500/20'
-                            : 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-400 border border-red-100 dark:border-red-500/20'
-                            }`}>
-                            {message.type === 'success' ? <CheckCircle2 className="size-5" /> : <AlertCircle className="size-5" />}
-                            <p className="text-sm font-medium">{message.text}</p>
-                        </div>
+                        <Toast 
+                            message={message.text} 
+                            type={message.type === 'success' ? 'success' : 'error'} 
+                            onClose={() => setMessage(null)} 
+                        />
                     )}
 
                     {/* Account Info (Read-only) */}
