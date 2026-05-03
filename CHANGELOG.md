@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - 2026-05-03
+
+### Changed
+- **側邊栏導航重構 (Sidebar Refactoring)**:
+  - 將「個人資料」從「教會週報」邏輯中解耦，設為導航欄常駐項，對所有登錄用戶可見。
+  - 更換個人資料圖標為 `User`，提升識別度。
+  - 優化權限過濾機制，確保個人資料頁面不被普通管理員的權限列表意外攔截。
+- **個人資料頁面增強 (Profile Page Enhancements)**:
+  - 增加姓名、郵箱等基本身份信息的唯讀展示。
+  - 針對 **Google 登錄用戶**，自動隱藏密碼修改區域，僅保留頭像和手機號修改功能，避免操作混淆。
+- **認證日誌優化 (Auth Logging Optimization)**:
+  - 屏蔽了 `auth/popup-closed-by-user` 錯誤的控制台日誌，減少用戶主動關閉登錄彈窗時產生的噪音。
+
 ## [Unreleased] - 2026-05-02
 
 ### Added

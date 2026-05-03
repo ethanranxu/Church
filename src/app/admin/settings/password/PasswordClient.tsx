@@ -8,7 +8,7 @@ import { updateUser } from '@/app/actions/users';
 
 export default function PasswordClient() {
     const { t } = useTranslation();
-    const { changePassword, profile, setProfile } = useAuth();
+    const { changePassword, user, profile, setProfile } = useAuth();
     
     // Form states
     const [newPassword, setNewPassword] = useState('');
@@ -191,6 +191,26 @@ export default function PasswordClient() {
                         </div>
                     )}
 
+                    {/* Account Info (Read-only) */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b border-gray-100 dark:border-gray-800">
+                        <div>
+                            <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
+                                {t.admin.users.name}
+                            </label>
+                            <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                                {profile?.name || '-'}
+                            </p>
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
+                                {t.admin.users.email}
+                            </label>
+                            <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                                {profile?.email || '-'}
+                            </p>
+                        </div>
+                    </div>
+
                     {/* Profile Section */}
                     <div className="space-y-6">
                         {/* Avatar Upload */}
@@ -246,48 +266,52 @@ export default function PasswordClient() {
                         </div>
                     </div>
 
-                    {/* Password Section */}
-                    <div className="pt-4 space-y-4">
-                        <div className="flex items-center gap-2 mb-2">
-                            <Lock className="size-4 text-primary" />
-                            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                                密碼修改
-                            </h3>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t.admin.password.newPassword}</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Lock className="h-5 w-5 text-gray-400" />
+                    {/* Password Section - Only for password-based users */}
+                    {user?.providerData.some(p => p.providerId === 'password') && (
+                        <div className="pt-4 space-y-4">
+                            <div className="flex items-center justify-between gap-2 mb-2">
+                                <div className="flex items-center gap-2">
+                                    <Lock className="size-4 text-primary" />
+                                    <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                        密碼修改
+                                    </h3>
                                 </div>
-                                <input
-                                    type="password"
-                                    value={newPassword}
-                                    onChange={(e) => setNewPassword(e.target.value)}
-                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                    placeholder={t.admin.password.newPasswordPlaceholder}
-                                    disabled={isSubmitting}
-                                />
                             </div>
-                        </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t.admin.password.newPassword}</label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <Lock className="h-5 w-5 text-gray-400" />
+                                    </div>
+                                    <input
+                                        type="password"
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
+                                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        placeholder={t.admin.password.newPasswordPlaceholder}
+                                        disabled={isSubmitting}
+                                    />
+                                </div>
+                            </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t.admin.password.confirmPassword}</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Lock className="h-5 w-5 text-gray-400" />
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t.admin.password.confirmPassword}</label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <Lock className="h-5 w-5 text-gray-400" />
+                                    </div>
+                                    <input
+                                        type="password"
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        placeholder={t.admin.password.confirmPasswordPlaceholder}
+                                        disabled={isSubmitting}
+                                    />
                                 </div>
-                                <input
-                                    type="password"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                    placeholder={t.admin.password.confirmPasswordPlaceholder}
-                                    disabled={isSubmitting}
-                                />
                             </div>
                         </div>
-                    </div>
+                    )}
 
                     <div className="pt-2">
                         <button

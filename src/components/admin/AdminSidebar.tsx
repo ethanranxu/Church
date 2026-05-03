@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Users, BookOpen, LayoutDashboard, Settings, LogOut, Church, Lock, HeartHandshake, UserPlus } from "lucide-react";
+import { Users, User, BookOpen, LayoutDashboard, Settings, LogOut, Church, Lock, HeartHandshake, UserPlus } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import clsx from "clsx";
 
@@ -31,6 +31,7 @@ export function AdminSidebar() {
         { name: t.admin.sidebar.prayers, href: "/admin/prayers", icon: HeartHandshake },
         { name: t.admin.sidebar.visits, href: "/admin/visits", icon: UserPlus },
         { name: t.admin.sidebar.bulletins, href: "/admin/bulletins", icon: BookOpen },
+        { name: t.admin.sidebar.changePassword, href: "/admin/settings/password", icon: User, alwaysShow: true },
     ];
 
     const displayUser = {
@@ -49,62 +50,15 @@ export function AdminSidebar() {
             <div className="flex-1 overflow-y-auto py-6">
                 <nav className="space-y-1 px-3">
                     {navigation.map((item) => {
-                        // Special handling for bulletions / Change Password
+                        // Special handling for bulletions check (level based visibility)
                         if (item.href === "/admin/bulletins") {
-                            // If they are password users, we inject a "Change password" button anyway.
-                            const providerId = user?.providerData?.[0]?.providerId;
-                            const isActivePass = pathname?.startsWith("/admin/settings/password");
-                            
-                            // Normal bulletin navigation checking (level based visibility)
                             let canSeeBulletin = profile?.level === 'super_admin' || (profile?.permissions || []).includes('/admin/bulletins');
-                            
-                            return (
-                                <Fragment key={item.name}>
-                                    {canSeeBulletin && (
-                                        <Link
-                                            href={item.href}
-                                            className={clsx(
-                                                "group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
-                                                (pathname === item.href || pathname?.startsWith(item.href + "/"))
-                                                    ? "bg-white/20 text-white font-semibold shadow-sm"
-                                                    : "text-white/70 hover:bg-white/10 hover:text-white"
-                                            )}
-                                        >
-                                            <item.icon
-                                                className={clsx(
-                                                    "mr-3 h-5 w-5 flex-shrink-0 transition-colors",
-                                                    (pathname === item.href || pathname?.startsWith(item.href + "/")) ? "text-white" : "text-white/60 group-hover:text-white"
-                                                )}
-                                            />
-                                            {item.name}
-                                        </Link>
-                                    )}
-                                    {providerId === 'password' && (
-                                        <Link
-                                            href="/admin/settings/password"
-                                            className={clsx(
-                                                "group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
-                                                isActivePass
-                                                    ? "bg-white/20 text-white font-semibold shadow-sm"
-                                                    : "text-white/70 hover:bg-white/10 hover:text-white"
-                                            )}
-                                        >
-                                            <Lock
-                                                className={clsx(
-                                                    "mr-3 h-5 w-5 flex-shrink-0 transition-colors",
-                                                    isActivePass ? "text-white" : "text-white/60 group-hover:text-white"
-                                                )}
-                                            />
-                                            {t.admin.sidebar.changePassword}
-                                        </Link>
-                                    )}
-                                </Fragment>
-                            );
+                            if (!canSeeBulletin) return null;
                         }
 
-
-                        // Level-based visibility check for other items
-                        if (profile?.level !== 'super_admin') {
+                        // Level-based visibility check for other items (except alwaysShow ones)
+                        // @ts-ignore - alwaysShow is a custom property
+                        if (profile?.level !== 'super_admin' && !item.alwaysShow) {
                             const userPermissions = profile?.permissions || [];
                             // Exact match for /admin, exact match for others
                             if (!userPermissions.includes(item.href)) {

@@ -92,8 +92,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     await handleAuthVerification(result.user);
                 }
             } catch (error: any) {
-                console.error("Redirect Auth Error", error);
                 if (error.code !== 'auth/popup-closed-by-user') {
+                    console.error("Redirect Auth Error", error);
                     alert("重定向登錄失敗: " + (error.message || "未知錯誤"));
                 }
             }
@@ -171,10 +171,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 await handleAuthVerification(result.user);
             }
         } catch (error: any) {
-            console.error("Google Popup Error", error);
-
             // If popup is blocked, fallback to redirect automatically
             if (error.code === 'auth/popup-blocked') {
+                console.error("Google Popup Blocked, falling back to redirect", error);
                 try {
                     // Ensure param is set for redirect too
                     googleProvider.setCustomParameters({
@@ -186,6 +185,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     alert("登錄失败: 彈窗被攔截且重定向失敗。");
                 }
             } else if (error.code !== 'auth/popup-closed-by-user') {
+                console.error("Google Popup Error", error);
                 alert(error.message || "登錄失敗，請重試");
             }
         }

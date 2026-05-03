@@ -15,7 +15,7 @@
 ## Features
 - **Weekly Bulletin System**: Automated .docx generation from placeholders in `public/templates/bulletin-template.docx`.
 - **Daily Devotions**: Calendar-based devotion system with daily Scripture and topics.
-- **Admin Dashboard**: Permission-based management for bulletins, devotions, and users. Includes **Profile** (`/admin/settings/password`) for personal settings.
+- **Admin Dashboard**: Permission-based management for bulletins, devotions, and users. Includes **Profile** (`/admin/settings/password`), which is always accessible to all authenticated users for personal settings (avatar, phone, etc.).
 - **Image Handling**: Client-side compression for avatars (Canvas API), stored as Base64 in Firestore `Users` collection (target < 100KB).
 - **Church Info**: Static and dynamic pages for church vision, team, and locations.
 
