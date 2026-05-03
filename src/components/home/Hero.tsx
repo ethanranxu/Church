@@ -21,19 +21,19 @@ export const Hero = () => {
             {/* Minimal Overlay - removed as per user request */}
 
             {/* Content */}
-            <Container className="relative z-20 text-center mt-12">
+            <Container className="relative z-20 flex flex-col items-center text-center mt-12">
                 <span className="inline-block px-5 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white text-xl font-semibold mb-6 border border-white/30 shadow-lg animate-fade-in">
                     {t.home.hero.badge}
                 </span>
-                <h1 className="text-4xl md:text-6xl font-black text-white leading-tight mb-6 tracking-tight drop-shadow-lg animate-slide-up">
+                <h1 className="text-4xl md:text-6xl font-black text-white leading-tight mb-6 tracking-tight drop-shadow-lg animate-hero-entrance">
                     {t.home.hero.title1}
                     <br />
                     {t.home.hero.title2}
                 </h1>
-                <p className="text-lg md:text-xl text-white/90 mb-10 max-w-2xl mx-auto font-medium drop-shadow-md animate-slide-up animation-delay-200">
+                <p className="text-lg md:text-xl text-white/90 mb-10 max-w-2xl mx-auto font-medium drop-shadow-md animate-hero-entrance animation-delay-200">
                     {t.home.hero.description}
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up animation-delay-400">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-hero-entrance animation-delay-400">
                     <Link
                         href="/#location"
                         onClick={(e) => {
