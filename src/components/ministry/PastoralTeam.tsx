@@ -44,7 +44,7 @@ export default function PastoralTeam() {
                 </div>
             </div>
 
-            {/* Pastor Ni Gengzhong Card */}
+            {/* Pastor Gengzhong Ni Card */}
             <div className="flex flex-col md:flex-row bg-white dark:bg-[#1a2632] rounded-2xl overflow-hidden shadow-lg border border-gray-100 dark:border-gray-800">
                 <div
                     className="md:w-2/5 min-h-[320px] bg-cover bg-top"
