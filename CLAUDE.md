@@ -6,16 +6,17 @@
 - **Lint**: `npm run lint`
 
 ## Project Structure
-- `src/app`: Next.js App Router pages
+- `src/app`: Next.js App Router pages and server actions
+- `src/app/api`: Server-side API routes (e.g., latest bulletin fetch)
 - `src/components`: Reusable UI components
 - `src/utils`: Helper functions (e.g., `docxUtils.ts` for bulletin generation)
 - `src/lib/firebase`: Firebase configuration and client/admin initialization
 - `scripts/`: Maintenance and data import scripts
 
 ## Features
-- **Weekly Bulletin System**: Automated .docx generation from placeholders in `public/templates/bulletin-template.docx`.
+- **Weekly Bulletin System**: Automated .docx generation from placeholders. Includes a homepage **History Search** feature and a dedicated **Latest Bulletin API**.
 - **Daily Devotions**: Calendar-based devotion system with daily Scripture and topics.
-- **Admin Dashboard**: Permission-based management for bulletins, devotions, and users. Includes **Profile** (`/admin/settings/password`), which is always accessible to all authenticated users for personal settings (avatar, phone, etc.).
+- **Admin Dashboard**: Permission-based management. All tables are **center-aligned** for a consistent visual experience. Includes **Profile** management for all users.
 - **Image Handling**: Client-side compression for avatars (Canvas API), stored as Base64 in Firestore `Users` collection (target < 100KB).
 - **Church Info**: Static and dynamic pages for church vision, team, and locations.
 

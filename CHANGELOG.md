@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - 2026-05-07
+
+### Changed
+- **后台界面标准化 (Admin UI Standardization)**: 统一了所有管理后台模块（周报、灵修、用户、探访、活动日志）的表格对齐方式，表格头部和内容列均改为居中显示，提升视觉整洁度。
+- **首页周报交互优化 (Homepage Bulletin UX)**: 
+  - 在首页「主日信息」板块增加了「查看往期周报」功能，通过弹出模态框（HistoryBulletinsModal）支持按日期和关键词搜索历史周报。
+  - 优化了首页最新周报的加载逻辑，通过新 API 路由 `/api/bulletin/latest` 实时获取最新发布的周报。
+
+### Added
+- **历史周报模态框 (HistoryBulletinsModal)**: 全新的搜索和筛选界面，方便会友查找历史周报。
+- **最新周报 API (Latest Bulletin API)**: 增加 `/api/bulletin/latest` 路由，用于快速检索当前发布的周报。
+- **运维工具集 (Maintenance Scripts)**: 
+  - `scripts/setup-storage.js`: 初始化 Firebase Storage 权限与存储桶。
+  - `scripts/fix-cors.js`: 解决 Firebase Storage 的跨域资源共享问题。
+  - `scripts/migrate-status.js`: 迁移旧版周报状态字段。
+  - `scripts/debug-bulletins.js`: 调试周报数据结构。
+
 ## [Unreleased] - 2026-05-03
 
 ### Changed
