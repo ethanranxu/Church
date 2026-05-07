@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Search, Calendar, ChevronLeft, Save, Loader2, ArrowUpRight, Edit3, Trash2, Download } from "lucide-react";
+import { Plus, Search, Calendar, ChevronLeft, Save, Loader2, ArrowUpRight, Edit3, Trash2, Download, Upload, FileText } from "lucide-react";
 import clsx from "clsx";
 import { Bulletin, createBulletin, updateBulletin, deleteBulletin } from "@/app/actions/bulletins";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useTranslation } from "@/i18n/LanguageContext";
 import { generateDocx } from "@/utils/docxUtils";
+import { format } from "date-fns";
+import { zhTW } from "date-fns/locale";
 
 interface BulletinsClientProps {
     initialBulletins: Bulletin[];
@@ -46,8 +48,10 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
     const [view, setView] = useState<"list" | "create" | "edit">("list");
     const [isLoading, setIsLoading] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
+    const [isUploading, setIsUploading] = useState<string | null>(null);
+    const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedStatus, setSelectedStatus] = useState<("draft" | "published")[]>(["draft", "published"]);
+    const [selectedStatus, setSelectedStatus] = useState<("已保存" | "已下載")[]>(["已保存", "已下載"]);
     const [smartParseText, setSmartParseText] = useState("");
     
     const router = useRouter();
@@ -56,23 +60,25 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
 
     const [title, setTitle] = useState("");
     const [publishDate, setPublishDate] = useState("");
-    const [status, setStatus] = useState<"draft" | "published">("draft");
+    const [status, setStatus] = useState<"已保存" | "已下載">("已保存");
     const [editId, setEditId] = useState<string | null>(null);
     const [contentData, setContentData] = useState<Record<string, string>>(DEFAULT_CONTENT_DATA);
     const [successMessage, setSuccessMessage] = useState("");
     
     const [activeTab, setActiveTab] = useState<"basic" | "worship" | "reading">("basic");
 
-    const filteredBulletins = initialBulletins.filter(
-        (item) =>
-            item.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-            selectedStatus.includes(item.status)
-    );
+    const filteredBulletins = [...initialBulletins]
+        .sort((a, b) => (b.publishDate || "").localeCompare(a.publishDate || ""))
+        .filter(
+            (item) =>
+                item.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+                selectedStatus.includes(item.status)
+        );
 
     const handleCreate = () => {
         setTitle("");
         setPublishDate(new Date().toISOString().split('T')[0]);
-        setStatus("draft");
+        setStatus("已保存");
         setEditId(null);
         setContentData(DEFAULT_CONTENT_DATA);
         setView("create");
@@ -89,7 +95,7 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
         setActiveTab("basic");
     };
 
-    const handleSave = async (saveStatus: 'draft' | 'published' = 'draft', redirect = true) => {
+    const handleSave = async (saveStatus: '已保存' | '已下載' = '已保存', redirect = true) => {
         if (!title) {
             alert("請輸入標題");
             return false;
@@ -144,9 +150,71 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
         }
     };
 
+    const handleUploadPdf = async (id: string, file: File) => {
+        if (!file) return;
+
+        // 1. 校验大小 (1MB = 1024 * 1024 bytes)
+        const MAX_SIZE = 1 * 1024 * 1024;
+        if (file.size > MAX_SIZE) {
+            alert(`文件太大！当前大小为 ${(file.size / 1024 / 1024).toFixed(2)}MB，Firestore 方案要求文件必须小于 1MB。请压缩后重试。`);
+            return;
+        }
+        
+        setIsUploading(id);
+        setUploadProgress(prev => ({ ...prev, [id]: 20 })); // 假进度起始
+        
+        try {
+            // 2. 将文件转换为 Base64
+            const reader = new FileReader();
+            
+            const base64Promise = new Promise<string>((resolve, reject) => {
+                reader.onload = () => {
+                    const result = reader.result as string;
+                    // 去掉 data:application/pdf;base64, 前缀
+                    const base64String = result.split(',')[1];
+                    resolve(base64String);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+
+            setUploadProgress(prev => ({ ...prev, [id]: 50 }));
+            const base64Data = await base64Promise;
+            setUploadProgress(prev => ({ ...prev, [id]: 80 }));
+
+            // 3. 直接更新到 Firestore
+            const operator = profile ? { name: profile.name, email: profile.email } : undefined;
+            const result = await updateBulletin(id, { 
+                pdfBase64: base64Data,
+                pdfName: file.name
+            }, operator);
+            
+            if (result.success) {
+                setUploadProgress(prev => ({ ...prev, [id]: 100 }));
+                setSuccessMessage("PDF 上傳成功 (已存入資料庫)");
+                setTimeout(() => setSuccessMessage(""), 3000);
+                router.refresh();
+            } else {
+                alert("更新數據庫失敗");
+            }
+        } catch (error) {
+            console.error("Upload failed:", error);
+            alert("處理文件失敗");
+        } finally {
+            setIsUploading(null);
+            setTimeout(() => {
+                setUploadProgress(prev => {
+                    const next = { ...prev };
+                    delete next[id];
+                    return next;
+                });
+            }, 1000);
+        }
+    };
+
     const handleGenerateDocx = async () => {
-        // 保存并标记为已下载 (published status)
-        const saved = await handleSave('published', false);
+        // 保存并标记为已下载 (已下載 status)
+        const saved = await handleSave('已下載', false);
         if (!saved) return;
 
         setIsGenerating(true);
@@ -157,7 +225,7 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
             
             await generateDocx(arrayBuffer, contentData, `${title || '周報'}.docx`);
             // 更新本地状态，以便界面立即显示“已下载”
-            setStatus('published');
+            setStatus('已下載');
         } catch (error) {
             alert("生成周報失敗，請確保模板存在。");
             console.error(error);
@@ -221,7 +289,7 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
                             生成下載 DOCX
                         </button>
                         <button
-                            onClick={() => handleSave('draft', false)}
+                            onClick={() => handleSave('已保存', false)}
                             disabled={isLoading}
                             className="flex items-center rounded-lg bg-emerald-600 px-6 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-emerald-700 disabled:opacity-70"
                         >
@@ -429,43 +497,92 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
 
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm">
-                        <thead className="bg-gray-50/50 text-gray-500">
+                        <thead className="bg-gray-50/50 text-gray-500 text-center">
                             <tr>
-                                <th className="px-6 py-4 font-medium">出版日期</th>
-                                <th className="px-6 py-4 font-medium">標題</th>
-                                <th className="px-6 py-4 font-medium">狀態</th>
-                                <th className="px-6 py-4 font-medium">最後操作</th>
-                                <th className="px-6 py-4 font-medium text-right">操作</th>
+                                <th className="px-6 py-4 font-medium text-center">更新日期</th>
+                                <th className="px-6 py-4 font-medium text-center">標題</th>
+                                <th className="px-6 py-4 font-medium min-w-[220px] text-center">PDF版本</th>
+                                <th className="px-6 py-4 font-medium text-center">狀態</th>
+                                <th className="px-6 py-4 font-medium text-center">最後操作</th>
+                                <th className="px-6 py-4 font-medium text-center">操作</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
                             {filteredBulletins.map((item) => (
                                 <tr key={item.id} className="group transition-colors hover:bg-gray-50/50">
-                                    <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
-                                        {item.publishDate}
+                                    <td className="px-6 py-4 text-gray-500 whitespace-nowrap text-center">
+                                        {item.updatedAt ? format(new Date(item.updatedAt), 'yyyy-MM-dd HH:mm', { locale: zhTW }) : item.publishDate}
                                     </td>
                                     <td className="px-6 py-4">
-                                        <span
-                                            onClick={() => handleEdit(item)}
-                                            className="font-medium text-gray-900 group-hover:text-emerald-700 transition-colors cursor-pointer"
-                                        >
-                                            {item.title}
-                                        </span>
+                                        <div className="flex flex-col">
+                                            <span
+                                                onClick={() => handleEdit(item)}
+                                                className="font-medium text-gray-900 group-hover:text-emerald-700 transition-colors cursor-pointer"
+                                            >
+                                                {item.title}
+                                            </span>
+                                            <span className="text-xs text-gray-400">出版: {item.publishDate}</span>
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <span className={clsx("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium", item.status === "published" ? "bg-indigo-100 text-indigo-700" : "bg-emerald-100 text-emerald-700")}>
-                                            {item.status === "published" ? "已下載" : "保存"}
+                                        {item.pdfBase64 || item.pdfUrl ? (
+                                            <a 
+                                                href={item.pdfBase64 ? `data:application/pdf;base64,${item.pdfBase64}` : item.pdfUrl} 
+                                                download={item.pdfName || "周報.pdf"}
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-1.5 text-indigo-600 hover:text-indigo-800 transition-colors"
+                                            >
+                                                <FileText className="h-4 w-4" />
+                                                <span className="max-w-[220px] truncate underline decoration-dotted font-medium">
+                                                    {item.pdfName || "查看 PDF"}
+                                                </span>
+                                            </a>
+                                        ) : (
+                                            <span className="text-gray-300 italic text-xs">未上傳</span>
+                                        )}
+                                    </td>
+                                    <td className="px-6 py-4 text-center">
+                                        <span className={clsx("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium", item.status === "已下載" ? "bg-indigo-100 text-indigo-700" : "bg-emerald-100 text-emerald-700")}>
+                                            {item.status === "已下載" ? "已下載" : "已保存"}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                    <td className="px-6 py-4 text-gray-500 whitespace-nowrap text-xs text-center">
                                         {item.lastOperator || '-'}
                                     </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <div className="flex items-center justify-end gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-                                            <button onClick={() => handleEdit(item)} className="rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center justify-center gap-2">
+                                            {isUploading === item.id ? (
+                                                <div className="flex flex-col items-center gap-1 min-w-[80px]">
+                                                    <div className="flex items-center gap-2 text-[10px] font-medium text-emerald-600">
+                                                        <Loader2 className="h-3 w-3 animate-spin" />
+                                                        <span>{uploadProgress[item.id] || 0}%</span>
+                                                    </div>
+                                                    <div className="h-1 w-full overflow-hidden rounded-full bg-gray-100">
+                                                        <div 
+                                                            className="h-full bg-emerald-500 transition-all duration-300"
+                                                            style={{ width: `${uploadProgress[item.id] || 0}%` }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <label className="cursor-pointer rounded p-1.5 text-indigo-500 hover:bg-indigo-50 hover:text-indigo-700 transition-colors" title="上傳 PDF">
+                                                    <Upload className="h-4 w-4" />
+                                                    <input 
+                                                        type="file" 
+                                                        accept="application/pdf" 
+                                                        className="hidden" 
+                                                        onChange={(e) => {
+                                                            const file = e.target.files?.[0];
+                                                            if (file && item.id) handleUploadPdf(item.id, file);
+                                                        }}
+                                                    />
+                                                </label>
+                                            )}
+                                            <button onClick={() => handleEdit(item)} className="rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors">
                                                 <Edit3 className="h-4 w-4" />
                                             </button>
-                                            <button onClick={() => item.id && handleDelete(item.id, item.title)} className="rounded p-1.5 text-red-500 hover:bg-red-50 hover:text-red-700">
+                                            <button onClick={() => item.id && handleDelete(item.id, item.title)} className="rounded p-1.5 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors">
                                                 <Trash2 className="h-4 w-4" />
                                             </button>
                                         </div>

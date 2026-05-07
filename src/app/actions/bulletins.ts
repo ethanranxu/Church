@@ -8,10 +8,13 @@ export interface Bulletin {
     id?: string;
     title: string;
     publishDate: string;
-    status: 'draft' | 'published';
+    status: '已保存' | '已下載';
     createdAt?: string | null;
+    updatedAt?: string | null;
     templateUrl?: string;
     pdfUrl?: string;
+    pdfName?: string;
+    pdfBase64?: string;
     contentData: Record<string, string>;
     lastOperator?: string;
     views?: number;
@@ -29,7 +32,9 @@ export async function getBulletins(): Promise<Bulletin[]> {
             return {
                 ...data,
                 id: doc.id,
-                createdAt: data.createdAt?.toDate?.() ? data.createdAt.toDate().toISOString() : null
+                createdAt: data.createdAt?.toDate?.() ? data.createdAt.toDate().toISOString() : null,
+                updatedAt: data.updatedAt?.toDate?.() ? data.updatedAt.toDate().toISOString() : 
+                           (data.createdAt?.toDate?.() ? data.createdAt.toDate().toISOString() : null)
             } as Bulletin;
         });
     } catch (error) {
@@ -47,7 +52,9 @@ export async function getBulletinById(id: string): Promise<Bulletin | null> {
         return {
             ...data,
             id: doc.id,
-            createdAt: data?.createdAt?.toDate?.() ? data.createdAt.toDate().toISOString() : null
+            createdAt: data?.createdAt?.toDate?.() ? data.createdAt.toDate().toISOString() : null,
+            updatedAt: data?.updatedAt?.toDate?.() ? data.updatedAt.toDate().toISOString() : 
+                       (data?.createdAt?.toDate?.() ? data.createdAt.toDate().toISOString() : null)
         } as Bulletin;
     } catch (error) {
         console.error(`Failed to fetch bulletin ${id}:`, error);
@@ -60,6 +67,7 @@ export async function createBulletin(data: Omit<Bulletin, 'id' | 'createdAt'>, o
         const newbulletin = {
             ...data,
             createdAt: FieldValue.serverTimestamp(),
+            updatedAt: FieldValue.serverTimestamp(),
             lastOperator: operator?.name || '未知',
         };
         const docRef = await db.collection('Bulletins').add(newbulletin);
@@ -86,6 +94,7 @@ export async function updateBulletin(id: string, data: Partial<Omit<Bulletin, 'i
     try {
         await db.collection('Bulletins').doc(id).update({
             ...data,
+            updatedAt: FieldValue.serverTimestamp(),
             lastOperator: operator?.name || '未知',
         });
 
@@ -134,5 +143,80 @@ export async function deleteBulletin(id: string, operator?: { name: string, emai
     } catch (error) {
         console.error('Failed to delete bulletin:', error);
         return { success: false, error: 'Failed to delete bulletin' };
+    }
+}
+
+export async function getLatestBulletinWithPdf(): Promise<Bulletin | null> {
+    try {
+        // Fetch all bulletins (limited to 50 for safety)
+        const snapshot = await db.collection('Bulletins')
+            .orderBy('publishDate', 'desc')
+            .limit(50)
+            .get();
+
+        const bulletins = snapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                ...data,
+                id: doc.id,
+                // Serialize Firestore Timestamps to ISO strings
+                createdAt: data.createdAt?.toDate?.() ? data.createdAt.toDate().toISOString() : data.createdAt,
+                updatedAt: data.updatedAt?.toDate?.() ? data.updatedAt.toDate().toISOString() : data.updatedAt,
+            } as Bulletin;
+        });
+
+        // Filter in memory to avoid needing a composite index in Firestore
+        // Only require that it HAS a PDF (either URL or Base64), regardless of status
+        return bulletins.find(b => b.pdfUrl || b.pdfBase64) || null;
+    } catch (error) {
+        console.error('Failed to fetch latest PDF bulletin:', error);
+        return null;
+    }
+}
+
+export async function getHistoricalBulletins(limitCount: number = 10, lastId?: string): Promise<{ bulletins: Bulletin[], hasMore: boolean }> {
+    try {
+        let bulletins: Bulletin[] = [];
+        let currentLastId = lastId;
+        let hasMore = true;
+        const internalLimit = 100; // Increase scan range per request
+
+        // Keep searching until we find enough bulletins with PDF or reach the end
+        let snapshot = await db.collection('Bulletins')
+            .orderBy('publishDate', 'desc')
+            .limit(internalLimit)
+            .get();
+
+        if (currentLastId) {
+            const lastDoc = await db.collection('Bulletins').doc(currentLastId).get();
+            if (lastDoc.exists) {
+                snapshot = await db.collection('Bulletins')
+                    .orderBy('publishDate', 'desc')
+                    .startAfter(lastDoc)
+                    .limit(internalLimit)
+                    .get();
+            }
+        }
+
+        const allDocs = snapshot.docs;
+        const filtered = allDocs
+            .map(doc => {
+                const data = doc.data();
+                return {
+                    ...data,
+                    id: doc.id,
+                    createdAt: data.createdAt?.toDate?.() ? data.createdAt.toDate().toISOString() : null,
+                    updatedAt: data.updatedAt?.toDate?.() ? data.updatedAt.toDate().toISOString() : null,
+                } as Bulletin;
+            })
+            .filter(b => !!b.pdfUrl || !!b.pdfBase64);
+
+        bulletins = filtered.slice(0, limitCount);
+        hasMore = allDocs.length === internalLimit;
+
+        return { bulletins, hasMore };
+    } catch (error) {
+        console.error('Failed to fetch historical bulletins:', error);
+        return { bulletins: [], hasMore: false };
     }
 }

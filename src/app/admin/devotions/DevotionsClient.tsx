@@ -325,19 +325,19 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                         <thead className="bg-gray-50/50 text-gray-500">
                             <tr>
                                 <th
-                                    className="px-6 py-4 font-medium w-40 cursor-pointer hover:bg-gray-100/50 transition-colors group/th"
+                                    className="px-6 py-4 font-medium w-40 cursor-pointer hover:bg-gray-100/50 transition-colors group/th text-center"
                                     onClick={() => setSort("publishDate")}
                                 >
-                                    <div className="flex items-center">
+                                    <div className="flex items-center justify-center">
                                         {t.admin.devotions.publishTime}
                                         <SortIcon columnKey="publishDate" />
                                     </div>
                                 </th>
                                 <th
-                                    className="px-6 py-4 font-medium cursor-pointer hover:bg-gray-100/50 transition-colors group/th"
+                                    className="px-6 py-4 font-medium cursor-pointer hover:bg-gray-100/50 transition-colors group/th text-center"
                                     onClick={() => setSort("title")}
                                 >
-                                    <div className="flex items-center">
+                                    <div className="flex items-center justify-center">
                                         {t.admin.devotions.title2}
                                         <SortIcon columnKey="title" />
                                     </div>
@@ -352,30 +352,30 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                                     </div>
                                 </th>
                                 <th
-                                    className="px-6 py-4 font-medium w-40 cursor-pointer hover:bg-gray-100/50 transition-colors group/th"
+                                    className="px-6 py-4 font-medium w-40 cursor-pointer hover:bg-gray-100/50 transition-colors group/th text-center"
                                     onClick={() => setSort("createdAt")}
                                 >
-                                    <div className="flex items-center">
+                                    <div className="flex items-center justify-center">
                                         {t.admin.devotions.createdAt}
                                         <SortIcon columnKey="createdAt" />
                                     </div>
                                 </th>
                                 <th
-                                    className="px-6 py-4 font-medium cursor-pointer hover:bg-gray-100/50 transition-colors group/th"
+                                    className="px-6 py-4 font-medium cursor-pointer hover:bg-gray-100/50 transition-colors group/th text-center"
                                     onClick={() => setSort("status")}
                                 >
-                                    <div className="flex items-center">
+                                    <div className="flex items-center justify-center">
                                         {t.admin.devotions.status}
                                         <SortIcon columnKey="status" />
                                     </div>
                                 </th>
-                                <th className="px-6 py-4 font-medium text-right">{t.admin.devotions.actions}</th>
+                                <th className="px-6 py-4 font-medium text-center">{t.admin.devotions.actions}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
                             {currentDevotions.map((item) => (
                                 <tr key={item.id} className="group transition-colors hover:bg-gray-50/50">
-                                    <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                    <td className="px-6 py-4 text-gray-500 whitespace-nowrap text-center">
                                         {item.publishDate || t.admin.devotions.undetermined}
                                     </td>
                                     <td className="px-6 py-4">
@@ -391,10 +391,10 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                                     <td className="px-6 py-4 text-center text-gray-600">
                                         {item.views || 0}
                                     </td>
-                                    <td className="px-6 py-4 text-gray-500 text-xs whitespace-nowrap hidden md:table-cell">
+                                    <td className="px-6 py-4 text-gray-500 text-xs whitespace-nowrap hidden md:table-cell text-center">
                                         {item.createdAt ? new Date(item.createdAt).toLocaleString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-'}
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="px-6 py-4 text-center">
                                         <span
                                             className={clsx(
                                                 "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
@@ -406,8 +406,8 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                                             {item.status === "published" ? t.admin.devotions.published : t.admin.devotions.draft}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <div className="flex items-center justify-end gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+                                    <td className="px-6 py-4 text-center">
+                                        <div className="flex items-center justify-center gap-2">
                                             <button
                                                 onClick={() => handleEdit(item)}
                                                 className="rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
@@ -426,7 +426,7 @@ export default function DevotionsClient({ initialDevotions }: DevotionsClientPro
                             ))}
                             {filteredDevotions.length === 0 && (
                                 <tr>
-                                    <td colSpan={4} className="py-12 text-center text-gray-500">
+                                    <td colSpan={6} className="py-12 text-center text-gray-500">
                                         {t.admin.devotions.noDevotions}
                                     </td>
                                 </tr>

@@ -201,19 +201,19 @@ export function ActivityFeed() {
                         <table className="w-full text-left text-sm whitespace-nowrap">
                             <thead className="text-gray-500 bg-gray-50 sticky top-0 z-10">
                                 <tr>
-                                    <th className="px-4 py-3 font-medium">地点</th>
-                                    <th className="px-4 py-3 font-medium">访问链接</th>
-                                    <th className="px-4 py-3 font-medium">IP地址</th>
-                                    <th className="px-4 py-3 font-medium">停留时间</th>
-                                    <th className="px-4 py-3 font-medium">访问时间</th>
+                                    <th className="px-4 py-3 font-medium text-center">地点</th>
+                                    <th className="px-4 py-3 font-medium text-center">访问链接</th>
+                                    <th className="px-4 py-3 font-medium text-center">IP地址</th>
+                                    <th className="px-4 py-3 font-medium text-center">停留时间</th>
+                                    <th className="px-4 py-3 font-medium text-center">访问时间</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
                                 {logs.map((log) => (
                                     <tr key={log.id} className="hover:bg-gray-50/50 transition-colors">
-                                        <td className="px-4 py-3">
+                                        <td className="px-4 py-3 text-center">
                                             {log.location ? (
-                                                <div className="flex items-center gap-2">
+                                                <div className="flex items-center justify-center gap-2">
                                                     <Globe className="size-4 text-gray-400 shrink-0" />
                                                     <span className="text-gray-900 font-medium">{log.location}</span>
                                                 </div>
@@ -222,23 +222,25 @@ export function ActivityFeed() {
                                             )}
                                         </td>
                                         <td className="px-4 py-3">
-                                            <a
-                                                href={log.page}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1 max-w-[200px] truncate"
-                                                title={log.page}
-                                            >
-                                                {log.page}
-                                            </a>
+                                            <div className="flex justify-center">
+                                                <a
+                                                    href={log.page}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1 max-w-[200px] truncate"
+                                                    title={log.page}
+                                                >
+                                                    {log.page}
+                                                </a>
+                                            </div>
                                         </td>
-                                        <td className="px-4 py-3 text-gray-600 font-mono text-xs">
-                                            <div className="flex items-center gap-1">
+                                        <td className="px-4 py-3 text-gray-600 font-mono text-xs text-center">
+                                            <div className="flex items-center justify-center gap-1">
                                                 <MapPin className="size-3 text-gray-400" />
                                                 {log.ip}
                                             </div>
                                         </td>
-                                        <td className="px-4 py-3">
+                                        <td className="px-4 py-3 text-center">
                                             {log.duration > 0 ? (
                                                 <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
                                                     {log.duration}s
@@ -247,8 +249,8 @@ export function ActivityFeed() {
                                                 <span className="text-gray-300">-</span>
                                             )}
                                         </td>
-                                        <td className="px-4 py-3 text-gray-500 text-xs">
-                                            <div className="flex items-center gap-1">
+                                        <td className="px-4 py-3 text-gray-500 text-xs text-center">
+                                            <div className="flex items-center justify-center gap-1">
                                                 <Clock className="size-3" />
                                                 {formatTime(log.createdAt)}
                                             </div>

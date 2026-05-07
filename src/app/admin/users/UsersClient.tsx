@@ -280,11 +280,11 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                     <table className="w-full text-left text-sm">
                         <thead className="bg-gray-50/50 text-gray-500">
                             <tr>
-                                <th className="px-6 py-4 font-medium">{t.admin.users.name}</th>
-                                <th className="px-6 py-4 font-medium">{t.admin.users.email}</th>
-                                <th className="px-6 py-4 font-medium">{t.admin.users.phone}</th>
-                                <th className="px-6 py-4 font-medium">{t.admin.users.createdAt}</th>
-                                <th className="px-6 py-4 font-medium text-right">{t.admin.users.actions}</th>
+                                <th className="px-6 py-4 font-medium text-center">{t.admin.users.name}</th>
+                                <th className="px-6 py-4 font-medium text-center">{t.admin.users.email}</th>
+                                <th className="px-6 py-4 font-medium text-center">{t.admin.users.phone}</th>
+                                <th className="px-6 py-4 font-medium text-center">{t.admin.users.createdAt}</th>
+                                <th className="px-6 py-4 font-medium text-center">{t.admin.users.actions}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
@@ -322,7 +322,7 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                             {user.phone}
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 text-gray-500">
+                                    <td className="px-6 py-4 text-gray-500 text-center">
                                         {user.createdAt ? new Date(user.createdAt).toLocaleString('zh-CN', {
                                             year: 'numeric',
                                             month: '2-digit',
@@ -331,8 +331,8 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
                                             minute: '2-digit'
                                         }) : '-'}
                                     </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <div className="flex items-center justify-end gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+                                    <td className="px-6 py-4 text-center">
+                                        <div className="flex items-center justify-center gap-2">
                                             <button
                                                 onClick={() => handleOpenEdit(user)}
                                                 className="rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700"

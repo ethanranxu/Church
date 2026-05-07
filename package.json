@@ -25,6 +25,7 @@
     "next": "16.1.1",
     "node-cron": "^4.2.1",
     "pizzip": "^3.2.0",
+    "qrcode.react": "^4.2.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-leaflet": "^5.0.0",

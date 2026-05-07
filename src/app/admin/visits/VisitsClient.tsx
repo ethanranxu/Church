@@ -247,20 +247,20 @@ export default function VisitsClient({ initialReservations }: { initialReservati
                     <table className="w-full text-sm text-left">
                         <thead className="bg-gray-50/50 dark:bg-gray-700/50 text-gray-500 font-medium border-b border-gray-100 dark:border-gray-700">
                             <tr>
-                                <th onClick={() => handleSort('visitDate')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors">
-                                    <div className="flex items-center">{t.admin.visits.date} <SortIcon active={sortConfig.key === 'visitDate'} /></div>
+                                <th onClick={() => handleSort('visitDate')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors text-center">
+                                    <div className="flex items-center justify-center">{t.admin.visits.date} <SortIcon active={sortConfig.key === 'visitDate'} /></div>
                                 </th>
-                                <th onClick={() => handleSort('visitorName')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors">
-                                    <div className="flex items-center">{t.admin.visits.visitors} <SortIcon active={sortConfig.key === 'visitorName'} /></div>
+                                <th onClick={() => handleSort('visitorName')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors text-center">
+                                    <div className="flex items-center justify-center">{t.admin.visits.visitors} <SortIcon active={sortConfig.key === 'visitorName'} /></div>
                                 </th>
-                                <th className="px-6 py-4">{t.admin.visits.introducer}</th>
-                                <th onClick={() => handleSort('status')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors">
-                                    <div className="flex items-center">{t.admin.visits.status} <SortIcon active={sortConfig.key === 'status'} /></div>
+                                <th className="px-6 py-4 text-center">{t.admin.visits.introducer}</th>
+                                <th onClick={() => handleSort('status')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors text-center">
+                                    <div className="flex items-center justify-center">{t.admin.visits.status} <SortIcon active={sortConfig.key === 'status'} /></div>
                                 </th>
-                                <th onClick={() => handleSort('createdAt')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors hidden md:table-cell">
-                                    <div className="flex items-center">{t.admin.visits.submitTime} <SortIcon active={sortConfig.key === 'createdAt'} /></div>
+                                <th onClick={() => handleSort('createdAt')} className="px-6 py-4 cursor-pointer hover:text-primary group transition-colors hidden md:table-cell text-center">
+                                    <div className="flex items-center justify-center">{t.admin.visits.submitTime} <SortIcon active={sortConfig.key === 'createdAt'} /></div>
                                 </th>
-                                <th className="px-6 py-4 text-right">{t.admin.visits.actions}</th>
+                                <th className="px-6 py-4 text-center">{t.admin.visits.actions}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
@@ -276,8 +276,8 @@ export default function VisitsClient({ initialReservations }: { initialReservati
                             ) : (
                                 paginatedReservations.map((reservation) => (
                                     <tr key={reservation.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors">
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="flex items-center gap-2">
+                                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                                            <div className="flex items-center justify-center gap-2">
                                                 <Calendar className="h-4 w-4 text-gray-400" />
                                                 <span className="font-medium text-gray-900 dark:text-gray-100">
                                                     {reservation.visitDate ? new Date(reservation.visitDate).toLocaleDateString() : 'Pending'}
@@ -290,17 +290,17 @@ export default function VisitsClient({ initialReservations }: { initialReservati
                                                 {reservation.visitors.length} {t.admin.visits.unit}
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-gray-600 dark:text-gray-400">
+                                        <td className="px-6 py-4 text-gray-600 dark:text-gray-400 text-center">
                                             {reservation.introducer || '-'}
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-6 py-4 text-center">
                                             <StatusBadge status={reservation.status} />
                                         </td>
-                                        <td className="px-6 py-4 text-gray-500 hidden md:table-cell">
+                                        <td className="px-6 py-4 text-gray-500 hidden md:table-cell text-center">
                                             {new Date(reservation.createdAt).toLocaleDateString()}
                                         </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="flex items-center justify-end gap-2">
+                                        <td className="px-6 py-4 text-center">
+                                            <div className="flex items-center justify-center gap-2">
                                                 <button
                                                     onClick={() => openEditModal(reservation)}
                                                     className="p-1.5 rounded-lg text-gray-400 hover:text-primary hover:bg-primary/5 transition-all"

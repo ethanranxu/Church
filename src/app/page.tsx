@@ -7,14 +7,16 @@ import { AnnualThemeBanner } from "@/components/home/AnnualThemeBanner";
 import { Ministries } from "@/components/home/Ministries";
 import { Location } from "@/components/home/Location";
 import { Connect } from "@/components/home/Connect";
+import { getLatestBulletinWithPdf } from "@/app/actions/bulletins";
 
-export default function Home() {
+export default async function Home() {
+  const latestBulletin = await getLatestBulletinWithPdf();
   return (
     <div className="relative flex flex-col w-full min-h-screen overflow-x-hidden">
       <Navbar />
       <main>
         <Hero />
-        <ServiceInfo />
+        <ServiceInfo latestBulletin={latestBulletin} />
         <LatestSermon />
         <AnnualThemeBanner />
         <Ministries />
