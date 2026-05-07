@@ -101,8 +101,8 @@ export async function updateBulletin(id: string, data: Partial<Omit<Bulletin, 'i
         if (operator) {
             const { createAdminLog } = await import('@/app/actions/log');
             let action = '更新周报';
-            if (data.status === 'published') action = '发布/更新周报';
-            if (data.status === 'draft') action = '存为草稿周报';
+            if (data.status === '已下載') action = '发布/更新周报';
+            if (data.status === '已保存') action = '存为草稿周报';
 
             await createAdminLog({
                 adminName: operator.name,
