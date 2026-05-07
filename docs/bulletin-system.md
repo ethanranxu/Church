@@ -37,5 +37,6 @@
 - **解析引擎**: `pizzip` + `docxtemplater`
 - **前端实现**: `src/app/admin/bulletins/BulletinsClient.tsx`
 - **工具类**: `src/utils/docxUtils.ts`
-- **公共 API**: `/api/bulletin/latest` - 返回最新的一条已下载状态的周报。
-- **历史查询**: 首页 `HistoryBulletinsModal.tsx` 通过日期范围和标题关键词过滤 Firestore 中的 `Bulletins` 集合。
+- **公共 API**: `/api/bulletin/latest` - 返回最新的一条状态为「已下载」的周报，用于首页展示。
+- **历史查询**: 首页「主日信息」板块集成 `HistoryBulletinsModal.tsx`，支持通过日期范围和标题关键词过滤 Firestore 中的 `Bulletins` 集合。
+- **界面一致性**: 后台周报管理列表已统一为居中对齐样式。
