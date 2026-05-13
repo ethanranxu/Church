@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - 2026-05-13
+
+### Added
+- **灵修数据导入工具 (Devotion Import Tools)**:
+  - `scripts/import-may-jun-devotions.ts`: 5-6月灵修数据导入脚本，支持先删除旧数据再全量导入。
+  - `scripts/delete-all-devotions.ts`: 删除所有灵修数据的脚本。
+
+### Changed
+- **灵修数据更新 (Devotions Update)**: 删除了数据库中原有的 52 篇 5-6 月灵修文章，并使用最新的 markdown 文件重新清洗后上传。
+
 ## [Unreleased] - 2026-05-07
 
 ### Changed

@@ -188,30 +188,25 @@ async function importDevotions() {
     console.log(`  5月: ${mayDates.join(', ')}`);
     console.log(`  6月: ${junDates.join(', ')}\n`);
 
-    // 检查是否在数据库中已存在，新增模式跳过删除步骤
-    console.log('正在获取现有数据以避免重复导入...');
-    const existingDocs = await db.collection('Articles').get();
-    const existingDates = new Set();
-    existingDocs.forEach(doc => {
+    // 删除数据库中5月和6月的灵修文章
+    console.log('正在删除数据库中5月和6月的灵修文章...');
+    const snapshot = await db.collection('Articles').get();
+    let deleteCount = 0;
+    for (const doc of snapshot.docs) {
         const data = doc.data();
-        if (data.publishDate) {
-            existingDates.add(data.publishDate);
+        const publishDate = data.publishDate;
+        if (publishDate && (publishDate.startsWith('2026-05') || publishDate.startsWith('2026-06'))) {
+            await doc.ref.delete();
+            deleteCount++;
+            console.log(`  🗑️ 已删除: ${publishDate}: ${data.title}`);
         }
-    });
-
-    console.log(`✓ 获取到 ${existingDates.size} 条现有数据记录，即将增量写入...\n`);
+    }
+    console.log(`✓ 共删除 ${deleteCount} 条记录\n`);
 
     // 批量写入新数据
     let successCount = 0;
-    let skipCount = 0;
 
     for (const devotion of devotions) {
-        if (existingDates.has(devotion.publishDate)) {
-            console.log(`  - 跳过: ${devotion.publishDate} (已存在)`);
-            skipCount++;
-            continue;
-        }
-
         try {
             await db.collection('Articles').add({
                 ...devotion,
@@ -225,7 +220,7 @@ async function importDevotions() {
     }
 
     console.log(`\n========================================`);
-    console.log(`导入完成! 成功新增: ${successCount}, 跳过重复: ${skipCount}`);
+    console.log(`导入完成! 成功新增: ${successCount}`);
     console.log(`========================================`);
 }
 

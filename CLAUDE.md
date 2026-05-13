@@ -16,6 +16,8 @@
     - `fix-cors.js`: Fix Storage CORS issues.
     - `migrate-status.js`: Migrate bulletin status fields.
     - `debug-bulletins.js`: Debug Firestore data structure.
+    - `import-may-jun-devotions.ts`: Import May-June devotions (clear first).
+    - `delete-all-devotions.ts`: Delete all devotion data.
 
 ## Features
 - **Weekly Bulletin System**: Automated .docx generation from placeholders. Includes **Last Operator** tracking, a homepage **History Search** feature, and a dedicated **Latest Bulletin API**.
