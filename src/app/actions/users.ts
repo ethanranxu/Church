@@ -26,6 +26,7 @@ export async function createUser(data: Omit<User, 'id' | 'createdAt'>, operator?
     try {
         const newUser = {
             ...data,
+            email: data.email ? data.email.toLowerCase() : '',
             createdAt: new Date().toISOString(),
         };
         const docRef = await db.collection('Users').add(newUser);
@@ -56,9 +57,13 @@ export async function updateUser(id: string, data: Partial<Omit<User, 'id' | 'cr
     }
 
     try {
+        const updateData = { ...data };
+        if (updateData.email) {
+            updateData.email = updateData.email.toLowerCase();
+        }
         // Use set with merge: true to be more robust (works even if document is missing, 
         // though it shouldn't be missing for an existing user)
-        await db.collection('Users').doc(id).set(data, { merge: true });
+        await db.collection('Users').doc(id).set(updateData, { merge: true });
 
         if (operator) {
             const { createAdminLog } = await import('@/app/actions/log');

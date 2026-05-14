@@ -3,13 +3,19 @@
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { AuthProvider, useAuth } from "@/components/auth/AuthProvider";
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Menu } from "lucide-react";
 
 function AdminLayoutContent({ children }: { children: React.ReactNode }) {
     const { user, loading, profile } = useAuth();
     const pathname = usePathname();
     const router = useRouter();
     const isLoginPage = pathname === "/admin/login";
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    useEffect(() => {
+        setIsSidebarOpen(false);
+    }, [pathname]);
 
     // Role-based Path Protection
     useEffect(() => {
@@ -63,13 +69,35 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
 
     return (
         <div className="flex h-screen bg-gray-50 dark:bg-[#0f172a] font-sans">
+            {/* Mobile Sidebar Backdrop */}
+            {isSidebarOpen && (
+                <div 
+                    className="fixed inset-0 z-40 bg-black/50 lg:hidden backdrop-blur-sm"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
-            <aside className="fixed inset-y-0 left-0 z-50 w-64 hidden lg:block border-r border-gray-100 dark:border-gray-800">
+            <aside className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-gray-100 dark:border-gray-800 transition-transform duration-300 ease-in-out ${
+                isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+            }`}>
                 <AdminSidebar />
             </aside>
 
             {/* Main Content */}
             <div className="flex flex-1 flex-col lg:pl-64 h-full">
+                {/* Mobile Header */}
+                <div className="flex h-16 items-center justify-between border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-[#0f172a] px-4 lg:hidden">
+                    <button
+                        onClick={() => setIsSidebarOpen(true)}
+                        className="rounded-full p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                    >
+                        <Menu className="h-6 w-6" />
+                    </button>
+                    <div className="font-semibold text-gray-900 dark:text-white">后台管理</div>
+                    <div className="w-10"></div> {/* Spacer to center title */}
+                </div>
+
                 {/* Page Content */}
                 <main className="flex-1 overflow-y-auto bg-gray-50/50 dark:bg-[#0f172a]/50 p-8">
                     <div className="mx-auto max-w-7xl animate-in fade-in slide-in-from-bottom-4 duration-500">

@@ -17,7 +17,8 @@ export async function verifyUser(email: string, shouldLog: boolean = true): Prom
 
     try {
         const usersRef = db.collection('Users');
-        const snapshot = await usersRef.where('email', '==', email).limit(1).get();
+        const normalizedEmail = email.toLowerCase();
+        const snapshot = await usersRef.where('email', '==', normalizedEmail).limit(1).get();
 
         if (snapshot.empty) {
             console.log(`[Auth] Rejected login for ${email}: Not found in Users collection.`);
