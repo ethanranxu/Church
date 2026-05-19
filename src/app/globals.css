@@ -152,3 +152,18 @@ body {
 .animation-delay-400 {
   animation-delay: 400ms;
 }
+
+/* 优化每日灵修文章富文本内容，强制正文字体大小与列表保持一致（16px/1rem） */
+.sun-editor-editable {
+  font-size: 1rem !important;
+  line-height: 1.75 !important;
+  color: inherit !important;
+}
+
+.sun-editor-editable p,
+.sun-editor-editable span,
+.sun-editor-editable li,
+.sun-editor-editable div {
+  font-size: 1rem !important;
+  line-height: 1.75 !important;
+}

@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Bulletin, getHistoricalBulletins } from "@/app/actions/bulletins";
-import { Loader2, X, Download, FileText, Calendar } from "lucide-react";
+import { Bulletin, getHistoricalBulletins, getBulletinPdf } from "@/app/actions/bulletins";
+import { Loader2, X, Download, FileText } from "lucide-react";
 import clsx from "clsx";
 
 import { format } from "date-fns";
@@ -19,6 +19,7 @@ export const HistoryBulletinsModal = ({ isOpen, onClose }: HistoryBulletinsModal
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [lastId, setLastId] = useState<string | undefined>();
+    const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
     const fetchBulletins = async (isInitial = false) => {
         if (isInitial) setIsLoading(true);
@@ -41,10 +42,40 @@ export const HistoryBulletinsModal = ({ isOpen, onClose }: HistoryBulletinsModal
         setIsLoadingMore(false);
     };
 
+    const handleDownload = async (item: Bulletin) => {
+        if (item.pdfUrl) {
+            window.open(item.pdfUrl, "_blank");
+            return;
+        }
+        if (!item.id) return;
+        
+        setDownloadingId(item.id);
+        try {
+            const base64 = await getBulletinPdf(item.id);
+            if (base64) {
+                const linkSource = `data:application/pdf;base64,${base64}`;
+                const downloadLink = document.createElement("a");
+                downloadLink.href = linkSource;
+                downloadLink.download = item.pdfName || `${item.title}.pdf`;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            } else {
+                alert("無法獲取周報 PDF 數據");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("下載周報失敗");
+        } finally {
+            setDownloadingId(null);
+        }
+    };
+
     useEffect(() => {
         if (isOpen && bulletins.length === 0) {
             fetchBulletins(true);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen]);
 
     if (!isOpen) return null;
@@ -90,26 +121,32 @@ export const HistoryBulletinsModal = ({ isOpen, onClose }: HistoryBulletinsModal
                                 return (
                                     <div 
                                         key={item.id}
-                                        className="group flex items-center justify-between p-4 rounded-xl border border-gray-100 dark:border-gray-800 hover:border-primary/30 hover:bg-primary/5 transition-all"
+                                        onClick={() => !downloadingId && handleDownload(item)}
+                                        className="group flex items-center justify-between p-4 rounded-xl border border-gray-100 dark:border-gray-800 hover:border-primary/30 hover:bg-primary/5 hover:shadow-sm transition-all cursor-pointer"
                                     >
                                         <div className="flex items-center gap-4 min-w-0 flex-1">
-                                            <div className="bg-gray-100 dark:bg-gray-800 p-2.5 rounded-lg text-gray-400 group-hover:text-primary transition-colors">
-                                                <FileText className="h-5 w-5" />
+                                            <div className={clsx(
+                                                "p-2.5 rounded-lg transition-colors",
+                                                downloadingId === item.id 
+                                                    ? "bg-primary/10 text-primary animate-pulse" 
+                                                    : "bg-gray-100 dark:bg-gray-800 text-gray-400 group-hover:text-primary"
+                                            )}>
+                                                {downloadingId === item.id ? (
+                                                    <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                                                ) : (
+                                                    <FileText className="h-5 w-5" />
+                                                )}
                                             </div>
                                             <div className="min-w-0 flex-1">
-                                                <a
-                                                    href={item.pdfBase64 ? `data:application/pdf;base64,${item.pdfBase64}` : item.pdfUrl}
-                                                    download={item.pdfName || `${item.title}.pdf`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="font-bold text-gray-900 dark:text-white truncate block hover:text-primary hover:underline transition-all cursor-pointer text-lg"
-                                                >
+                                                <span className="font-bold text-gray-900 dark:text-white truncate block group-hover:text-primary transition-all text-lg select-none">
                                                     {formattedDate}
-                                                </a>
+                                                </span>
                                             </div>
                                         </div>
                                         
-                                        {(item.pdfUrl || item.pdfBase64) && (
+                                        {downloadingId === item.id ? (
+                                            <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                                        ) : (
                                             <div className="text-gray-300 group-hover:text-primary transition-colors">
                                                 <Download className="h-4 w-4" />
                                             </div>

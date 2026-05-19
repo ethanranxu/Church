@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Plus, Search, Calendar, ChevronLeft, Save, Loader2, ArrowUpRight, Edit3, Trash2, Download, Upload, FileText } from "lucide-react";
 import clsx from "clsx";
-import { Bulletin, createBulletin, updateBulletin, deleteBulletin } from "@/app/actions/bulletins";
+import { Bulletin, createBulletin, updateBulletin, deleteBulletin, getBulletinPdf } from "@/app/actions/bulletins";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useTranslation } from "@/i18n/LanguageContext";
@@ -53,6 +53,7 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedStatus, setSelectedStatus] = useState<("已保存" | "已下載")[]>(["已保存", "已下載"]);
     const [smartParseText, setSmartParseText] = useState("");
+    const [downloadingPdfId, setDownloadingPdfId] = useState<string | null>(null);
     
     const router = useRouter();
     const { profile } = useAuth();
@@ -138,8 +139,42 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
         }
     };
 
+    const handleDownloadPdf = async (item: Bulletin, type: 'lite' | 'full' = 'lite') => {
+        const isFull = type === 'full';
+        const pdfUrl = isFull ? item.fullPdfUrl : item.pdfUrl;
+        const pdfName = isFull ? item.fullPdfName : item.pdfName;
+
+        if (pdfUrl) {
+            window.open(pdfUrl, "_blank");
+            return;
+        }
+        if (!item.id) return;
+
+        const downloadKey = `${item.id}-${type}`;
+        setDownloadingPdfId(downloadKey);
+        try {
+            const base64 = await getBulletinPdf(item.id, type);
+            if (base64) {
+                const linkSource = `data:application/pdf;base64,${base64}`;
+                const downloadLink = document.createElement("a");
+                downloadLink.href = linkSource;
+                downloadLink.download = pdfName || `${item.title}_${isFull ? '完整版' : '精簡版'}.pdf`;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            } else {
+                alert(`無法獲取周報 ${isFull ? '完整版' : '精簡版'} PDF 數據`);
+            }
+        } catch (err) {
+            console.error(err);
+            alert(`下載周報 ${isFull ? '完整版' : '精简版'} PDF 失敗`);
+        } finally {
+            setDownloadingPdfId(null);
+        }
+    };
+
     const handleDelete = async (id: string, itemTitle: string) => {
-        if (confirm(`確定要刪除周報 ${itemTitle} 嗎？`)) {
+        if (confirm(`確定要刪除周報 ${itemTitle} 吗？`)) {
             try {
                 const operator = profile ? { name: profile.name, email: profile.email } : undefined;
                 await deleteBulletin(id, operator);
@@ -150,7 +185,7 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
         }
     };
 
-    const handleUploadPdf = async (id: string, file: File) => {
+    const handleUploadPdf = async (id: string, file: File, type: 'lite' | 'full' = 'lite') => {
         if (!file) return;
 
         // 1. 校验大小 (1MB = 1024 * 1024 bytes)
@@ -160,8 +195,9 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
             return;
         }
         
-        setIsUploading(id);
-        setUploadProgress(prev => ({ ...prev, [id]: 20 })); // 假进度起始
+        const uploadKey = `${id}-${type}`;
+        setIsUploading(uploadKey);
+        setUploadProgress(prev => ({ ...prev, [uploadKey]: 20 })); // 假进度起始
         
         try {
             // 2. 将文件转换为 Base64
@@ -178,20 +214,25 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
                 reader.readAsDataURL(file);
             });
 
-            setUploadProgress(prev => ({ ...prev, [id]: 50 }));
+            setUploadProgress(prev => ({ ...prev, [uploadKey]: 50 }));
             const base64Data = await base64Promise;
-            setUploadProgress(prev => ({ ...prev, [id]: 80 }));
+            setUploadProgress(prev => ({ ...prev, [uploadKey]: 80 }));
 
             // 3. 直接更新到 Firestore
             const operator = profile ? { name: profile.name, email: profile.email } : undefined;
-            const result = await updateBulletin(id, { 
+            const updatePayload = type === 'full' ? {
+                fullPdfBase64: base64Data,
+                fullPdfName: file.name
+            } : {
                 pdfBase64: base64Data,
                 pdfName: file.name
-            }, operator);
+            };
+
+            const result = await updateBulletin(id, updatePayload, operator);
             
             if (result.success) {
-                setUploadProgress(prev => ({ ...prev, [id]: 100 }));
-                setSuccessMessage("PDF 上傳成功 (已存入資料庫)");
+                setUploadProgress(prev => ({ ...prev, [uploadKey]: 100 }));
+                setSuccessMessage(`${type === 'full' ? '完整版' : '精簡版'} PDF 上傳成功 (已存入資料庫)`);
                 setTimeout(() => setSuccessMessage(""), 3000);
                 router.refresh();
             } else {
@@ -205,7 +246,7 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
             setTimeout(() => {
                 setUploadProgress(prev => {
                     const next = { ...prev };
-                    delete next[id];
+                    delete next[uploadKey];
                     return next;
                 });
             }, 1000);
@@ -499,99 +540,178 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
                     <table className="w-full text-left text-sm">
                         <thead className="bg-gray-50/50 text-gray-500 text-center">
                             <tr>
-                                <th className="px-6 py-4 font-medium text-center">更新日期</th>
-                                <th className="px-6 py-4 font-medium text-center">標題</th>
-                                <th className="px-6 py-4 font-medium min-w-[220px] text-center">PDF版本</th>
-                                <th className="px-6 py-4 font-medium text-center">狀態</th>
-                                <th className="px-6 py-4 font-medium text-center">最後操作</th>
-                                <th className="px-6 py-4 font-medium text-center">操作</th>
+                                <th className="px-4 py-4 font-medium text-center whitespace-nowrap w-[150px]">更新日期</th>
+                                <th className="px-4 py-4 font-medium text-left">標題</th>
+                                <th className="px-4 py-4 font-medium min-w-[280px] text-center w-[300px]">網站發佈精簡PDF版本</th>
+                                <th className="px-4 py-4 font-medium min-w-[340px] text-center w-[360px]">後台保存完整PDF版本</th>
+                                <th className="px-4 py-4 font-medium text-center whitespace-nowrap w-[90px]">最後操作</th>
+                                <th className="px-4 py-4 font-medium text-center whitespace-nowrap w-[80px]">操作</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-                            {filteredBulletins.map((item) => (
-                                <tr key={item.id} className="group transition-colors hover:bg-gray-50/50">
-                                    <td className="px-6 py-4 text-gray-500 whitespace-nowrap text-center">
-                                        {item.updatedAt ? format(new Date(item.updatedAt), 'yyyy-MM-dd HH:mm', { locale: zhTW }) : item.publishDate}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex flex-col">
-                                            <span
-                                                onClick={() => handleEdit(item)}
-                                                className="font-medium text-gray-900 group-hover:text-emerald-700 transition-colors cursor-pointer"
-                                            >
-                                                {item.title}
-                                            </span>
-                                            <span className="text-xs text-gray-400">出版: {item.publishDate}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {item.pdfBase64 || item.pdfUrl ? (
-                                            <a 
-                                                href={item.pdfBase64 ? `data:application/pdf;base64,${item.pdfBase64}` : item.pdfUrl} 
-                                                download={item.pdfName || "周報.pdf"}
-                                                target="_blank" 
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-1.5 text-indigo-600 hover:text-indigo-800 transition-colors"
-                                            >
-                                                <FileText className="h-4 w-4" />
-                                                <span className="max-w-[220px] truncate underline decoration-dotted font-medium">
-                                                    {item.pdfName || "查看 PDF"}
+                            {filteredBulletins.map((item, index) => {
+                                return (
+                                    <tr key={item.id} className="group transition-colors hover:bg-gray-50/50">
+                                        <td className="px-4 py-4 text-gray-500 whitespace-nowrap text-center">
+                                            {item.updatedAt ? format(new Date(item.updatedAt), 'yyyy-MM-dd HH:mm', { locale: zhTW }) : item.publishDate}
+                                        </td>
+                                        <td className="px-4 py-4">
+                                            <div className="flex flex-col">
+                                                <span
+                                                    onClick={() => handleEdit(item)}
+                                                    className="font-medium text-gray-900 group-hover:text-emerald-700 transition-colors cursor-pointer"
+                                                >
+                                                    {item.title}
                                                 </span>
-                                            </a>
-                                        ) : (
-                                            <span className="text-gray-300 italic text-xs">未上傳</span>
-                                        )}
-                                    </td>
-                                    <td className="px-6 py-4 text-center">
-                                        <span className={clsx("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium", item.status === "已下載" ? "bg-indigo-100 text-indigo-700" : "bg-emerald-100 text-emerald-700")}>
-                                            {item.status === "已下載" ? "已下載" : "已保存"}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 text-gray-500 whitespace-nowrap text-xs text-center">
-                                        {item.lastOperator || '-'}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center justify-center gap-2">
-                                            {isUploading === item.id ? (
-                                                <div className="flex flex-col items-center gap-1 min-w-[80px]">
-                                                    <div className="flex items-center gap-2 text-[10px] font-medium text-emerald-600">
-                                                        <Loader2 className="h-3 w-3 animate-spin" />
-                                                        <span>{uploadProgress[item.id] || 0}%</span>
+                                                <span className="text-xs text-gray-400">出版: {item.publishDate}</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-4 py-4">
+                                            {isUploading === `${item.id}-lite` ? (
+                                                <div className="flex flex-col items-center gap-1 min-w-[120px] mx-auto">
+                                                    <div className="flex items-center gap-1.5 text-[10px] font-semibold text-emerald-600">
+                                                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                                        <span>上傳精簡版... {uploadProgress[`${item.id}-lite`] || 0}%</span>
                                                     </div>
-                                                    <div className="h-1 w-full overflow-hidden rounded-full bg-gray-100">
+                                                    <div className="h-1 w-24 overflow-hidden rounded-full bg-emerald-100">
                                                         <div 
                                                             className="h-full bg-emerald-500 transition-all duration-300"
-                                                            style={{ width: `${uploadProgress[item.id] || 0}%` }}
+                                                            style={{ width: `${uploadProgress[`${item.id}-lite`] || 0}%` }}
                                                         />
                                                     </div>
                                                 </div>
+                                            ) : item.hasPdf || item.pdfUrl ? (
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <button 
+                                                        onClick={() => downloadingPdfId !== `${item.id}-lite` && handleDownloadPdf(item, 'lite')}
+                                                        disabled={downloadingPdfId === `${item.id}-lite`}
+                                                        className="flex items-start gap-1.5 text-indigo-600 hover:text-indigo-800 disabled:opacity-50 cursor-pointer text-left border-none bg-transparent p-0"
+                                                        title="點擊下載精簡版 PDF"
+                                                    >
+                                                        {downloadingPdfId === `${item.id}-lite` ? (
+                                                            <Loader2 className="h-4 w-4 animate-spin text-indigo-600 mt-0.5 flex-shrink-0" />
+                                                        ) : (
+                                                            <FileText className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                                                        )}
+                                                        <span className="max-w-[280px] break-all whitespace-normal underline decoration-dotted font-medium">
+                                                            {downloadingPdfId === `${item.id}-lite` ? "下載中..." : (item.pdfName || "查看精簡版")}
+                                                        </span>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => document.getElementById(`lite-upload-${item.id}`)?.click()}
+                                                        className="rounded p-1 text-gray-400 hover:bg-emerald-50 hover:text-emerald-600 transition-colors cursor-pointer"
+                                                        title="重新上傳精簡版 PDF"
+                                                    >
+                                                        <Upload className="h-3.5 w-3.5" />
+                                                    </button>
+                                                </div>
                                             ) : (
-                                                <label className="cursor-pointer rounded p-1.5 text-indigo-500 hover:bg-indigo-50 hover:text-indigo-700 transition-colors" title="上傳 PDF">
-                                                    <Upload className="h-4 w-4" />
-                                                    <input 
-                                                        type="file" 
-                                                        accept="application/pdf" 
-                                                        className="hidden" 
-                                                        onChange={(e) => {
-                                                            const file = e.target.files?.[0];
-                                                            if (file && item.id) handleUploadPdf(item.id, file);
-                                                        }}
-                                                    />
-                                                </label>
+                                                <button
+                                                    onClick={() => document.getElementById(`lite-upload-${item.id}`)?.click()}
+                                                    className="flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 shadow-sm transition-all hover:bg-emerald-100 mx-auto cursor-pointer"
+                                                >
+                                                    <Upload className="h-3.5 w-3.5" />
+                                                    上傳精簡版
+                                                </button>
                                             )}
-                                            <button onClick={() => handleEdit(item)} className="rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors">
-                                                <Edit3 className="h-4 w-4" />
-                                            </button>
-                                            <button onClick={() => item.id && handleDelete(item.id, item.title)} className="rounded p-1.5 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors">
-                                                <Trash2 className="h-4 w-4" />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                                            <input 
+                                                id={`lite-upload-${item.id}`} 
+                                                type="file" 
+                                                accept="application/pdf" 
+                                                className="hidden" 
+                                                onChange={(e) => {
+                                                    const file = e.target.files?.[0];
+                                                    if (file && item.id) handleUploadPdf(item.id, file, 'lite');
+                                                }}
+                                            />
+                                        </td>
+                                        <td className="px-4 py-4">
+                                            {isUploading === `${item.id}-full` ? (
+                                                <div className="flex flex-col items-center gap-1 min-w-[120px] mx-auto">
+                                                    <div className="flex items-center gap-1.5 text-[10px] font-semibold text-indigo-600">
+                                                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                                        <span>上傳完整版... {uploadProgress[`${item.id}-full`] || 0}%</span>
+                                                    </div>
+                                                    <div className="h-1 w-24 overflow-hidden rounded-full bg-indigo-100">
+                                                        <div 
+                                                            className="h-full bg-indigo-500 transition-all duration-300"
+                                                            style={{ width: `${uploadProgress[`${item.id}-full`] || 0}%` }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            ) : item.hasFullPdf || item.fullPdfUrl ? (
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <button 
+                                                        onClick={() => downloadingPdfId !== `${item.id}-full` && handleDownloadPdf(item, 'full')}
+                                                        disabled={downloadingPdfId === `${item.id}-full`}
+                                                        className="flex items-start gap-1.5 text-indigo-600 hover:text-indigo-800 disabled:opacity-50 cursor-pointer text-left border-none bg-transparent p-0"
+                                                        title="點擊下載完整版 PDF"
+                                                    >
+                                                        {downloadingPdfId === `${item.id}-full` ? (
+                                                            <Loader2 className="h-4 w-4 animate-spin text-indigo-600 mt-0.5 flex-shrink-0" />
+                                                        ) : (
+                                                            <FileText className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                                                        )}
+                                                        <span className="max-w-[340px] break-all whitespace-normal underline decoration-dotted font-medium">
+                                                            {downloadingPdfId === `${item.id}-full` ? "下載中..." : (item.fullPdfName || "查看完整版")}
+                                                        </span>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => document.getElementById(`full-upload-${item.id}`)?.click()}
+                                                        className="rounded p-1 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-pointer"
+                                                        title="重新上傳完整版 PDF"
+                                                    >
+                                                        <Upload className="h-3.5 w-3.5" />
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <button
+                                                    onClick={() => document.getElementById(`full-upload-${item.id}`)?.click()}
+                                                    className="flex items-center gap-1.5 rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-700 shadow-sm transition-all hover:bg-indigo-100 mx-auto cursor-pointer"
+                                                >
+                                                    <Upload className="h-3.5 w-3.5" />
+                                                    上傳完整版
+                                                </button>
+                                            )}
+                                            <input 
+                                                id={`full-upload-${item.id}`} 
+                                                type="file" 
+                                                accept="application/pdf" 
+                                                className="hidden" 
+                                                onChange={(e) => {
+                                                    const file = e.target.files?.[0];
+                                                    if (file && item.id) handleUploadPdf(item.id, file, 'full');
+                                                }}
+                                            />
+                                        </td>
+
+                                        <td className="px-4 py-4 text-gray-500 whitespace-nowrap text-xs text-center">
+                                            {item.lastOperator || '-'}
+                                        </td>
+                                        <td className="px-4 py-4 text-center whitespace-nowrap">
+                                            <div className="flex items-center justify-center gap-2">
+                                                <button 
+                                                    onClick={() => handleEdit(item)} 
+                                                    className="rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors cursor-pointer" 
+                                                    title="編輯"
+                                                >
+                                                    <Edit3 className="h-4 w-4" />
+                                                </button>
+                                                <button 
+                                                    onClick={() => item.id && handleDelete(item.id, item.title)} 
+                                                    className="rounded p-1.5 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors cursor-pointer" 
+                                                    title="刪除"
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                             {filteredBulletins.length === 0 && (
                                 <tr>
-                                    <td colSpan={5} className="py-12 text-center text-gray-500">
+                                    <td colSpan={6} className="py-12 text-center text-gray-500">
                                         暫無周報記錄
                                     </td>
                                 </tr>

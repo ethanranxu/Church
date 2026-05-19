@@ -74,7 +74,7 @@ export default function DevotionModal({ devotion, isLoading, onClose }: Devotion
                         </div>
                     ) : (
                         <div
-                            className="sun-editor-editable prose prose-lg dark:prose-invert max-w-none font-serif-content
+                            className="sun-editor-editable prose dark:prose-invert max-w-none font-serif-content
                                 prose-headings:font-display prose-headings:font-bold
                                 prose-p:leading-relaxed prose-p:mb-4
                                 prose-a:text-primary prose-a:no-underline hover:prose-a:underline
