@@ -18,18 +18,12 @@ export async function GET() {
                 headers: {
                     'Content-Type': 'application/pdf',
                     'Content-Disposition': `inline; filename="${encodeURIComponent(bulletin.pdfName || 'bulletin.pdf')}"`,
-                    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
-                    'Pragma': 'no-cache',
-                    'Expires': '0',
+                    'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
                 },
             });
         } else if (bulletin.pdfUrl) {
             // Redirect to external URL
-            const response = NextResponse.redirect(bulletin.pdfUrl);
-            response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
-            response.headers.set('Pragma', 'no-cache');
-            response.headers.set('Expires', '0');
-            return response;
+            return NextResponse.redirect(bulletin.pdfUrl);
         }
 
         return new NextResponse("No PDF available", { status: 404 });
