@@ -168,7 +168,7 @@ export async function writeUserLog(data: {
                 });
                 t.set(ipRef, { visitedAt: FieldValue.serverTimestamp() });
             } else {
-                let updateData: any = {
+                const updateData: Record<string, unknown> = {
                     pageViews: FieldValue.increment(1),
                     locations,
                     updatedAt: FieldValue.serverTimestamp()
@@ -186,9 +186,9 @@ export async function writeUserLog(data: {
 
         return { success: true, id: newLogRef.id };
 
-    } catch (error: any) {
+    } catch (error) {
         console.error('Write User Log Error:', error);
-        return { success: false, error: error?.message || String(error) };
+        return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
 }
 

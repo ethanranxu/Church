@@ -1,10 +1,18 @@
 "use client";
 
 import React, { useMemo } from 'react';
-import { BookOpen, Wind, Infinity, Heart, UserX, Wine, Frown, Users, Church } from 'lucide-react';
+import { BookOpen, Wind, Infinity, Heart, UserX, Wine, Frown, Users, Church, LucideIcon } from 'lucide-react';
 import { useTranslation } from '@/i18n';
 
-const BeliefCard = ({ icon: Icon, title, description, reference, colorClass = "text-[#1E3A8A]" }: any) => (
+interface BeliefCardProps {
+    icon: LucideIcon;
+    title: string;
+    description: string;
+    reference: string;
+    colorClass?: string;
+}
+
+const BeliefCard = ({ icon: Icon, title, description, reference, colorClass = "text-[#1E3A8A]" }: BeliefCardProps) => (
     <div className="flex flex-col bg-white dark:bg-[#1a2632] rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm relative overflow-hidden h-full hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
         <div className="absolute -right-4 -top-4 opacity-5 pointer-events-none">
             <Icon size={120} />

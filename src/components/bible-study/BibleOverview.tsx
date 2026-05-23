@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useTranslation } from "@/i18n/LanguageContext";
+import Image from 'next/image';
 
 export default function BibleOverview() {
     const { t } = useTranslation();
@@ -31,10 +32,12 @@ export default function BibleOverview() {
                     </a>
                 </div>
                 <div className="w-full md:w-1/3 aspect-square relative rotate-3 hover:rotate-0 transition-transform duration-500">
-                    <img
+                    <Image
                         src="/images/bible.png"
                         alt="Bible Overview"
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 300px"
                     />
                 </div>
             </div>

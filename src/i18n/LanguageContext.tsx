@@ -33,7 +33,7 @@ function detectBrowserLanguage(): Locale {
     if (stored === 'zh-TW' || stored === 'en') return stored;
 
     // Detect from browser
-    const browserLang = navigator.language || (navigator as any).userLanguage || '';
+    const browserLang = navigator.language || (navigator as Navigator & { userLanguage?: string }).userLanguage || '';
 
     // If browser language starts with zh (zh, zh-TW, zh-CN, zh-HK), use Chinese
     if (browserLang.startsWith('zh')) return 'zh-TW';
@@ -48,8 +48,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         const detected = detectBrowserLanguage();
-        setLocaleState(detected);
-        setMounted(true);
+        const timer = setTimeout(() => {
+            setLocaleState(detected);
+            setMounted(true);
+        }, 0);
+        return () => clearTimeout(timer);
     }, []);
 
     const setLocale = useCallback((newLocale: Locale) => {

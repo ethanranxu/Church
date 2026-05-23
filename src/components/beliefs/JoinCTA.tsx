@@ -4,6 +4,7 @@ import React from 'react';
 import { HeartHandshake } from 'lucide-react';
 import { useTranslation } from '@/i18n';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function JoinCTA() {
     const { t } = useTranslation();
@@ -30,12 +31,12 @@ export default function JoinCTA() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row justify-center gap-4">
-                            <a href="/#location" className="flex cursor-pointer items-center justify-center rounded-full h-14 px-10 bg-[#FBBF24] hover:bg-yellow-400 transition-all text-[#1E3A8A] text-lg font-bold shadow-lg transform hover:scale-105">
+                            <Link href="/#location" className="flex cursor-pointer items-center justify-center rounded-full h-14 px-10 bg-[#FBBF24] hover:bg-yellow-400 transition-all text-[#1E3A8A] text-lg font-bold shadow-lg transform hover:scale-105">
                                 {t.beliefs.joinCTA.contactUs}
-                            </a>
-                            <a href="/#service-info" className="flex cursor-pointer items-center justify-center rounded-full h-14 px-10 bg-white/10 hover:bg-white/20 border border-white/30 transition-all text-white text-lg font-bold backdrop-blur-sm">
+                            </Link>
+                            <Link href="/#service-info" className="flex cursor-pointer items-center justify-center rounded-full h-14 px-10 bg-white/10 hover:bg-white/20 border border-white/30 transition-all text-white text-lg font-bold backdrop-blur-sm">
                                 {t.beliefs.joinCTA.joinSunday}
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>

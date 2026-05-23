@@ -1,6 +1,8 @@
 import { getLatestBulletinWithPdf } from "@/app/actions/bulletins";
 import { NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
     try {
         const bulletin = await getLatestBulletinWithPdf();

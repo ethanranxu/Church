@@ -78,11 +78,11 @@ function familyReportToRuns(text: string): TextRun[] {
  */
 export const generateDocx = async (
     templateBuffer: ArrayBuffer,
-    data: Record<string, any>,
+    data: Record<string, unknown>,
     outputFilename: string = "bulletin_generated.docx"
 ): Promise<Blob> => {
     try {
-        const patches: Record<string, any> = {};
+        const patches: Record<string, { type: typeof PatchType.PARAGRAPH; children: TextRun[] }> = {};
 
         Object.keys(data).forEach(key => {
             const value = data[key] ?? "";

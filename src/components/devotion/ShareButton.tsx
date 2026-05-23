@@ -16,7 +16,8 @@ export default function ShareButton({ title, id, className = "" }: ShareButtonPr
 
     useEffect(() => {
         if (typeof navigator !== 'undefined' && 'share' in navigator) {
-            setSupportsNativeShare(true);
+            const timer = setTimeout(() => setSupportsNativeShare(true), 0);
+            return () => clearTimeout(timer);
         }
     }, []);
 

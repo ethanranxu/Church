@@ -36,5 +36,5 @@ npm run dev
 推荐使用 [Vercel](https://vercel.com) 部署。确保在环境变量中正确配置 Firebase 和 Google Maps 密钥。
 
 ---
-*Last Updated: 2026-05-07*
+*Last Updated: 2026-05-23*
 

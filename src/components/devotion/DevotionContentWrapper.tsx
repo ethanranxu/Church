@@ -42,7 +42,7 @@ function DevotionContent({ initialDevotions, popularDevotions, calendarDevotions
         }
 
         if (devotion.id) {
-            incrementDevotionView(devotion.id).catch((err: any) =>
+            incrementDevotionView(devotion.id).catch((err) =>
                 console.error("Failed to increment view", err)
             );
         }

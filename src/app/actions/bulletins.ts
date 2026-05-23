@@ -146,6 +146,8 @@ export async function createBulletin(data: Omit<Bulletin, 'id' | 'createdAt'>, o
         }
 
         revalidatePath('/admin/bulletins');
+        revalidatePath('/');
+        revalidatePath('/api/bulletin/latest');
         return { success: true, id };
     } catch (error) {
         console.error('Failed to create bulletin:', error);
@@ -225,6 +227,8 @@ export async function updateBulletin(id: string, data: Partial<Omit<Bulletin, 'i
         }
 
         revalidatePath('/admin/bulletins');
+        revalidatePath('/');
+        revalidatePath('/api/bulletin/latest');
         return { success: true };
     } catch (error) {
         console.error('Failed to update bulletin:', error);
@@ -256,6 +260,8 @@ export async function deleteBulletin(id: string, operator?: { name: string, emai
         }
 
         revalidatePath('/admin/bulletins');
+        revalidatePath('/');
+        revalidatePath('/api/bulletin/latest');
         return { success: true };
     } catch (error) {
         console.error('Failed to delete bulletin:', error);

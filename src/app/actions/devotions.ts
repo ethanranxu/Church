@@ -154,6 +154,7 @@ export async function createDevotion(data: Omit<Devotion, 'id' | 'createdAt'>, o
         }
 
         revalidatePath('/admin/devotions');
+        revalidatePath('/devotion');
         return { success: true, id: docRef.id };
     } catch (error) {
         console.error('Failed to create article:', error);
@@ -186,6 +187,7 @@ export async function updateDevotion(id: string, data: Partial<Omit<Devotion, 'i
         }
 
         revalidatePath('/admin/devotions');
+        revalidatePath('/devotion');
         return { success: true };
     } catch (error) {
         console.error('Failed to update article:', error);
@@ -216,6 +218,7 @@ export async function deleteDevotion(id: string, operator?: { name: string, emai
         }
 
         revalidatePath('/admin/devotions');
+        revalidatePath('/devotion');
         return { success: true };
     } catch (error) {
         console.error('Failed to delete article:', error);

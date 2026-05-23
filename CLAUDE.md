@@ -37,5 +37,7 @@
 - Document new placeholders in `public/templates/bulletin-template.docx` in the internal wiki.
 - **Auth Pattern**: Use `router.replace` for auth redirects to avoid history loops.
 - **Auth Pattern**: Always include immediate redirection logic in `LoginPage` to handle active sessions.
+- **Hook Pattern**: Avoid synchronous `setState` inside mounting effects (e.g. browser API detection or language setup) to prevent cascading renders and ESLint errors; wrap them in a `setTimeout` if needed.
+- **Type Safety**: Strictly avoid `any` in Server Actions, helper utilities and client components. Enforce precise types or use `Record<string, unknown>` for flexibility.
 - Update `CHANGELOG.md` after every major feature deployment.
 - Keep `src/utils/docxUtils.ts` types in sync with Firestore schema.

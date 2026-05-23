@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 import { Devotion, getPublishedDevotions } from '@/app/actions/devotions';
 import ShareButton from './ShareButton';
@@ -18,7 +18,7 @@ export default function DevotionFeed({ devotions: initialDevotions, onSelectDevo
     const [hasMore, setHasMore] = useState(true);
     const observerTarget = useRef<HTMLDivElement>(null);
 
-    const loadMoreDevotions = async () => {
+    const loadMoreDevotions = useCallback(async () => {
         if (loading || !hasMore) return;
 
         setLoading(true);
@@ -73,13 +73,14 @@ export default function DevotionFeed({ devotions: initialDevotions, onSelectDevo
         } finally {
             setLoading(false);
         }
-    };
+    }, [loading, hasMore, devotions]);
 
     const handleDevotionClick = async (article: Devotion) => {
         onSelectDevotion(article);
     };
 
     useEffect(() => {
+        const currentTarget = observerTarget.current;
         const observer = new IntersectionObserver(
             entries => {
                 if (entries[0].isIntersecting && hasMore) {
@@ -89,16 +90,16 @@ export default function DevotionFeed({ devotions: initialDevotions, onSelectDevo
             { threshold: 1.0 }
         );
 
-        if (observerTarget.current) {
-            observer.observe(observerTarget.current);
+        if (currentTarget) {
+            observer.observe(currentTarget);
         }
 
         return () => {
-            if (observerTarget.current) {
-                observer.unobserve(observerTarget.current);
+            if (currentTarget) {
+                observer.unobserve(currentTarget);
             }
         };
-    }, [hasMore, loading, devotions.length]);
+    }, [hasMore, loadMoreDevotions]);
 
     return (
         <div className="flex flex-col gap-6">

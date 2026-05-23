@@ -30,7 +30,6 @@ export default function Calendar({ devotions = [], onSelectDevotion }: CalendarP
     // Get first day of the month and total days
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const daysInPrevMonth = new Date(year, month, 0).getDate();
 
     // Get today's date for highlighting
     const today = new Date();
@@ -67,8 +66,6 @@ export default function Calendar({ devotions = [], onSelectDevotion }: CalendarP
     const handleNextMonth = () => {
         setCurrentDate(new Date(year, month + 1, 1));
     };
-
-    const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
 
     return (
         <div className="bg-white dark:bg-[#101922] p-6 rounded-2xl shadow-lg border border-gray-100/80 dark:border-gray-800 transition-shadow duration-300 hover:shadow-xl">
