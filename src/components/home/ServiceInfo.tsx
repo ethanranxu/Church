@@ -26,7 +26,9 @@ export const ServiceInfo = ({ latestBulletin }: { latestBulletin: Bulletin | nul
         ? format(new Date(latestBulletin.publishDate), "yyyy年M月d日", { locale: zhTW })
         : "";
 
-    const qrUrl = baseUrl ? `${baseUrl}/api/bulletin/latest` : "";
+    const qrUrl = baseUrl && latestBulletin
+        ? `${baseUrl}/api/bulletin/latest?v=${latestBulletin.id}&t=${latestBulletin.updatedAt ? encodeURIComponent(latestBulletin.updatedAt) : ""}`
+        : "";
 
     return (
         <div id="service-info" className="relative z-30 -mt-20">
