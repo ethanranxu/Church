@@ -24,16 +24,12 @@ export async function GET() {
                 },
             });
         } else if (bulletin.pdfUrl) {
-            // Redirect to external URL with no-cache headers to prevent redirect caching
-            return new NextResponse(null, {
-                status: 307,
-                headers: {
-                    'Location': bulletin.pdfUrl,
-                    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
-                    'Pragma': 'no-cache',
-                    'Expires': '0',
-                }
-            });
+            // Redirect to external URL
+            const response = NextResponse.redirect(bulletin.pdfUrl);
+            response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
+            response.headers.set('Pragma', 'no-cache');
+            response.headers.set('Expires', '0');
+            return response;
         }
 
         return new NextResponse("No PDF available", { status: 404 });
