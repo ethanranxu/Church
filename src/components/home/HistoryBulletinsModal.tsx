@@ -25,7 +25,7 @@ export const HistoryBulletinsModal = ({ isOpen, onClose }: HistoryBulletinsModal
         setIsLoading(true);
         const cursor = cursorsMap[page - 1];
         
-        const result = await getHistoricalBulletins(10, cursor);
+        const result = await getHistoricalBulletins(5, cursor);
         
         setBulletins(result.bulletins);
         setHasMore(result.hasMore);

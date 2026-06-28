@@ -309,12 +309,12 @@ export async function getLatestBulletinWithPdf(): Promise<Bulletin | null> {
     }
 }
 
-export async function getHistoricalBulletins(limitCount: number = 10, lastId?: string): Promise<{ bulletins: Bulletin[], hasMore: boolean }> {
+export async function getHistoricalBulletins(limitCount: number = 5, lastId?: string): Promise<{ bulletins: Bulletin[], hasMore: boolean }> {
     try {
         let bulletins: Bulletin[] = [];
         let currentLastId = lastId;
-        let hasMore = true;
-        const internalLimit = 100;
+        // Fetch slightly more than requested to determine hasMore without pulling massive batches
+        const internalLimit = limitCount + 5;
 
         // Fetch metadata only to maximize performance and minimize bandwidth/memory consumption
         let query = db.collection('Bulletins')
@@ -355,7 +355,7 @@ export async function getHistoricalBulletins(limitCount: number = 10, lastId?: s
             .filter(b => b.hasPdf);
 
         bulletins = filtered.slice(0, limitCount);
-        hasMore = allDocs.length === internalLimit;
+        const hasMore = filtered.length > limitCount || allDocs.length === internalLimit;
 
         return { bulletins, hasMore };
     } catch (error) {
