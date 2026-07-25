@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useTranslation } from "@/i18n/LanguageContext";
 import { generateDocx } from "@/utils/docxUtils";
+import { matchChineseText } from "@/utils/cnConverter";
 import { format } from "date-fns";
 import { zhTW } from "date-fns/locale";
 
@@ -68,13 +69,25 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
     
     const [activeTab, setActiveTab] = useState<"basic" | "worship" | "reading">("basic");
 
+    // Pagination State
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+
     const filteredBulletins = [...initialBulletins]
         .sort((a, b) => (b.publishDate || "").localeCompare(a.publishDate || ""))
-        .filter(
-            (item) =>
-                item.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                selectedStatus.includes(item.status)
-        );
+        .filter((item) => matchChineseText(item.title, searchTerm));
+
+    // Pagination Logic
+    const totalPages = Math.ceil(filteredBulletins.length / itemsPerPage);
+    const currentBulletins = filteredBulletins.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(e.target.value);
+        setCurrentPage(1);
+    };
 
     const handleCreate = () => {
         setTitle("");
@@ -530,7 +543,7 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
                             type="text"
                             placeholder="搜索周報..."
                             value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
+                            onChange={handleSearchChange}
                             className="w-full rounded-lg border-gray-200 bg-gray-50 py-2 pl-10 pr-4 text-sm outline-none transition-all"
                         />
                     </div>
@@ -549,7 +562,7 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-                            {filteredBulletins.map((item, index) => {
+                            {currentBulletins.map((item, index) => {
                                 return (
                                     <tr key={item.id} className="group transition-colors hover:bg-gray-50/50">
                                         <td className="px-4 py-4 text-gray-500 whitespace-nowrap text-center">
@@ -719,6 +732,34 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
                         </tbody>
                     </table>
                 </div>
+
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                    <div className="flex items-center justify-between border-t border-gray-100 px-6 py-4">
+                        <div className="text-sm text-gray-500">
+                            {t.admin.devotions.showing} {(currentPage - 1) * itemsPerPage + 1} {t.admin.devotions.to} {Math.min(currentPage * itemsPerPage, filteredBulletins.length)} {t.admin.devotions.total} {filteredBulletins.length} {t.admin.devotions.entries}
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                disabled={currentPage === 1}
+                                className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                            >
+                                {t.admin.devotions.prevPage}
+                            </button>
+                            <span className="text-sm font-medium text-gray-900">
+                                {t.admin.devotions.page} {currentPage} / {totalPages} {t.admin.devotions.ofPages}
+                            </span>
+                            <button
+                                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                                disabled={currentPage === totalPages}
+                                className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                            >
+                                {t.admin.devotions.nextPage}
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
