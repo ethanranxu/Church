@@ -201,10 +201,11 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
     const handleUploadPdf = async (id: string, file: File, type: 'lite' | 'full' = 'lite') => {
         if (!file) return;
 
-        // 1. 校验大小 (1MB = 1024 * 1024 bytes)
-        const MAX_SIZE = 1 * 1024 * 1024;
+        // 1. 校驗大小 (限制 750KB = 750 * 1024 bytes)
+        const MAX_SIZE = 750 * 1024;
         if (file.size > MAX_SIZE) {
-            alert(`文件太大！当前大小为 ${(file.size / 1024 / 1024).toFixed(2)}MB，Firestore 方案要求文件必须小于 1MB。请压缩后重试。`);
+            const currentSizeKb = (file.size / 1024).toFixed(1);
+            alert(`文件大小 (${currentSizeKb}KB) 已超過限制！\n無論是網站發佈精簡PDF版本還是後台保存完整PDF版本，文件大小都必須控制在 750KB 以內，請壓縮後重試。`);
             return;
         }
         
@@ -635,6 +636,7 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
                                                 onChange={(e) => {
                                                     const file = e.target.files?.[0];
                                                     if (file && item.id) handleUploadPdf(item.id, file, 'lite');
+                                                    e.target.value = '';
                                                 }}
                                             />
                                         </td>
@@ -661,7 +663,7 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
                                                         title="點擊下載完整版 PDF"
                                                     >
                                                         {downloadingPdfId === `${item.id}-full` ? (
-                                                            <Loader2 className="h-4 w-4 animate-spin text-indigo-600 mt-0.5 flex-shrink-0" />
+                                                             <Loader2 className="h-4 w-4 animate-spin text-indigo-600 mt-0.5 flex-shrink-0" />
                                                         ) : (
                                                             <FileText className="h-4 w-4 mt-0.5 flex-shrink-0" />
                                                         )}
@@ -694,6 +696,7 @@ export default function BulletinsClient({ initialBulletins }: BulletinsClientPro
                                                 onChange={(e) => {
                                                     const file = e.target.files?.[0];
                                                     if (file && item.id) handleUploadPdf(item.id, file, 'full');
+                                                    e.target.value = '';
                                                 }}
                                             />
                                         </td>
