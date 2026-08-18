@@ -36,13 +36,18 @@ export interface Devotion {
 
 /**
  * 獲取所有靈修文章（從 Articles 集合）
+ * 預設查詢全部歷史記錄，支援可選的 limitCount 限制
  */
-export async function getDevotions(): Promise<Devotion[]> {
+export async function getDevotions(limitCount?: number): Promise<Devotion[]> {
     try {
-        const snapshot = await db.collection('Articles')
-            .orderBy('publishDate', 'desc')
-            .limit(100)
-            .get();
+        let query: FirebaseFirestore.Query = db.collection('Articles')
+            .orderBy('publishDate', 'desc');
+
+        if (limitCount && limitCount > 0) {
+            query = query.limit(limitCount);
+        }
+
+        const snapshot = await query.get();
 
         return snapshot.docs.map(doc => {
             const data = doc.data();
